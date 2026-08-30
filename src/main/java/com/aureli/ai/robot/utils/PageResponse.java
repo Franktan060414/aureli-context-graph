@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/21 17:21
  * @Version: v1.0.0
  * @Description: 分页响应参数工具类

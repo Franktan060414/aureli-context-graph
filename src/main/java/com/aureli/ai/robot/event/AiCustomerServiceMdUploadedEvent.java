@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/22 15:28
  * @Version: v1.0.0
  * @Description: AI 客服 Markdown 问答文件上传事件

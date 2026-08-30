@@ -3,7 +3,6 @@ package com.aureli.ai.robot.model.common;
 import lombok.Data;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/21 17:22
  * @Version: v1.0.0
  * @Description: TODO

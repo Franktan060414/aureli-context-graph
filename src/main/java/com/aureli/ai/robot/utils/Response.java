@@ -7,7 +7,6 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/19 16:19
  * @Version: v1.0.0
  * @Description: 响应参数工具类

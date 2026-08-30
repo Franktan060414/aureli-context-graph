@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/19 16:18
  * @Version: v1.0.0
  * @Description: 业务异常

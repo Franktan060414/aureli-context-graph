@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.aureli.ai.robot.domain.dos.ChatMessageDO;
 import com.aureli.ai.robot.domain.mapper.ChatMessageMapper;
-import com.aureli.ai.robot.model.vo.chat.AiChatReqVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/20 18:56
  * @Version: v1.0.0
  * @Description: 自定义对话记忆 Advisor
@@ -30,12 +28,12 @@ import java.util.Objects;
 public class CustomChatMemoryAdvisor implements StreamAdvisor {
 
     private final ChatMessageMapper chatMessageMapper;
-    private final AiChatReqVO aiChatReqVO;
+    private final String chatUuid;
     private final int limit;
 
-    public CustomChatMemoryAdvisor(ChatMessageMapper chatMessageMapper, AiChatReqVO aiChatReqVO, int limit) {
+    public CustomChatMemoryAdvisor(ChatMessageMapper chatMessageMapper, String chatUuid, int limit) {
         this.chatMessageMapper = chatMessageMapper;
-        this.aiChatReqVO = aiChatReqVO;
+        this.chatUuid = chatUuid;
         this.limit = limit;
     }
 
@@ -52,9 +50,6 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
         log.info("## 自定义聊天记忆 Advisor...");
-
-        // 对话 UUID
-        String chatUuid = aiChatReqVO.getChatId();
 
         // 查询数据库拉取最新的聊天消息
         List<ChatMessageDO> messages = chatMessageMapper.selectList(Wrappers.<ChatMessageDO>lambdaQuery()

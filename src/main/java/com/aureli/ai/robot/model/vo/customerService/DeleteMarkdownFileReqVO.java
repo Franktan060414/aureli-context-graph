@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/23 15:23
  * @Version: v1.0.0
  * @Description: 删除 Markdown 问答文件

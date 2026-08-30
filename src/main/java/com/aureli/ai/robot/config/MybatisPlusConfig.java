@@ -8,13 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/7/6 18:27
  * @Version: v1.0.0
  * @Description: TODO
  **/
 @Configuration
-@MapperScan("com.quanxiaoha.ai.robot.domain.mapper")
+@MapperScan("com.aureli.ai.robot.domain.mapper")
 public class MybatisPlusConfig {
 
     /**

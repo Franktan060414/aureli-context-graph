@@ -1,15 +1,12 @@
 package com.aureli.ai.robot.controller;
 
-import com.aureli.ai.robot.model.vo.customerService.*;
 import com.google.common.collect.Lists;
 import com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor;
 import com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor;
 import com.aureli.ai.robot.advisor.CustomerServiceAdvisor;
 import com.aureli.ai.robot.aspect.ApiOperationLog;
 import com.aureli.ai.robot.domain.mapper.ChatMessageMapper;
-import com.aureli.ai.robot.model.vo.chat.AIResponse;
-import com.aureli.ai.robot.model.vo.chat.AiChatReqVO;
-import com.quanxiaoha.ai.robot.model.vo.customerService.*;
+import com.aureli.ai.robot.model.vo.customerService.*;
 import com.aureli.ai.robot.service.CustomerService;
 import com.aureli.ai.robot.utils.PageResponse;
 import com.aureli.ai.robot.utils.Response;
@@ -33,7 +30,6 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/22 15:22
  * @Version: v1.0.0
  * @Description: AI 客服
@@ -92,53 +88,12 @@ public class AiCustomerServiceController {
     }
 
     /**
-     * 流式对话
-     * @return
-     */
-//    @PostMapping(value = "/chat/completion", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @GetMapping(value = "/chat/completion", produces = "text/html;charset=utf-8")
-    @ApiOperationLog(description = "AI 智能客服对话")
-//    public Flux<String> chat(@RequestBody @Validated AiCustomerServiceChatReqVO aiChatReqVO) {
-    public Flux<String> chat(@RequestParam(value = "message") String userMessage) {
-        // 用户消息
-//        String userMessage = aiChatReqVO.getMessage();
-
-        // 构建 ChatModel
-        ChatModel chatModel = OpenAiChatModel.builder()
-                .options(OpenAiChatOptions.builder()
-                        .baseUrl(baseUrl)
-                        .apiKey(apiKey)
-                        .build())
-                .build();
-
-        // 动态设置调用的模型名称、温度值
-        ChatClient.ChatClientRequestSpec chatClientRequestSpec = ChatClient.create(chatModel)
-                .prompt()
-                .options(OpenAiChatOptions.builder()
-                        .model(model)
-                        .temperature(temperature))
-                .user(userMessage); // 用户提示词
-
-        // Advisor 集合
-        List<Advisor> advisors = Lists.newArrayList();
-        advisors.add(new CustomerServiceAdvisor(vectorStore)); // 检索向量库，组合增强提示词
-
-        // 应用 Advisor 集合
-        chatClientRequestSpec.advisors(advisors);
-
-        // 流式输出
-        return chatClientRequestSpec
-                .stream()
-                .content();
-    }
-
-    /**
      * Tile 式智能客服对话。
      * tileId 表示当前磁贴；parentTileId 为空时表示从空白处提问，不读取工作记忆。
      */
     @PostMapping(value = "/chat/tile/completion", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ApiOperationLog(description = "Tile 式 AI 智能客服对话")
-    public Flux<AIResponse> tileChat(@RequestBody @Validated AiCustomerServiceChatReqVO aiChatReqVO) {
+    public Flux<AiCustomerServiceChatRspVO> tileChat(@RequestBody @Validated AiCustomerServiceChatReqVO aiChatReqVO) {
         String userMessage = aiChatReqVO.getMessage();
 
         ChatModel chatModel = OpenAiChatModel.builder()
@@ -160,11 +115,12 @@ public class AiCustomerServiceController {
 
         String parentTileId = aiChatReqVO.getParentTileId();
         if (StringUtils.isNotBlank(parentTileId)) {
-            advisors.add(new CustomChatMemoryAdvisor(chatMessageMapper, buildAiChatReqVO(userMessage, parentTileId), 2));
+            advisors.add(new CustomChatMemoryAdvisor(chatMessageMapper, parentTileId, 2));
         }
 
         advisors.add(new CustomStreamLoggerAndMessage2DBAdvisor(chatMessageMapper,
-                buildAiChatReqVO(userMessage, aiChatReqVO.getTileId()),
+                aiChatReqVO.getTileId(),
+                userMessage,
                 transactionTemplate));
 
         chatClientRequestSpec.advisors(advisors);
@@ -172,17 +128,7 @@ public class AiCustomerServiceController {
         return chatClientRequestSpec
                 .stream()
                 .content()
-                .mapNotNull(text -> AIResponse.builder().v(text).build());
-    }
-
-    private AiChatReqVO buildAiChatReqVO(String message, String chatId) {
-        return AiChatReqVO.builder()
-                .message(message)
-                .chatId(chatId)
-                .modelName(model)
-                .temperature(temperature)
-                .networkSearch(false)
-                .build();
+                .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build());
     }
 
 }

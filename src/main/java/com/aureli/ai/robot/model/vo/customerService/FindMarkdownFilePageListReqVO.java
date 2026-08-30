@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/23 15:47
  * @Version: v1.0.0
  * @Description: 查询 Markdown 问答文件列表

@@ -3,7 +3,6 @@ package com.aureli.ai.robot.utils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/20 15:53
  * @Version: v1.0.0
  * @Description: 字符串工具类

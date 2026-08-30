@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Optional;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/19 21:44
  * @Version: v1.0.0
  * @Description: 全局异常处理

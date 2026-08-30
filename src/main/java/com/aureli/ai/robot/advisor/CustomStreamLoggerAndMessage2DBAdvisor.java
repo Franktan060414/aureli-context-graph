@@ -2,7 +2,6 @@ package com.aureli.ai.robot.advisor;
 
 import com.aureli.ai.robot.domain.dos.ChatMessageDO;
 import com.aureli.ai.robot.domain.mapper.ChatMessageMapper;
-import com.aureli.ai.robot.model.vo.chat.AiChatReqVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/20 18:31
  * @Version: v1.0.0
  * @Description: 自定义打印流式日志 Advisor
@@ -25,14 +23,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
     private final ChatMessageMapper chatMessageMapper;
-    private final AiChatReqVO aiChatReqVO;
+    private final String chatUuid;
+    private final String userMessage;
     private final TransactionTemplate transactionTemplate;
 
     public CustomStreamLoggerAndMessage2DBAdvisor(ChatMessageMapper chatMessageMapper,
-                                                  AiChatReqVO aiChatReqVO,
+                                                  String chatUuid,
+                                                  String userMessage,
                                                   TransactionTemplate transactionTemplate) {
         this.chatMessageMapper = chatMessageMapper;
-        this.aiChatReqVO = aiChatReqVO;
+        this.chatUuid = chatUuid;
+        this.userMessage = userMessage;
         this.transactionTemplate = transactionTemplate;
     }
 
@@ -48,12 +49,6 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
-
-        // 对话 UUID
-        String chatUuid = aiChatReqVO.getChatId();
-        // 用户消息
-        String userMessage = aiChatReqVO.getMessage();
-
         Flux<ChatClientResponse> chatClientResponseFlux = streamAdvisorChain.nextStream(chatClientRequest);
 
         // 创建 AI 流式回答聚合容器（线程安全）

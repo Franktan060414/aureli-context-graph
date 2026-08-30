@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/23 17:08
  * @Version: v1.0.0
  * @Description: AI 智能客服聊天

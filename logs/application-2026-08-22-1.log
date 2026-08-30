@@ -235,7 +235,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2025/7/12 19:12
  * @Version: v1.0.0
  * @Description: RestTemplate 配置类
@@ -261,7 +260,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/30 18:50
  * @Version: v1.0.0
  * @Description: QQ Tool 工具
@@ -483,7 +481,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2025/7/12 19:12
  * @Version: v1.0.0
  * @Description: RestTemplate 配置类
@@ -509,7 +506,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/30 18:50
  * @Version: v1.0.0
  * @Description: QQ Tool 工具
@@ -677,7 +673,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2025/7/12 19:12
  * @Version: v1.0.0
  * @Description: RestTemplate 配置类
@@ -703,7 +698,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/30 18:50
  * @Version: v1.0.0
  * @Description: QQ Tool 工具
@@ -871,7 +865,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2025/7/12 19:12
  * @Version: v1.0.0
  * @Description: RestTemplate 配置类
@@ -897,7 +890,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/30 18:50
  * @Version: v1.0.0
  * @Description: QQ Tool 工具
@@ -1065,7 +1057,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2025/7/12 19:12
  * @Version: v1.0.0
  * @Description: RestTemplate 配置类
@@ -1091,7 +1082,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/30 18:50
  * @Version: v1.0.0
  * @Description: QQ Tool 工具

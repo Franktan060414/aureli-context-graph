@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/22 15:29
  * @Version: v1.0.0
  * @Description: Markdown 文件上传事件监听
@@ -46,7 +45,7 @@ public class AiCustomerServiceMdUploadedListener {
      * @param event
      */
     @EventListener
-    @Async("eventTaskExecutor") // 指定使用我们自定义的线程池
+    @Async("eventTaskExecutor") // 指定使用自定义的线程池
     public void vectorizing(AiCustomerServiceMdUploadedEvent event) {
         log.info("## AiCustomerServiceMdUploadedEvent: {}", event);
 

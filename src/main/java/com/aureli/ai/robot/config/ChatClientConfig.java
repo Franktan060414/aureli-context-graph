@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/6/23 19:32
  * @Version: v1.0.0
  * @Description: ChatClient 客户端配置

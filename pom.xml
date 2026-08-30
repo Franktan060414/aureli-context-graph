@@ -8,12 +8,10 @@
         <version>4.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.quanxiaoha</groupId>
-    <artifactId>ai-robot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>xiaoha-ai-robot-springboot</name>
-    <description>xiaoha-ai-robot-springboot</description>
-
+    <groupId>com.aureli</groupId>
+    <artifactId>aureli-graph-ai-system</artifactId>
+    <name>aureli-graph-ai-system</name>
+    <description>Aureli Graph AI System</description>
     <properties>
         <!-- JDK 版本 -->
         <java.version>21</java.version>
@@ -26,8 +24,6 @@
         <mybatis-plus.version>3.5.16</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
         <guava.version>33.0.0-jre</guava.version>
-        <okhttp.version>4.12.0</okhttp.version>
-        <jsoup.version>1.17.2</jsoup.version>
         <hutool.version>5.8.39</hutool.version>
         <commons-io.version>2.20.0</commons-io.version>
     </properties>
@@ -135,20 +131,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-        <!-- OKHttp-->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-        </dependency>
-
-        <!-- Jsoup -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>${jsoup.version}</version>
         </dependency>
 
         <!-- 分页插件 -->

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @Author: 犬小哈
  * @Date: 2026/8/19 16:18
  * @Version: v1.0.0
  * @Description: 响应异常码
