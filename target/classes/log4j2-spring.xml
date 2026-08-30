@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 配置文件命名为 log4j2-spring.xml 而非 log4j2.xml：
+     让 Spring Boot 接管 Log4j2 的初始化，application.yml 中的 logging.* 配置才能生效 -->
+<Configuration status="WARN" monitorInterval="30">
+
+    <Properties>
+        <!-- 日志输出格式 -->
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Property>
+        <!-- 日志文件存放目录 -->
+        <Property name="LOG_DIR">logs</Property>
+        <!-- 日志文件名（按项目名命名，可自行调整） -->
+        <Property name="LOG_FILE_NAME">ai-robot</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!-- 滚动文件输出：按天 + 按大小切分，自动压缩 gz，最多保留 30 个 -->
+        <RollingFile name="RollingFile"
+                     fileName="${LOG_DIR}/${LOG_FILE_NAME}.log"
+                     filePattern="${LOG_DIR}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!-- 每次启动触发切分 -->
+                <OnStartupTriggeringPolicy/>
+                <!-- 按天切分 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- 单文件超过 100MB 触发切分 -->
+                <SizeBasedTriggeringPolicy>100MB</SizeBasedTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 按需调整指定包的日志级别 -->
+        <Logger name="org.apache.kafka" level="warn"/>
+
+        <!-- 根日志：级别 info，同时输出到控制台和文件 -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

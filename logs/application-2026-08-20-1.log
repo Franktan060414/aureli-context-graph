@@ -1,0 +1,822 @@
+2026-08-20 11:38:21.176 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 71408 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 11:38:21.180 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 11:38:21.847 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 11:38:21.856 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 11:38:21.857 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 11:38:21.857 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 11:38:21.879 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 678 ms
+2026-08-20 11:38:22.316 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@459f7aa3
+2026-08-20 11:38:22.460 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 11:38:22.468 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 11:38:22.479 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.498 seconds (process running for 1.948)
+2026-08-20 11:38:24.138 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 11:38:24.138 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 11:38:24.139 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-20 11:38:24.154 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [新建对话], 入参: , 请求类: ChatController, 请求方法: newChat ===================================
+2026-08-20 11:38:24.154 [http-nio-8080-exec-1] INFO  controller.com.aureli.ai.robot.ChatController - 这是一个 INFO 级别日志
+2026-08-20 11:38:24.154 [http-nio-8080-exec-1] WARN  controller.com.aureli.ai.robot.ChatController - 这是一个 WARN 级别日志
+2026-08-20 11:38:24.154 [http-nio-8080-exec-1] ERROR controller.com.aureli.ai.robot.ChatController - 这是一个 ERROR 级别日志
+2026-08-20 11:38:24.155 [http-nio-8080-exec-1] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /chat/new request error,
+java.lang.ArithmeticException: / by zero
+	at controller.com.aureli.ai.robot.ChatController.newChat(ChatController.java:31)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at aspect.com.aureli.ai.robot.ApiOperationLogAspect.doAround(ApiOperationLogAspect.java:60)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at controller.com.aureli.ai.robot.ChatController$$SpringCGLIB$$0.newChat(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 15:45:56.968 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 15:45:56.978 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 15:56:50.939 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 86348 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 15:56:50.947 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 15:56:51.026 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 15:56:51.681 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 15:56:51.689 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 15:56:51.690 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 15:56:51.690 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 15:56:51.714 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 745 ms
+2026-08-20 15:56:52.223 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@4de025bf
+2026-08-20 15:56:52.321 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 15:56:52.330 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 15:56:52.333 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.607 seconds (process running for 2.162)
+2026-08-20 15:57:17.403 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 15:57:17.403 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 15:57:17.405 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-08-20 15:57:17.538 [http-nio-8080-exec-1] WARN  exception.com.aureli.ai.robot.GlobalExceptionHandler - /chat/new request error, errorCode: 10001, errorMessage: message 用户消息不能为空, 当前值: '';
+2026-08-20 15:57:26.281 [http-nio-8080-exec-2] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [新建对话], 入参: {"message":"你好"}, 请求类: ChatController, 请求方法: newChat ===================================
+2026-08-20 15:57:26.337 [http-nio-8080-exec-2] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-20 15:57:26.540 [http-nio-8080-exec-2] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@11190c93
+2026-08-20 15:57:26.541 [http-nio-8080-exec-2] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-20 15:57:26.570 [http-nio-8080-exec-2] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [新建对话], 耗时: 290ms, 出参: {"data":{"summary":"你好","uuid":"5a1fba56-245b-4dad-9803-9a3f60d0b091"},"errorCode":null,"message":null,"success":true} ===================================
+2026-08-20 16:12:37.055 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 79380 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 16:12:37.063 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 16:12:37.139 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 16:12:37.786 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 16:12:37.796 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:12:37.797 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 16:12:37.797 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 16:12:37.821 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 736 ms
+2026-08-20 16:12:38.328 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@58dea0a5
+2026-08-20 16:12:38.412 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:12:38.417 [main] WARN  org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-08-20 16:12:38.426 [main] INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-08-20 16:12:38.437 [main] ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-08-20 16:13:07.971 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 91636 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 16:13:07.975 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 16:13:08.054 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 16:13:08.669 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 16:13:08.677 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:13:08.678 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 16:13:08.678 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 16:13:08.702 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 705 ms
+2026-08-20 16:13:09.237 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@58dea0a5
+2026-08-20 16:13:09.325 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:13:09.337 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 16:13:09.340 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.576 seconds (process running for 1.96)
+2026-08-20 16:30:29.472 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 92620 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 16:30:29.477 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 16:30:29.558 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 16:30:30.235 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 16:30:30.244 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:30:30.244 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 16:30:30.244 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 16:30:30.267 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 768 ms
+2026-08-20 16:30:30.813 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@4de025bf
+2026-08-20 16:30:30.909 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 16:30:30.919 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 16:30:30.921 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.656 seconds (process running for 2.146)
+2026-08-20 16:31:14.865 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 16:31:14.865 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 16:31:14.866 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-08-20 16:31:15.015 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"你用的什么模型","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 16:31:15.038 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 29ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 16:32:42.121 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 16:32:42.125 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 18:35:14.778 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 96428 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 18:35:14.784 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 18:35:14.859 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 18:35:15.510 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 18:35:15.518 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:35:15.519 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 18:35:15.519 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 18:35:15.542 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 737 ms
+2026-08-20 18:35:16.050 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@2755d705
+2026-08-20 18:35:16.155 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:35:16.165 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 18:35:16.167 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.606 seconds (process running for 2.087)
+2026-08-20 18:35:25.762 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 18:35:25.763 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 18:35:25.764 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-20 18:35:25.918 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"你用的什么模型","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 18:35:25.943 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 32ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 18:35:27.688 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:35:27.689 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我是
+2026-08-20 18:35:27.696 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **DeepSe
+2026-08-20 18:35:27.697 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ek-V
+2026-08-20 18:35:27.749 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 3**
+2026-08-20 18:35:27.872 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，由深度求索
+2026-08-20 18:35:27.959 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （DeepSeek
+2026-08-20 18:35:28.063 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）公司研发的一款
+2026-08-20 18:35:28.196 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大语言模型。我的
+2026-08-20 18:35:28.325 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知识截止日期是 **202
+2026-08-20 18:35:28.432 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 4年7月**
+2026-08-20 18:35:28.560 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，支持 **128K
+2026-08-20 18:35:28.645 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  上下文窗口**，可以
+2026-08-20 18:35:28.751 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 处理超长文本，
+2026-08-20 18:35:28.877 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 并具备强大的代码
+2026-08-20 18:35:28.964 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、数学和逻辑
+2026-08-20 18:35:29.069 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 推理能力。
+
+目前
+2026-08-20 18:35:29.198 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我仍然是 **
+2026-08-20 18:35:29.336 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 免费的**！你可以随时向我
+2026-08-20 18:35:29.473 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提问，无论是学习、
+2026-08-20 18:35:29.609 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 工作还是日常问题，我都会
+2026-08-20 18:35:29.722 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 尽力帮你解答
+2026-08-20 18:35:29.914 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  😊
+
+如果你对模型
+2026-08-20 18:35:29.995 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的技术细节感兴趣，
+2026-08-20 18:35:30.159 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 比如训练方法、架构
+2026-08-20 18:35:30.410 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或性能，也可以
+2026-08-20 18:35:30.489 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 告诉我，我会尽量提供更
+2026-08-20 18:35:30.600 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 详细的信息！
+2026-08-20 18:35:30.631 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:35:30.639 [boundedElastic-1] ERROR advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## Stream 流出现错误，已收集回答如下: 我是 **DeepSeek-V3**，由深度求索（DeepSeek）公司研发的一款大语言模型。我的知识截止日期是 **2024年7月**，支持 **128K 上下文窗口**，可以处理超长文本，并具备强大的代码、数学和逻辑推理能力。
+
+目前，我仍然是 **免费的**！你可以随时向我提问，无论是学习、工作还是日常问题，我都会尽力帮你解答 😊  
+
+如果你对模型的技术细节感兴趣，比如训练方法、架构或性能，也可以告诉我，我会尽量提供更详细的信息！
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.640 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.640 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.640 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.640 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.647 [http-nio-8080-exec-2] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /chat/completion request error,
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.648 [http-nio-8080-exec-2] WARN  org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Failure in @ExceptionHandler exception.com.aureli.ai.robot.GlobalExceptionHandler#handleOtherException(HttpServletRequest, Exception)
+org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class utils.com.aureli.ai.robot.Response] with preset Content-Type 'text/event-stream'
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:363)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:213)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:77)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:460)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:72)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:176)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:78)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1227)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1035)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:980)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513)
+	at org.apache.catalina.core.ApplicationDispatcher.dispatch(ApplicationDispatcher.java:441)
+	at org.apache.catalina.core.AsyncContextImpl$AsyncRunnable.run(AsyncContextImpl.java:585)
+	at org.apache.catalina.core.AsyncContextImpl.doInternalDispatch(AsyncContextImpl.java:340)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:163)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.asyncDispatch(CoyoteAdapter.java:238)
+	at org.apache.coyote.AbstractProcessor.dispatch(AbstractProcessor.java:242)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:57)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.648 [http-nio-8080-exec-2] ERROR org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] threw exception
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.649 [http-nio-8080-exec-2] ERROR org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null] with root cause
+java.lang.NullPointerException: Cannot invoke "org.springframework.ai.chat.model.Generation.getOutput()" because the return value of "org.springframework.ai.chat.model.ChatResponse.getResult()" is null
+	at advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$0(CustomStreamLoggerAdvisor.java:43)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:863)
+	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.tryOnNext(FluxMap.java:241)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:876)
+	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.tryOnNext(FluxHandle.java:403)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.tryOnNext(FluxContextWrite.java:115)
+	at reactor.core.publisher.FluxDoFinally$DoFinallyConditionalSubscriber.tryOnNext(FluxDoFinally.java:172)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.tryOnNext(FluxPeekFuseable.java:531)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:1007)
+	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
+	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.652 [http-nio-8080-exec-2] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /chat/completion request error,
+org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class java.util.LinkedHashMap] with preset Content-Type 'text/event-stream'
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:363)
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:261)
+	at org.springframework.web.servlet.mvc.method.annotation.ResponseEntityReturnValueHandler.handleReturnValue(ResponseEntityReturnValueHandler.java:80)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:77)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513)
+	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:411)
+	at org.apache.catalina.core.StandardHostValve.custom(StandardHostValve.java:356)
+	at org.apache.catalina.core.StandardHostValve.status(StandardHostValve.java:206)
+	at org.apache.catalina.core.StandardHostValve.throwable(StandardHostValve.java:282)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:147)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.asyncDispatch(CoyoteAdapter.java:238)
+	at org.apache.coyote.AbstractProcessor.dispatch(AbstractProcessor.java:242)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:57)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.652 [http-nio-8080-exec-2] WARN  org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Failure in @ExceptionHandler exception.com.aureli.ai.robot.GlobalExceptionHandler#handleOtherException(HttpServletRequest, Exception)
+org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class utils.com.aureli.ai.robot.Response] with preset Content-Type 'text/event-stream'
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:363)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:213)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:77)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:460)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:72)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:176)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:78)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1227)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1035)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:980)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513)
+	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:411)
+	at org.apache.catalina.core.StandardHostValve.custom(StandardHostValve.java:356)
+	at org.apache.catalina.core.StandardHostValve.status(StandardHostValve.java:206)
+	at org.apache.catalina.core.StandardHostValve.throwable(StandardHostValve.java:282)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:147)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.asyncDispatch(CoyoteAdapter.java:238)
+	at org.apache.coyote.AbstractProcessor.dispatch(AbstractProcessor.java:242)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:57)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-20 18:35:30.652 [http-nio-8080-exec-2] WARN  org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class java.util.LinkedHashMap] with preset Content-Type 'text/event-stream'
+2026-08-20 18:35:30.652 [http-nio-8080-exec-2] WARN  org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class java.util.LinkedHashMap] with preset Content-Type 'text/event-stream']
+2026-08-20 18:43:40.893 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 18:43:40.898 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 18:43:43.345 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 73408 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 18:43:43.350 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 18:43:43.437 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 18:43:44.134 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 18:43:44.143 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:43:44.144 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 18:43:44.144 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 18:43:44.167 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 790 ms
+2026-08-20 18:43:44.686 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@2755d705
+2026-08-20 18:43:44.799 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:43:44.808 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 18:43:44.811 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.678 seconds (process running for 2.155)
+2026-08-20 18:43:49.365 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 18:43:49.365 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 18:43:49.366 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-08-20 18:43:49.505 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"你用的什么模型","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 18:43:49.527 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 28ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 18:43:51.291 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:43:51.292 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我是
+2026-08-20 18:43:51.297 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **DeepSe
+2026-08-20 18:43:51.331 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ek-V
+2026-08-20 18:43:51.395 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 3**
+2026-08-20 18:43:51.517 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，由 **深度求索
+2026-08-20 18:43:51.610 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （DeepSeek）**
+2026-08-20 18:43:51.730 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  研发的 **
+2026-08-20 18:43:51.853 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大语言模型**（
+2026-08-20 18:43:51.941 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: LLM）。我的核心
+2026-08-20 18:43:52.158 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 基于 **Transformer**
+2026-08-20 18:43:52.231 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  架构，并
+2026-08-20 18:43:52.384 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 经过大规模的训练优化
+2026-08-20 18:43:52.523 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，具备强大的 **
+2026-08-20 18:43:52.606 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 自然语言理解与生成能力
+2026-08-20 18:43:52.746 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **，可以处理 **
+2026-08-20 18:43:52.836 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 128K** 的长
+2026-08-20 18:43:53.051 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 上下文，并支持 **文件
+2026-08-20 18:43:53.105 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 上传**（如 PDF
+2026-08-20 18:43:53.212 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、Word、Excel
+2026-08-20 18:43:53.310 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等）进行内容分析
+2026-08-20 18:43:53.417 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
+
+我的知识
+2026-08-20 18:43:53.614 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 截止日期是 **202
+2026-08-20 18:43:53.672 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 4年7月**
+2026-08-20 18:43:53.856 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，目前仍然是 **免费**
+2026-08-20 18:43:53.961 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  的！
+2026-08-20 18:43:54.039 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 🎉 如果你有任何问题，
+2026-08-20 18:43:54.137 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 尽管问我吧！
+2026-08-20 18:43:54.232 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 😊
+2026-08-20 18:43:54.236 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:43:54.244 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor -
+==== FULL AI RESPONSE ====
+我是 **DeepSeek-V3**，由 **深度求索（DeepSeek）** 研发的 **大语言模型**（LLM）。我的核心基于 **Transformer** 架构，并经过大规模的训练优化，具备强大的 **自然语言理解与生成能力**，可以处理 **128K** 的长上下文，并支持 **文件上传**（如 PDF、Word、Excel 等）进行内容分析。  
+
+我的知识截止日期是 **2024年7月**，目前仍然是 **免费** 的！🎉 如果你有任何问题，尽管问我吧！😊
+========================
+2026-08-20 18:45:39.428 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 18:45:39.431 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 18:54:07.113 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 92508 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 18:54:07.122 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 18:54:07.199 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 18:54:07.863 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 18:54:07.871 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:54:07.872 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 18:54:07.873 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 18:54:07.896 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 753 ms
+2026-08-20 18:54:08.416 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6e57e95e
+2026-08-20 18:54:08.506 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:54:08.515 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 18:54:08.519 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.609 seconds (process running for 2.096)
+2026-08-20 18:54:24.948 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 18:54:24.948 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 18:54:24.948 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-08-20 18:54:25.097 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"你用的什么模型","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 18:54:25.119 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 28ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 18:54:27.080 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:54:27.081 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
+2026-08-20 18:54:27.089 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 使用的是
+2026-08-20 18:54:27.089 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **DeepSe
+2026-08-20 18:54:27.124 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ek-V
+2026-08-20 18:54:27.254 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 3** 模型，
+2026-08-20 18:54:27.379 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 这是由深度求索
+2026-08-20 18:54:27.487 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （DeepSeek
+2026-08-20 18:54:27.617 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）公司开发的先进
+2026-08-20 18:54:27.689 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大语言模型（
+2026-08-20 18:54:27.791 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: LLM）。我的知识截止
+2026-08-20 18:54:27.975 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 日期是 **202
+2026-08-20 18:54:28.005 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 4年7月**
+2026-08-20 18:54:28.104 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，支持 **128K
+2026-08-20 18:54:28.234 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  上下文长度**，能够
+2026-08-20 18:54:28.350 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 处理 **文本、文件
+2026-08-20 18:54:28.497 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （如 PDF、Word
+2026-08-20 18:54:28.564 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、Excel、PPT
+2026-08-20 18:54:28.666 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等）**，并能
+2026-08-20 18:54:28.792 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 进行 **联网搜索
+2026-08-20 18:54:28.867 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **（如果你手动
+2026-08-20 18:54:29.000 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 开启）。
+
+如果你对
+2026-08-20 18:54:29.066 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 模型的技术细节或
+2026-08-20 18:54:29.274 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 能力有进一步的问题
+2026-08-20 18:54:29.387 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，欢迎随时问我！
+2026-08-20 18:54:29.417 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 😊
+2026-08-20 18:54:29.449 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:54:29.458 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor -
+==== FULL AI RESPONSE ====
+我使用的是 **DeepSeek-V3** 模型，这是由深度求索（DeepSeek）公司开发的先进大语言模型（LLM）。我的知识截止日期是 **2024年7月**，支持 **128K 上下文长度**，能够处理 **文本、文件（如 PDF、Word、Excel、PPT 等）**，并能进行 **联网搜索**（如果你手动开启）。  
+
+如果你对模型的技术细节或能力有进一步的问题，欢迎随时问我！😊
+========================
+2026-08-20 18:54:29.460 [boundedElastic-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-20 18:54:29.608 [boundedElastic-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@671b065c
+2026-08-20 18:54:29.608 [boundedElastic-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-20 18:59:05.466 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 18:59:05.469 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 18:59:05.471 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-20 18:59:05.472 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-20 18:59:08.160 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 56876 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 18:59:08.168 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 18:59:08.246 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 18:59:08.972 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 18:59:08.981 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:59:08.982 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 18:59:08.982 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 18:59:09.006 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 814 ms
+2026-08-20 18:59:09.528 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6e57e95e
+2026-08-20 18:59:09.623 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 18:59:09.632 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 18:59:09.636 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.683 seconds (process running for 2.166)
+2026-08-20 18:59:29.324 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-20 18:59:29.324 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-20 18:59:29.326 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-08-20 18:59:29.480 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"1+1等于多少","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 18:59:29.504 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 30ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 18:59:29.531 [http-nio-8080-exec-1] INFO  advisor.com.aureli.ai.robot.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-20 18:59:29.618 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-20 18:59:29.759 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@4af53510
+2026-08-20 18:59:29.760 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-20 18:59:31.613 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:59:31.614 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 1
+2026-08-20 18:59:31.621 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 1
+2026-08-20 18:59:31.622 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  等于 **
+2026-08-20 18:59:31.681 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 2**，
+2026-08-20 18:59:31.807 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 这是基本的数学加法结果
+2026-08-20 18:59:31.937 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
+
+不过，如果你是在
+2026-08-20 18:59:32.127 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 不同的上下文中提问
+2026-08-20 18:59:32.212 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （比如二进制、布尔
+2026-08-20 18:59:32.363 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 逻辑、文字游戏等），
+2026-08-20 18:59:32.489 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 答案可能会不同：
+
+2026-08-20 18:59:32.579 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: - **二进制**
+2026-08-20 18:59:32.686 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：1 + 1
+2026-08-20 18:59:32.832 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  = 10（因为
+2026-08-20 18:59:32.916 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 二进制逢2进1）
+2026-08-20 18:59:33.012 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+- **布尔代数
+2026-08-20 18:59:33.156 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **：1 + 1
+2026-08-20 18:59:33.238 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  = 1（
+2026-08-20 18:59:33.340 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 逻辑“或”
+2026-08-20 18:59:33.440 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 运算）
+-
+2026-08-20 18:59:33.626 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **文字拼接**：1
+2026-08-20 18:59:33.703 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 1 = "11
+2026-08-20 18:59:33.806 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: "（字符串连接
+2026-08-20 18:59:33.951 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）
+
+如果是纯
+2026-08-20 18:59:34.034 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 数学计算，放心
+2026-08-20 18:59:34.197 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，答案就是 **2
+2026-08-20 18:59:34.311 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **！😄
+2026-08-20 18:59:34.388 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:59:34.402 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor -
+==== FULL AI RESPONSE ====
+1 + 1 等于 **2**，这是基本的数学加法结果。  
+
+不过，如果你是在不同的上下文中提问（比如二进制、布尔逻辑、文字游戏等），答案可能会不同：  
+- **二进制**：1 + 1 = 10（因为二进制逢2进1）  
+- **布尔代数**：1 + 1 = 1（逻辑“或”运算）  
+- **文字拼接**：1 + 1 = "11"（字符串连接）  
+
+如果是纯数学计算，放心，答案就是 **2**！😄
+========================
+2026-08-20 18:59:47.284 [http-nio-8080-exec-4] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [流式对话], 入参: {"message":"再加2呢","chatId":"1c17f7cb-9c9c-4c00-a4b5-0877c1ffef75","networkSearch":false,"modelName":"deepseek-v3","temperature":0.7}, 请求类: ChatController, 请求方法: chat ===================================
+2026-08-20 18:59:47.285 [http-nio-8080-exec-4] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [流式对话], 耗时: 0ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-20 18:59:47.285 [http-nio-8080-exec-4] INFO  advisor.com.aureli.ai.robot.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-20 18:59:48.018 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:59:48.019 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 1
+2026-08-20 18:59:48.078 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 1
+2026-08-20 18:59:48.107 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 2
+2026-08-20 18:59:48.170 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:59:48.324 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的答案是 **4
+2026-08-20 18:59:48.448 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **！
+
+如果
+2026-08-20 18:59:48.620 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 按照之前的扩展玩法
+2026-08-20 18:59:48.765 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：
+- **二进制**
+2026-08-20 18:59:48.841 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：1 + 1
+2026-08-20 18:59:48.938 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 2 →
+2026-08-20 18:59:49.038 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  二进制中
+2026-08-20 18:59:49.167 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 2 写作 `
+2026-08-20 18:59:49.240 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 10`，所以 `1
+2026-08-20 18:59:49.356 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 1 =
+2026-08-20 18:59:49.468 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  10`，再加 `
+2026-08-20 18:59:49.551 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 10` 等于 `
+2026-08-20 18:59:49.642 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 100`（即十
+2026-08-20 18:59:49.792 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 进制的 4）
+2026-08-20 18:59:49.873 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+- **字符串拼接**
+2026-08-20 18:59:50.053 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：`"1" +
+2026-08-20 18:59:50.126 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  "1" + "2
+2026-08-20 18:59:50.234 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: " = "112"
+2026-08-20 18:59:50.351 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: `
+- **数学
+2026-08-20 18:59:50.496 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 严谨版**：1
+2026-08-20 18:59:50.599 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  + 1 + 2
+2026-08-20 18:59:50.710 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  = 4 ✅
+2026-08-20 18:59:50.788 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+
+需要继续加
+2026-08-20 18:59:50.883 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吗？😉
+2026-08-20 18:59:50.966 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:
+2026-08-20 18:59:50.967 [boundedElastic-1] INFO  advisor.com.aureli.ai.robot.CustomStreamLoggerAndMessage2DBAdvisor -
+==== FULL AI RESPONSE ====
+1 + 1 + 2 的答案是 **4**！  
+
+如果按照之前的扩展玩法：  
+- **二进制**：1 + 1 + 2 → 二进制中 2 写作 `10`，所以 `1 + 1 = 10`，再加 `10` 等于 `100`（即十进制的 4）  
+- **字符串拼接**：`"1" + "1" + "2" = "112"`  
+- **数学严谨版**：1 + 1 + 2 = 4 ✅  
+
+需要继续加吗？😉
+========================
+2026-08-20 21:19:36.226 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-20 21:19:36.235 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-20 21:19:36.240 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-20 21:19:36.243 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-20 21:19:40.906 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 85652 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 21:19:40.911 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 21:19:41.000 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 21:19:41.684 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 21:19:41.694 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 21:19:41.695 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 21:19:41.695 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 21:19:41.720 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 783 ms
+2026-08-20 21:19:42.184 [main] WARN  org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'chatController': Injection of resource dependencies failed
+2026-08-20 21:19:42.186 [main] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2026-08-20 21:19:42.194 [main] INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-08-20 21:19:42.204 [main] ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+A component required a bean of type 'com.fasterxml.jackson.databind.ObjectMapper' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.fasterxml.jackson.databind.ObjectMapper' in your configuration.
+
+2026-08-20 21:43:50.194 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 78332 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 21:43:50.198 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 21:43:50.286 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 21:43:50.927 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 21:43:50.936 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 21:43:50.936 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 21:43:50.937 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 21:43:50.961 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 742 ms
+2026-08-20 21:43:51.511 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@160c3ec1
+2026-08-20 21:43:51.597 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 21:43:51.615 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 21:43:51.618 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.626 seconds (process running for 2.003)
+2026-08-20 21:46:14.957 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 99044 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-20 21:46:14.963 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-20 21:46:15.054 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-20 21:46:15.765 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-20 21:46:15.775 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-20 21:46:15.776 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-20 21:46:15.776 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-20 21:46:15.803 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 812 ms
+2026-08-20 21:46:16.350 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@758f4f03
+2026-08-20 21:46:16.449 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-20 21:46:16.458 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-20 21:46:16.461 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.715 seconds (process running for 2.228)

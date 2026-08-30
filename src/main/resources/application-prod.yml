@@ -1,0 +1,8 @@
+server:
+  port: 8080 # 项目启动端口
+
+spring:
+  ai:
+    openai:
+      base-url: https://llm-al9gjo71owh37s2d.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 # OpenAI 服务的访问地址，这里使用的是阿里云百炼
+      api-key: sk-ws-H.RYIMRMX.Cj6f.MEUCIDIko_t2t_2JTpFF--6Ij5xlNr9Q6bMNkMh3UL0UDTELAiEAmdR8eJitvFiQX65N7hU2vt1cONXPLsunMb-b1n5nc6I  # 填写阿里云百炼的 API Key, 改成你自己的

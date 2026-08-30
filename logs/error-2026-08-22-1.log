@@ -1,0 +1,43 @@
+2026-08-22 21:07:55.409 [main] ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-08-22 21:09:16.300 [event-handler-1] ERROR listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## Markdown 文件向量化失败: AiCustomerServiceMdUploadedEvent(id=63, filePath=E:\java_workspace\xiaoha-ai-robot\a58811f5-c007-4ba6-a049-b91f14ae1c20-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63})
+com.openai.errors.BadRequestException: 400: <400> InternalError.Algo.InvalidParameter: Value error, batch size is invalid, it should not be larger than 10.: input.contents
+	at com.openai.errors.BadRequestException$Builder.build(BadRequestException.kt:98)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:54)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:46)
+	at com.openai.services.blocking.EmbeddingServiceImpl$WithRawResponseImpl.create(EmbeddingServiceImpl.kt:80)
+	at com.openai.services.blocking.EmbeddingServiceImpl.create(EmbeddingServiceImpl.kt:44)
+	at com.openai.services.blocking.EmbeddingService.create(EmbeddingService.kt:33)
+	at org.springframework.ai.openai.OpenAiEmbeddingModel.lambda$call$2(OpenAiEmbeddingModel.java:246)
+	at io.micrometer.observation.Observation.observe(Observation.java:634)
+	at org.springframework.ai.openai.OpenAiEmbeddingModel.call(OpenAiEmbeddingModel.java:245)
+	at org.springframework.ai.embedding.EmbeddingModel.embed(EmbeddingModel.java:110)
+	at org.springframework.ai.vectorstore.pgvector.PgVectorStore.doAdd(PgVectorStore.java:260)
+	at org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore.lambda$add$1(AbstractObservationVectorStore.java:84)
+	at io.micrometer.observation.Observation.observe(Observation.java:569)
+	at org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore.add(AbstractObservationVectorStore.java:84)
+	at listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener.lambda$vectorizing$2(AiCustomerServiceMdUploadedListener.java:93)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:137)
+	at listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener.vectorizing(AiCustomerServiceMdUploadedListener.java:67)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:112)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

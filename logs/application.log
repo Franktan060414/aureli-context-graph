@@ -1,0 +1,632 @@
+2026-08-23 15:32:24.971 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 94196 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-23 15:32:24.988 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-23 15:32:25.066 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-23 15:32:25.710 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-23 15:32:25.720 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:32:25.721 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-23 15:32:25.721 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-23 15:32:25.744 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 736 ms
+2026-08-23 15:32:26.231 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-23 15:32:26.233 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-23 15:32:26.233 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-23 15:32:26.447 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@245a26e1
+2026-08-23 15:32:26.534 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:32:26.543 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-23 15:32:26.546 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.778 seconds (process running for 2.24)
+2026-08-23 15:33:44.294 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-23 15:33:44.294 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-23 15:33:44.296 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-08-23 15:33:44.308 [http-nio-8080-exec-1] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /document/delete request error,
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource document/delete for request '/document/delete'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-23 15:34:01.263 [http-nio-8080-exec-3] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [删除 Markdown 问答文件], 入参: {"id":66}, 请求类: AiCustomerServiceController, 请求方法: deleteMarkdownFile ===================================
+2026-08-23 15:34:01.267 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-23 15:34:01.365 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@39157bee
+2026-08-23 15:34:01.367 [http-nio-8080-exec-3] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-23 15:34:01.478 [http-nio-8080-exec-3] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [删除 Markdown 问答文件], 耗时: 216ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} ===================================
+2026-08-23 15:34:23.658 [http-nio-8080-exec-5] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [删除 Markdown 问答文件], 入参: {"id":67}, 请求类: AiCustomerServiceController, 请求方法: deleteMarkdownFile ===================================
+2026-08-23 15:34:23.671 [http-nio-8080-exec-5] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [删除 Markdown 问答文件], 耗时: 13ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} ===================================
+2026-08-23 15:53:37.349 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-23 15:53:37.353 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-23 15:53:37.355 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-23 15:53:37.356 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-23 15:53:39.936 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 99052 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-23 15:53:39.940 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-23 15:53:40.037 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-23 15:53:40.644 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-23 15:53:40.653 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:53:40.654 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-23 15:53:40.654 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-23 15:53:40.675 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 714 ms
+2026-08-23 15:53:41.153 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-23 15:53:41.155 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-23 15:53:41.155 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-23 15:53:41.370 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@245a26e1
+2026-08-23 15:53:41.451 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:53:41.461 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-23 15:53:41.463 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.724 seconds (process running for 2.171)
+2026-08-23 15:53:51.869 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-23 15:53:51.869 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-23 15:53:51.870 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-23 15:53:51.960 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList ===================================
+2026-08-23 15:53:52.054 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-23 15:53:52.168 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@62387e7b
+2026-08-23 15:53:52.169 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-23 15:53:52.201 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 252ms, 出参: {"current":1,"data":null,"errorCode":null,"message":null,"pages":0,"size":10,"success":true,"total":0} ===================================
+2026-08-23 15:54:18.984 [http-nio-8080-exec-3] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList ===================================
+2026-08-23 15:54:18.993 [http-nio-8080-exec-3] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 8ms, 出参: {"current":1,"data":null,"errorCode":null,"message":null,"pages":0,"size":10,"success":true,"total":0} ===================================
+2026-08-23 15:54:26.456 [http-nio-8080-exec-5] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\c9e56ada-2981-43eb-88ab-1fcc674d1c96-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-23 15:54:26.485 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=68, filePath=E:\java_workspace\xiaoha-ai-robot\c9e56ada-2981-43eb-88ab-1fcc674d1c96-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68})
+2026-08-23 15:54:26.525 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='f575b2bf-e59a-41e3-a15c-273f6a2cc14f', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68}, score=null}, Document{id='9af7907d-6a56-443c-961a-cd09ee45ca65', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='6e7f3e16-4d4a-4123-a5e6-f6f157e6f933', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=68}, score=null}, Document{id='b0520785-1e00-4101-8355-08458f86197f', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='c888b2c8-cb04-4491-b910-7c69e6f3f945', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='a8c20cf5-3552-4dda-9015-1305b531950c', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='877691a5-192e-4581-9489-fd38b48b0b87', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='44a35362-0757-4b1a-8a05-1468c3eaa42e', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68}, score=null}, Document{id='6e85790e-505a-4e34-ab56-3e1e5d3298d8', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=添加配置}, score=null}, Document{id='897425df-90e0-40b5-bc14-348c2e7e8b91', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='6d085199-09b0-4626-b14b-8d49b2f82176', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=68}, score=null}, Document{id='e6a94f80-fb9e-405d-b8b8-c1a336e7b1c5', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='2203f095-7321-4623-b68e-e99c89538bd6', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='76f6ecab-7eca-4ef5-8dae-9a117ed97c8c', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=定义 Tool}, score=null}, Document{id='25014aa1-d48d-4107-91cc-e8c7a7e856a8', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='4644ec6f-61c5-4aa1-8fe6-f32cefb64619', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=注册工具}, score=null}, Document{id='aa96af37-2d4d-426a-a117-af1c9ffa10ba', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_block, lang=}, score=null}, Document{id='eb4dc0b4-fa88-45b4-ae09-32c9d333de40', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=68, category=code_inline, title=测试一下}, score=null}]
+2026-08-23 15:54:30.803 [http-nio-8080-exec-6] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList ===================================
+2026-08-23 15:54:30.819 [http-nio-8080-exec-6] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 15ms, 出参: {"current":1,"data":[{"id":68,"originalFileName":"7.4 搭建自定义 MCP Server：获取 QQ 信息.md","fileSize":"12.37 KB","status":2,"createTime":"2026-08-23 15:54:26","updateTime":"2026-08-23 15:54:28","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":1} ===================================
+2026-08-23 15:56:41.757 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-23 15:56:41.760 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-23 15:56:41.761 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-23 15:56:41.763 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-23 15:56:44.278 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 91168 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-23 15:56:44.283 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-23 15:56:44.371 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-23 15:56:45.002 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-23 15:56:45.010 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:56:45.010 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-23 15:56:45.010 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-23 15:56:45.034 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 729 ms
+2026-08-23 15:56:45.507 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-23 15:56:45.509 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-23 15:56:45.509 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-23 15:56:45.725 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@5b800468
+2026-08-23 15:56:45.806 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-23 15:56:45.815 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-23 15:56:45.819 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.74 seconds (process running for 2.185)
+2026-08-23 15:57:04.714 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-23 15:57:04.715 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-23 15:57:04.716 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-23 15:57:04.837 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [修改 Markdown 问答文件信息], 入参: {"id":68,"remark":"犬小哈实战专栏问答文件"}, 请求类: AiCustomerServiceController, 请求方法: updateMarkdownFile ===================================
+2026-08-23 15:57:04.893 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-23 15:57:05.007 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@1bdb77c8
+2026-08-23 15:57:05.009 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-23 15:57:05.025 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [修改 Markdown 问答文件信息], 耗时: 211ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} ===================================
+2026-08-23 17:08:09.252 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-23 17:08:09.256 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-23 17:08:09.260 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-23 17:08:09.261 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-23 17:20:21.282 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 105748 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-23 17:20:21.289 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-23 17:20:21.382 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-23 17:20:22.039 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-23 17:20:22.048 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-23 17:20:22.049 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-23 17:20:22.049 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-23 17:20:22.071 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 759 ms
+2026-08-23 17:20:22.564 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-23 17:20:22.567 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-23 17:20:22.567 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-23 17:20:22.795 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@46cc127b
+2026-08-23 17:20:22.887 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-23 17:20:22.897 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-23 17:20:22.900 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.825 seconds (process running for 2.292)
+2026-08-23 17:23:47.015 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-23 17:23:47.017 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-23 17:23:47.017 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-08-23 17:23:47.060 [http-nio-8080-exec-1] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：犬小哈项目实战客服问答.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\6d937e27-b224-49cc-bd59-83489ddc65d9-犬小哈项目实战客服问答.md
+2026-08-23 17:23:47.111 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-23 17:23:47.279 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@2ea52a9f
+2026-08-23 17:23:47.280 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-23 17:23:47.312 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=69, filePath=E:\java_workspace\xiaoha-ai-robot\6d937e27-b224-49cc-bd59-83489ddc65d9-犬小哈项目实战客服问答.md, metadatas={originalFileName=犬小哈项目实战客服问答.md, mdStorageId=69})
+2026-08-23 17:23:47.367 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='ef9cc0ab-1b80-4d7a-bb16-2274ef60eb91', text='问题1：星球目前有几个项目？目前星球已更新了 3 个项目，分别是： 《从零手撸: 前后端分离博客, Wiki 知识库》： 介绍：全栈开发，从 0 到 1 手敲一个前后端分离博客，包括前台以及后台管理，渐进式讲解每个功能模块的开发，直到部署到云服务器，实现公网域名可访问。 试读链接：https://www.quanxiaoha.com/column/10000.html。 项目架构：前后端分离; 后端单体 MVC 架构、Maven 多模块功能拆分; Element Plus、Flowbit 前端界面。 项目技术栈：Spring Boot 2.x、JDK 1.8、MySQL 5.7、MyBatis Plus、Spring Security、JWT、Minio、Lucene、Maven、Nginx、Docker、Jenkins、CI/CD、Vue 3.x、Vite 4、Element Plus、Tailwindcss、Pinia、Axios、Echarts、Flowbit ... 《从零手撸：小哈书（仿小红书）》： 介绍：从 0 到 1 搭建一个小红书，基于 Spring Cloud Alibaba 微服务架构。 试读链接：https://www.quanxiaoha.com/column/10247.html。 项目架构：后端微服务、分布式架构，Maven 多模块，业务组件设计; 前后端分离; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring Boot 3.x、JDK 17、MySQL 8.0、Redis 7.x、Elasticsearch 7.x、Spring Cloud Alibaba 2022.x、Nacos、Gateway、Sentinel、RocketMQ、XXL-Job、MyBatis、SaToken、Minio、Cassandra、Zookeeper、Docker、Jmeter、Maven、Vue 3.x、Vite 4 ... 《从零手撸: Spring AI 应用项目（问答机器人、RAG 私有知识库、联网搜索）》： 介绍：全栈开发，基于 Spring AI 框架，从 0 到 1 手敲一个 AI 应用，初期规划是完成问答机器人、RAG 私有知识库、联网搜索（后续还会追加其他功能），包括前台以及后台管理，渐进式讲解每个功能模块的开发。 试读链接：https://www.quanxiaoha.com/column/10508.html。 项目架构：前后端分离; 后端单体 MVC 架构; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring AI、Spring Boot 3.x、JDK 21、MySQL 8.x、Deepseek、Function Call、RAG 增强检索、MCP、Ollama、MyBatis Plus、PostgreSQL、Redis Stack、Cassandra、SaToken、JWT、Minio、Jsoup、Maven、Docker、Vue 3.x、Vite 4、Ant Design Vue、Tailwindcss、Pinia、Axios ...', media='null', metadata={originalFileName=犬小哈项目实战客服问答.md, mdStorageId=69}, score=null}, Document{id='653b647e-bfdd-46fa-885f-fb13ec63bc8a', text='问题2: 项目是视频讲解吗？是图文专栏的模式哈，就第一个项目 《从零手撸: 前后端分离博客, Wiki 知识库》 的第八章是视频，后续小伙伴反馈说，视频看起来太磨叽，得来回横跳，又切回图文模式了。基本每一步关键步骤都有图示，可以 PC 端先试读瞅瞅：https://www.quanxiaoha.com/column。', media='null', metadata={originalFileName=犬小哈项目实战客服问答.md, mdStorageId=69}, score=null}, Document{id='e85e9242-59cc-4905-ad3f-8b02a885ce66', text='问题3：如何加入星球呢？微信扫描下面的优惠券就能加入，还能节省 15元，非常划算。15元新人优惠券图片链接：https://img.quanxiaoha.com/quanxiaoha/176222933164217', media='null', metadata={originalFileName=犬小哈项目实战客服问答.md, mdStorageId=69}, score=null}]
+2026-08-23 17:24:22.617 [http-nio-8080-exec-3] INFO  org.apache.tomcat.util.http.parser.Cookie - A cookie header was received [Hm_lvt_75062b8ad5f18e178698c68645a1ff82=1786669066,1786714135,1787121389,1787374585;] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2026-08-23 17:24:22.632 [http-nio-8080-exec-3] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /customer-service/chat/completion request error,
+org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public reactor.core.publisher.Flux<java.lang.String> controller.com.aureli.ai.robot.AiCustomerServiceController.chat(customerService.vo.model.com.aureli.ai.robot.AiCustomerServiceChatReqVO)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:156)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:174)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-23 17:24:23.507 [http-nio-8080-exec-4] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /favicon.ico request error,
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-23 17:30:10.635 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-23 17:30:10.640 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-23 17:30:10.642 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-23 17:30:10.643 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-23 17:30:12.983 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 109624 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-23 17:30:12.988 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-23 17:30:13.082 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-23 17:30:13.762 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-23 17:30:13.771 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-23 17:30:13.772 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-23 17:30:13.772 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-23 17:30:13.793 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 782 ms
+2026-08-23 17:30:14.301 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-23 17:30:14.303 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-23 17:30:14.304 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-23 17:30:14.528 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@46cc127b
+2026-08-23 17:30:14.617 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-23 17:30:14.625 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-23 17:30:14.629 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.849 seconds (process running for 2.318)
+2026-08-23 17:30:19.376 [http-nio-8080-exec-1] INFO  org.apache.tomcat.util.http.parser.Cookie - A cookie header was received [Hm_lvt_75062b8ad5f18e178698c68645a1ff82=1786669066,1786714135,1787121389,1787374585;] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2026-08-23 17:30:19.381 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-23 17:30:19.381 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-23 17:30:19.382 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-23 17:30:19.428 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [AI 智能客服对话], 入参: "星球目前有几个项目，是视频讲解的吗", 请求类: AiCustomerServiceController, 请求方法: chat ===================================
+2026-08-23 17:30:19.485 [http-nio-8080-exec-1] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [AI 智能客服对话], 耗时: 27ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-23 17:30:20.531 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-23 17:30:20.677 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@13b148b4
+2026-08-23 17:30:20.678 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-23 17:30:20.786 [http-nio-8080-exec-1] INFO  advisor.com.aureli.ai.robot.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “小哈 AI 助手”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+问题1：星球目前有几个项目？目前星球已更新了 3 个项目，分别是： 《从零手撸: 前后端分离博客, Wiki 知识库》： 介绍：全栈开发，从 0 到 1 手敲一个前后端分离博客，包括前台以及后台管理，渐进式讲解每个功能模块的开发，直到部署到云服务器，实现公网域名可访问。 试读链接：https://www.quanxiaoha.com/column/10000.html。 项目架构：前后端分离; 后端单体 MVC 架构、Maven 多模块功能拆分; Element Plus、Flowbit 前端界面。 项目技术栈：Spring Boot 2.x、JDK 1.8、MySQL 5.7、MyBatis Plus、Spring Security、JWT、Minio、Lucene、Maven、Nginx、Docker、Jenkins、CI/CD、Vue 3.x、Vite 4、Element Plus、Tailwindcss、Pinia、Axios、Echarts、Flowbit ... 《从零手撸：小哈书（仿小红书）》： 介绍：从 0 到 1 搭建一个小红书，基于 Spring Cloud Alibaba 微服务架构。 试读链接：https://www.quanxiaoha.com/column/10247.html。 项目架构：后端微服务、分布式架构，Maven 多模块，业务组件设计; 前后端分离; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring Boot 3.x、JDK 17、MySQL 8.0、Redis 7.x、Elasticsearch 7.x、Spring Cloud Alibaba 2022.x、Nacos、Gateway、Sentinel、RocketMQ、XXL-Job、MyBatis、SaToken、Minio、Cassandra、Zookeeper、Docker、Jmeter、Maven、Vue 3.x、Vite 4 ... 《从零手撸: Spring AI 应用项目（问答机器人、RAG 私有知识库、联网搜索）》： 介绍：全栈开发，基于 Spring AI 框架，从 0 到 1 手敲一个 AI 应用，初期规划是完成问答机器人、RAG 私有知识库、联网搜索（后续还会追加其他功能），包括前台以及后台管理，渐进式讲解每个功能模块的开发。 试读链接：https://www.quanxiaoha.com/column/10508.html。 项目架构：前后端分离; 后端单体 MVC 架构; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring AI、Spring Boot 3.x、JDK 21、MySQL 8.x、Deepseek、Function Call、RAG 增强检索、MCP、Ollama、MyBatis Plus、PostgreSQL、Redis Stack、Cassandra、SaToken、JWT、Minio、Jsoup、Maven、Docker、Vue 3.x、Vite 4、Ant Design Vue、Tailwindcss、Pinia、Axios ...
+---
+
+问题3：如何加入星球呢？微信扫描下面的优惠券就能加入，还能节省 15元，非常划算。15元新人优惠券图片链接：https://img.quanxiaoha.com/quanxiaoha/176222933164217
+---
+
+问题2: 项目是视频讲解吗？是图文专栏的模式哈，就第一个项目 《从零手撸: 前后端分离博客, Wiki 知识库》 的第八章是视频，后续小伙伴反馈说，视频看起来太磨叽，得来回横跳，又切回图文模式了。基本每一步关键步骤都有图示，可以 PC 端先试读瞅瞅：https://www.quanxiaoha.com/column。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+星球目前有几个项目，是视频讲解的吗
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：只能使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答，可以加博主「小哈」的私人微信来咨询，记得添加时一定要备注 **星球咨询**"
+微信二维码：![](https://img.quanxiaoha.com/quanxiaoha/173950927165691)
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-23 17:30:21.821 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-23 17:30:25.803 [http-nio-8080-exec-3] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /favicon.ico request error,
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-23 17:30:52.324 [http-nio-8080-exec-4] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求开始: [AI 智能客服对话], 入参: "请用java写个冒泡排序", 请求类: AiCustomerServiceController, 请求方法: chat ===================================
+2026-08-23 17:30:52.326 [http-nio-8080-exec-4] INFO  aspect.com.aureli.ai.robot.ApiOperationLogAspect - ====== 请求结束: [AI 智能客服对话], 耗时: 2ms, 出参: {"prefetch":-1,"scanAvailable":true} ===================================
+2026-08-23 17:30:52.429 [http-nio-8080-exec-4] INFO  advisor.com.aureli.ai.robot.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “小哈 AI 助手”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+问题1：星球目前有几个项目？目前星球已更新了 3 个项目，分别是： 《从零手撸: 前后端分离博客, Wiki 知识库》： 介绍：全栈开发，从 0 到 1 手敲一个前后端分离博客，包括前台以及后台管理，渐进式讲解每个功能模块的开发，直到部署到云服务器，实现公网域名可访问。 试读链接：https://www.quanxiaoha.com/column/10000.html。 项目架构：前后端分离; 后端单体 MVC 架构、Maven 多模块功能拆分; Element Plus、Flowbit 前端界面。 项目技术栈：Spring Boot 2.x、JDK 1.8、MySQL 5.7、MyBatis Plus、Spring Security、JWT、Minio、Lucene、Maven、Nginx、Docker、Jenkins、CI/CD、Vue 3.x、Vite 4、Element Plus、Tailwindcss、Pinia、Axios、Echarts、Flowbit ... 《从零手撸：小哈书（仿小红书）》： 介绍：从 0 到 1 搭建一个小红书，基于 Spring Cloud Alibaba 微服务架构。 试读链接：https://www.quanxiaoha.com/column/10247.html。 项目架构：后端微服务、分布式架构，Maven 多模块，业务组件设计; 前后端分离; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring Boot 3.x、JDK 17、MySQL 8.0、Redis 7.x、Elasticsearch 7.x、Spring Cloud Alibaba 2022.x、Nacos、Gateway、Sentinel、RocketMQ、XXL-Job、MyBatis、SaToken、Minio、Cassandra、Zookeeper、Docker、Jmeter、Maven、Vue 3.x、Vite 4 ... 《从零手撸: Spring AI 应用项目（问答机器人、RAG 私有知识库、联网搜索）》： 介绍：全栈开发，基于 Spring AI 框架，从 0 到 1 手敲一个 AI 应用，初期规划是完成问答机器人、RAG 私有知识库、联网搜索（后续还会追加其他功能），包括前台以及后台管理，渐进式讲解每个功能模块的开发。 试读链接：https://www.quanxiaoha.com/column/10508.html。 项目架构：前后端分离; 后端单体 MVC 架构; Tailwindcss + Vue3 前端界面。 项目技术栈：Spring AI、Spring Boot 3.x、JDK 21、MySQL 8.x、Deepseek、Function Call、RAG 增强检索、MCP、Ollama、MyBatis Plus、PostgreSQL、Redis Stack、Cassandra、SaToken、JWT、Minio、Jsoup、Maven、Docker、Vue 3.x、Vite 4、Ant Design Vue、Tailwindcss、Pinia、Axios ...
+---
+
+问题2: 项目是视频讲解吗？是图文专栏的模式哈，就第一个项目 《从零手撸: 前后端分离博客, Wiki 知识库》 的第八章是视频，后续小伙伴反馈说，视频看起来太磨叽，得来回横跳，又切回图文模式了。基本每一步关键步骤都有图示，可以 PC 端先试读瞅瞅：https://www.quanxiaoha.com/column。
+---
+
+问题3：如何加入星球呢？微信扫描下面的优惠券就能加入，还能节省 15元，非常划算。15元新人优惠券图片链接：https://img.quanxiaoha.com/quanxiaoha/176222933164217
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+请用java写个冒泡排序
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：只能使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答，可以加博主「小哈」的私人微信来咨询，记得添加时一定要备注 **星球咨询**"
+微信二维码：![](https://img.quanxiaoha.com/quanxiaoha/173950927165691)
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-23 17:30:54.286 [http-nio-8080-exec-6] ERROR exception.com.aureli.ai.robot.GlobalExceptionHandler - /favicon.ico request error,
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-23 17:31:50.940 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-23 17:31:50.943 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-23 17:31:50.945 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-23 17:31:50.946 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.

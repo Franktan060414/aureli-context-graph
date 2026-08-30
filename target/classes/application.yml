@@ -1,0 +1,9 @@
+server:
+  port: 8080 # 项目启动端口
+
+spring:
+  profiles:
+    active: dev # 激活 dev 开发环境
+
+logging:
+  config: classpath:log4j2.xml # 设置日志配置文件路径

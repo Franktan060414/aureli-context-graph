@@ -1,0 +1,52 @@
+spring:
+  datasource:
+#    driver-class-name: org.postgresql.Driver # 数据库驱动类名
+#    url: jdbc:postgresql://localhost:5432/robot # 数据库连接 URL
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver # 数据库驱动类名
+    url: jdbc:p6spy:postgresql://localhost:5432/robot # 数据库连接 URL
+    username: postgres # 数据库用户名
+    password: postgres # 数据库密码
+    hikari: # HikariCP 连接池配置
+      pool-name: AI-Robot-HikariCP # 自定义连接池名称
+      auto-commit: true # 是否自动提交事务
+      connection-timeout: 30000 # 连接超时时间（毫秒）
+      idle-timeout: 600000 # 空闲连接存活最大时间（毫秒）
+      max-lifetime: 1800000 # 连接最大存活时间（毫秒）
+      minimum-idle: 5 # 最小空闲连接数
+      maximum-pool-size: 20 # 最大连接池大小
+      connection-test-query: SELECT 1 # 连接测试查询
+      validation-timeout: 5000 # 验证连接的有效性
+  ai:
+    openai:
+      base-url: https://llm-al9gjo71owh37s2d.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 # OpenAI 服务的访问地址，这里使用的是阿里云百炼
+      api-key: sk-ws-H.RYIMRMX.Cj6f.MEUCIDIko_t2t_2JTpFF--6Ij5xlNr9Q6bMNkMh3UL0UDTELAiEAmdR8eJitvFiQX65N7hU2vt1cONXPLsunMb-b1n5nc6I  # 填写阿里云百炼的 API Key, 改成你自己的
+      embedding:
+        model: text-embedding-v4 # 向量化模型
+        dimensions: 1536 # 维度
+    vectorstore:
+      pgvector:
+        index-type: HNSW # 索引类型
+        distance-type: COSINE_DISTANCE # 距离类型
+        dimensions: 1536 # 嵌入维度
+        max-document-batch-size: 10000 # 每批处理的最大文档数
+        table-name: t_vector_store # 向量表名称
+
+
+
+okhttp: # OkHttp 客户端配置
+  connect-timeout: 5000    # 建立连接的最大等待时间（毫秒）
+  read-timeout: 30000      # 读取数据的最大等待时间（毫秒）
+  write-timeout: 15000     # 写入数据的最大等待时间（毫秒）
+  max-idle-connections: 200 # 连接池中保持的最大空闲连接数
+  keep-alive-duration: 5   # 空闲连接在连接池中的存活时间（分钟）
+
+searxng: # SearXNG 搜索引擎配置
+  url: http://localhost:8888/search # SearXNG 服务的 API 端点地址
+  count: 10 # 每次从搜索结果中，提取的最大数量
+
+customer-service:
+  md-storage-path: /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/Markdown # Markdown 问答文件存储路径
+  model: deepseek-v3 # 模型名称
+  temperature: 0.0 # 温度值
+
+

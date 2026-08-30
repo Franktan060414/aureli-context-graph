@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+status: 设置 Log4j2 内部日志的级别，可选值: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+monitorInterval: 配置自动检测间隔(秒)，在此时间后检查配置文件是否修改并自动重新加载，无需重启应用
+-->
+<Configuration status="WARN" monitorInterval="30">
+    <!-- 定义全局属性 -->
+    <Properties>
+        <!-- 日志输出格式模式 -->
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+        <!-- 日志文件存储根目录 -->
+        <Property name="APP_LOG_ROOT">./logs</Property>
+        <!-- 使用日期变量作为日志文件名的一部分 -->
+        <Property name="LOG_DATE_PATTERN">%d{yyyy-MM-dd}</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 使用预定义的日志格式 -->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!--
+        滚动文件附加器
+        fileName: 当前正在写入的日志文件路径和名称
+        filePattern: 滚动(归档)日志文件的命名模式
+        -->
+        <RollingFile name="FileAppender"
+                     fileName="${APP_LOG_ROOT}/application.log"
+                     filePattern="${APP_LOG_ROOT}/application-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!-- 基于时间的滚动策略: 每天滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- 基于文件大小的滚动策略: 当日志文件达到 10MB 时滚动 -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <!--
+            滚动策略配置: 自动删除旧日志文件
+            maxDepth: 搜索深度，1 表示只搜索当前目录
+            -->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${APP_LOG_ROOT}" maxDepth="1">
+                    <!-- 匹配文件名模式 -->
+                    <IfFileName glob="application-*.log" />
+                    <!-- 保留最近 30 天的日志文件 -->
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--
+        错误专用日志附加器 - 只记录 ERROR 级别及以上的日志
+        -->
+        <RollingFile name="ErrorAppender"
+                     fileName="${APP_LOG_ROOT}/error.log"
+                     filePattern="${APP_LOG_ROOT}/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <!-- Filters: 过滤器配置，只接受 ERROR 及以上级别的日志 -->
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <!-- 滚动策略: 最多保留 30 个归档文件 -->
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!--
+        根日志记录器: 所有日志记录的默认配置
+        level: 日志级别阈值，只有等于或高于此级别的日志才会被处理
+        -->
+        <Root level="info">
+            <!-- 引用控制台附加器 -->
+            <AppenderRef ref="Console"/>
+            <!-- 引用滚动文件附加器 -->
+            <AppenderRef ref="FileAppender"/>
+            <!-- 引用错误专用日志附加器 -->
+            <AppenderRef ref="ErrorAppender"/>
+        </Root>
+
+        <!-- 设置特定包的日志级别（未来备用） -->
+        <Logger name="com.example.demo" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ErrorAppender"/>
+        </Logger>
+    </Loggers>
+</Configuration>

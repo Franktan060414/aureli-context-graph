@@ -1,0 +1,1157 @@
+2026-08-22 09:34:50.733 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=11h23m44s753ms899µs).
+2026-08-22 15:23:37.592 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-22 15:23:37.600 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-22 15:23:37.606 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-22 15:23:37.609 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-22 15:23:43.537 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 153124 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 15:23:43.544 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 15:23:43.637 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 15:23:44.414 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 15:23:44.424 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 15:23:44.425 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 15:23:44.425 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 15:23:44.451 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 882 ms
+2026-08-22 15:23:45.082 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@1ac85b0c
+2026-08-22 15:23:45.182 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 15:23:45.193 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 15:23:45.196 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.875 seconds (process running for 2.413)
+2026-08-22 15:26:17.415 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-22 15:26:17.416 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-22 15:26:17.416 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-08-22 15:26:17.448 [http-nio-8080-exec-1] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\382a0f4e-2974-477b-8e98-b1b8634b67fb-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 15:26:17.484 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-22 15:26:17.611 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@7d14da46
+2026-08-22 15:26:17.612 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-22 16:32:37.413 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-22 16:32:37.419 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-22 16:32:37.427 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-22 16:32:37.429 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-22 16:32:40.347 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 149532 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 16:32:40.353 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 16:32:40.436 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 16:32:41.210 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 16:32:41.219 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 16:32:41.220 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 16:32:41.221 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 16:32:41.247 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 871 ms
+2026-08-22 16:32:41.859 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@5aabbb29
+2026-08-22 16:32:41.962 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 16:32:41.972 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 16:32:41.975 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.845 seconds (process running for 2.348)
+2026-08-22 16:35:05.849 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-22 16:35:05.853 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-22 16:35:07.405 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 155964 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 16:35:07.411 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 16:35:07.495 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 16:35:08.214 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 16:35:08.224 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 16:35:08.225 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 16:35:08.225 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 16:35:08.253 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 818 ms
+2026-08-22 16:35:08.853 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@3dd69f5a
+2026-08-22 16:35:08.953 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 16:35:08.963 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 16:35:08.966 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.778 seconds (process running for 2.29)
+2026-08-22 16:35:12.653 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-22 16:35:12.653 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-22 16:35:12.655 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-22 16:35:12.695 [http-nio-8080-exec-1] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\97d8c241-d754-4909-9a85-080f3c9f3d00-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 16:35:12.748 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-22 16:35:12.897 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@3d5d7795
+2026-08-22 16:35:12.900 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-22 16:35:12.928 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(filePath=E:\java_workspace\xiaoha-ai-robot\97d8c241-d754-4909-9a85-080f3c9f3d00-7.4 搭建自定义 MCP Server：获取 QQ 信息.md)
+2026-08-22 21:03:26.916 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 48896 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 21:03:26.920 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 21:03:27.005 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 21:03:27.622 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 21:03:27.630 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:03:27.631 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 21:03:27.631 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 21:03:27.653 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 713 ms
+2026-08-22 21:03:28.231 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-22 21:03:28.233 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-22 21:03:28.233 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-22 21:03:28.361 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@5b800468
+2026-08-22 21:03:28.445 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:03:28.454 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 21:03:28.456 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.732 seconds (process running for 2.18)
+2026-08-22 21:07:53.732 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 49736 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 21:07:53.736 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 21:07:53.837 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 21:07:54.515 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 21:07:54.524 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:07:54.525 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 21:07:54.525 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 21:07:54.548 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 789 ms
+2026-08-22 21:07:55.165 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-22 21:07:55.167 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-22 21:07:55.167 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-22 21:07:55.303 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@5a5c128
+2026-08-22 21:07:55.387 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:07:55.390 [main] WARN  org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-08-22 21:07:55.401 [main] INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-08-22 21:07:55.409 [main] ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-08-22 21:09:01.754 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 47952 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 21:09:01.759 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 21:09:01.845 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 21:09:02.473 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 21:09:02.481 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:09:02.482 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 21:09:02.482 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 21:09:02.504 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 722 ms
+2026-08-22 21:09:03.131 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-22 21:09:03.134 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-22 21:09:03.135 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-22 21:09:03.269 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@4d63b624
+2026-08-22 21:09:03.360 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:09:03.371 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 21:09:03.374 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.827 seconds (process running for 2.296)
+2026-08-22 21:09:08.839 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-22 21:09:08.839 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-22 21:09:08.840 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-22 21:09:08.866 [http-nio-8080-exec-1] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\a58811f5-c007-4ba6-a049-b91f14ae1c20-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 21:09:08.899 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-22 21:09:13.365 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@5144313
+2026-08-22 21:09:13.365 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-22 21:09:14.578 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=63, filePath=E:\java_workspace\xiaoha-ai-robot\a58811f5-c007-4ba6-a049-b91f14ae1c20-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63})
+2026-08-22 21:09:15.584 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='823cffb7-8b31-42ff-8b34-31f9d9d57fa6', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63}, score=null}, Document{id='a1207622-e7f1-439f-a0dd-1edcd68f0aca', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='f21915ce-585e-4a3f-bd61-b25295169882', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=63}, score=null}, Document{id='6c65308a-ad76-4495-bf62-ca061f1e5c42', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='be54246c-c8f7-4363-831a-ee96df4cc0e2', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='66b1fdb6-a63c-4d8b-8b20-ffe61829533b', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='3b6022e6-2ce0-4c41-883c-939d95aa192b', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='2667570e-d40c-4d13-8a59-ee1f7d034641', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63}, score=null}, Document{id='17557c62-6636-4965-9be8-fc70dbb9c6f7', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=添加配置}, score=null}, Document{id='d0447fcd-b256-4cd4-a4f4-5e8326d9e38f', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='3eb84cba-5b42-4f24-9790-0e212dfe82db', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=63}, score=null}, Document{id='01cc34d5-6231-4350-bca1-17dc606528ac', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='83f68ca8-cabe-4324-8107-1d711a9e1e14', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='1c2f8676-a83f-4cb3-866d-709bf65b1b19', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=定义 Tool}, score=null}, Document{id='d07cb48e-de8c-4d7f-9061-e4ad3f3471b8', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='78c827c4-ac35-4c05-9ea6-40601e363621', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=注册工具}, score=null}, Document{id='f901ba08-d380-4fb5-b64f-1d616a071279', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_block, lang=}, score=null}, Document{id='7a787360-9234-4b80-872d-5d0e0972f2ab', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63, category=code_inline, title=测试一下}, score=null}]
+2026-08-22 21:09:16.300 [event-handler-1] ERROR listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## Markdown 文件向量化失败: AiCustomerServiceMdUploadedEvent(id=63, filePath=E:\java_workspace\xiaoha-ai-robot\a58811f5-c007-4ba6-a049-b91f14ae1c20-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=63})
+com.openai.errors.BadRequestException: 400: <400> InternalError.Algo.InvalidParameter: Value error, batch size is invalid, it should not be larger than 10.: input.contents
+	at com.openai.errors.BadRequestException$Builder.build(BadRequestException.kt:98)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:54)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:46)
+	at com.openai.services.blocking.EmbeddingServiceImpl$WithRawResponseImpl.create(EmbeddingServiceImpl.kt:80)
+	at com.openai.services.blocking.EmbeddingServiceImpl.create(EmbeddingServiceImpl.kt:44)
+	at com.openai.services.blocking.EmbeddingService.create(EmbeddingService.kt:33)
+	at org.springframework.ai.openai.OpenAiEmbeddingModel.lambda$call$2(OpenAiEmbeddingModel.java:246)
+	at io.micrometer.observation.Observation.observe(Observation.java:634)
+	at org.springframework.ai.openai.OpenAiEmbeddingModel.call(OpenAiEmbeddingModel.java:245)
+	at org.springframework.ai.embedding.EmbeddingModel.embed(EmbeddingModel.java:110)
+	at org.springframework.ai.vectorstore.pgvector.PgVectorStore.doAdd(PgVectorStore.java:260)
+	at org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore.lambda$add$1(AbstractObservationVectorStore.java:84)
+	at io.micrometer.observation.Observation.observe(Observation.java:569)
+	at org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore.add(AbstractObservationVectorStore.java:84)
+	at listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener.lambda$vectorizing$2(AiCustomerServiceMdUploadedListener.java:93)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:137)
+	at listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener.vectorizing(AiCustomerServiceMdUploadedListener.java:67)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:112)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-22 21:12:10.524 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-22 21:12:10.527 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-22 21:12:10.529 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-22 21:12:10.530 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-22 21:12:12.825 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.7 with PID 32268 (E:\星球项目调试\xiaoha-ai-robot-springboot\target\classes started by Administrator in E:\星球项目调试\xiaoha-ai-robot-springboot)
+2026-08-22 21:12:12.830 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-22 21:12:12.918 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-22 21:12:13.550 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-22 21:12:13.559 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:12:13.560 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-22 21:12:13.560 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-22 21:12:13.583 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 732 ms
+2026-08-22 21:12:14.158 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-22 21:12:14.159 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-22 21:12:14.160 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-22 21:12:14.288 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@5b800468
+2026-08-22 21:12:14.382 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-22 21:12:14.393 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-22 21:12:14.397 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.767 seconds (process running for 2.235)
+2026-08-22 21:12:18.020 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-22 21:12:18.020 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-22 21:12:18.021 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-22 21:12:18.047 [http-nio-8080-exec-1] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\de630f11-a97f-432c-8a0d-c6c645087ec2-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 21:12:18.080 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-22 21:12:18.193 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@55835d06
+2026-08-22 21:12:18.194 [http-nio-8080-exec-1] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-22 21:12:18.217 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=64, filePath=E:\java_workspace\xiaoha-ai-robot\de630f11-a97f-432c-8a0d-c6c645087ec2-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64})
+2026-08-22 21:12:18.270 [event-handler-1] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='9889e0f5-5a01-4ee8-bcbd-e30bc8a83c5c', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64}, score=null}, Document{id='5b6a8652-b839-45fb-90a5-a880c35b6ed6', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='fd4bea54-46d1-4eba-b285-14d608d05bc7', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=64}, score=null}, Document{id='05d0509a-7fa1-47e7-a50b-a9d9cd16d4c8', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='540c18a6-da5f-450a-b40e-6807bed658b2', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='11a24b52-7c24-48e7-8358-7cda3f928c27', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='f07f2929-af1f-4292-b1f0-9b3aada64625', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='a59b6afd-1628-479c-95a0-9df043696728', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64}, score=null}, Document{id='56efac27-3bb0-4fbb-9354-39f8de9c1c7a', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=添加配置}, score=null}, Document{id='6b9234d9-a6c7-4fd7-bdbd-784599d237fc', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='68ca8617-ee8b-4c36-8ee0-efd7a18759e7', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=64}, score=null}, Document{id='6291d7b5-aaf4-46c6-a2ce-eddd82c4526b', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='281bd8cf-9d87-41fb-b947-f2a215b1ed00', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='5471582c-8b20-46e3-8678-ccc2e35dc954', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=定义 Tool}, score=null}, Document{id='88e12bd0-350e-44b5-8b9b-5d46efdd7ff4', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='786a932a-6a87-4aea-80b0-8651035a0b76', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=注册工具}, score=null}, Document{id='870827d4-ddc7-49e6-b629-d781606a3912', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_block, lang=}, score=null}, Document{id='ac51ac87-23ef-42a7-a705-81442ce872b7', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=64, category=code_inline, title=测试一下}, score=null}]
+2026-08-22 21:16:09.500 [http-nio-8080-exec-2] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\9daf49df-0da0-4eb4-8b9b-8e1aba1adcf6-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 21:16:09.508 [event-handler-2] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=65, filePath=E:\java_workspace\xiaoha-ai-robot\9daf49df-0da0-4eb4-8b9b-8e1aba1adcf6-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65})
+2026-08-22 21:16:09.516 [event-handler-2] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='5650499f-3e53-4c0a-8f41-90dfe60a1535', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65}, score=null}, Document{id='2983aab9-ec23-4031-90b9-9b4fc3e880a6', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='04181f54-3f76-45ed-87c9-68d2d5a61a60', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=65}, score=null}, Document{id='f152d321-187d-4b8c-b1a8-6eb42943ebbc', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='8d771319-c9e4-4fe1-88c9-e5268067100e', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='a6223618-3d14-40a1-9019-a1b529d041f9', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='76f9a3d3-76ed-41ff-acc9-045111044adb', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='8fde8975-b8f2-4ee6-8676-2ae750edf4b4', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65}, score=null}, Document{id='382c4347-10f0-43d2-b21e-11ba358ad7c0', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=添加配置}, score=null}, Document{id='ddde368e-5188-4b40-85b1-76c407882c91', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='b50c7b99-d11e-434a-804c-d82d63479efe', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=65}, score=null}, Document{id='a16d4edc-e115-48b8-bc30-ba53cd1b5146', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='c2eb54fa-7fba-4e80-bbfd-2d3b394001a5', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='59fa7ca8-d49d-4cce-ae37-f3bce311ea9b', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=定义 Tool}, score=null}, Document{id='f8b1adc8-aa7b-40bd-a5bf-e4826bdabaeb', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='17e9cadd-1f3c-43c2-994f-127ecf64117e', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=注册工具}, score=null}, Document{id='c7081906-0dae-4dcf-be75-5d0643d9f90d', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_block, lang=}, score=null}, Document{id='75d7d8ed-b13a-4955-9f3f-7a83d08bd261', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=65, category=code_inline, title=测试一下}, score=null}]
+2026-08-22 21:17:26.066 [http-nio-8080-exec-6] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\647d4efd-b35f-4a63-9161-280c58274ff2-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 21:17:26.073 [event-handler-3] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=66, filePath=E:\java_workspace\xiaoha-ai-robot\647d4efd-b35f-4a63-9161-280c58274ff2-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66})
+2026-08-22 21:17:26.081 [event-handler-3] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='eaeaa10b-1123-4940-8da3-177dbb1f8188', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66}, score=null}, Document{id='0566c3ea-13a8-428c-8b07-c09dd95b07ff', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='dd8e0d5b-548d-4987-b92f-c0301c26d498', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=66}, score=null}, Document{id='73a87b20-6932-4faa-b6d5-a39b3c36683e', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='960a0964-22e9-4ab9-a4f5-76a8bc613e6a', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='1f8d1de8-3588-4c41-a986-e72802d28f28', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='db1dc8e5-bf23-4d2f-8a95-fb4525e286f6', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='a29963e9-c2e6-4027-91ea-e5e56a9c9944', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66}, score=null}, Document{id='dbf8ed6e-f738-4c07-a2c8-bcf6b6a0e888', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=添加配置}, score=null}, Document{id='d550904c-5d48-419a-8551-256bcb39e448', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='9afef258-60a5-4988-9069-9911e05c9691', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=66}, score=null}, Document{id='969bab61-2df4-4bb9-b734-1f0b41b6c5b8', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='e6206155-067e-4613-a2b9-93ef41421d91', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='a15d1805-4be0-479b-8253-9bace4667d39', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=定义 Tool}, score=null}, Document{id='3dde3387-edaf-496e-b088-13956771346a', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='a3bcbe97-a2d6-43e9-b53d-f4e26d5c23f3', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=注册工具}, score=null}, Document{id='b2ce753a-c728-4b24-b3c3-87dbd734c732', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_block, lang=}, score=null}, Document{id='a5b3d0f7-e921-4b89-aa21-1319c4354699', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=66, category=code_inline, title=测试一下}, score=null}]
+2026-08-22 21:17:37.042 [http-nio-8080-exec-7] INFO  impl.service.com.aureli.ai.robot.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：7.4 搭建自定义 MCP Server：获取 QQ 信息.md -> 存储路径：E:\java_workspace\xiaoha-ai-robot\53426010-43fc-4fef-9199-4989866b056d-7.4 搭建自定义 MCP Server：获取 QQ 信息.md
+2026-08-22 21:17:37.047 [event-handler-4] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=67, filePath=E:\java_workspace\xiaoha-ai-robot\53426010-43fc-4fef-9199-4989866b056d-7.4 搭建自定义 MCP Server：获取 QQ 信息.md, metadatas={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67})
+2026-08-22 21:17:37.053 [event-handler-4] INFO  listener.event.com.aureli.ai.robot.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='53b23632-1a7b-433d-9281-c4c2a074427d', text='上小节中，我们使用 MCP Client 对接了第三方提供的 MCP Server 服务 —— 高德地图。那能否自行搭建一个 MCP Server 服务呢？答案是肯定的。本小节中，我们就来尝试一下，将星球第一个项目《前后端分离博客》中的 “根据 QQ 号获取 QQ 信息接口” 接口，打包到 MCP Server 服务中，以工具的方式提供出来。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67}, score=null}, Document{id='56284e67-4756-463d-a100-462dabf10edc', text='打开 IDEA, 依次点击左上角菜单 File -> New -> Project ，准备创建一个新项目：在弹框中，填写配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=header_2, title=新建 MCP Server 项目}, score=null}, Document{id='ef2e5167-93fd-4978-ba3c-25ac606ad72c', text='①：选择 Spring Boot 生成器来创建项目； ②：项目名称填写 xiaoha-mcp-server-qq； ③: 项目存放位置，选择之前创建好的 /xiaoha-ai-robot 文件夹； ④：项目构建方式选择 Maven; ⑤：填写 Group 组织名称，通常为公司域名倒写，如 com.quanxiaoha； ⑥： 项目唯一标识符，这里填写 xiaoha-mcp-server-qq; ⑦： 包名填写 com.quanxiaoha.mcp.qq; ⑧: JDK 版本选择 21 版本； ⑨： Java 语言版本也选择 21， 和 JDK 保持一致；配置文件格式使用 YAML;都填写完毕后，点击 Next 按钮，进入到下一步，如下图所示：无需勾选任何依赖，直接点击 Create 按钮：项目创建成功后，将上图标注的、不需要的文件与文件夹都删除掉。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=code_inline, mdStorageId=67}, score=null}, Document{id='0ffb4c89-52b3-4026-bb50-bcd767e44f7c', text='接着，编辑  pom.xml 文件，首先将 Spring Boot 的版本号修改为 4.1.0, 保持和 AI 机器人项目版本一致，防止有兼容性问题。另外，添加 Spring AI 框架的依赖管理、 lombok 工具依赖、仓库地址等，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=修改 pom.xml}, score=null}, Document{id='fb86edf5-0f85-4c9d-baa5-9edd50701e04', text='<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.quanxiaoha</groupId>
+    <artifactId>xiaoha-mcp-server-qq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>xiaoha-mcp-server-qq</name>
+    <description>MCP Server: 获取 QQ 信息</description>
+    <properties>
+        <!-- JDK 版本 -->
+        <java.version>21</java.version>
+        <!-- Spring AI 版本 -->
+        <spring-ai.version>2.0.0</spring-ai.version>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- 添加华为云、阿里云 maven 中央仓库，提升 Jar 包下载速度 -->
+        <repository>
+            <id>huaweicloud</id>
+            <name>huawei</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>aliyunmaven</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
+
+</project>
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='3fc20273-1728-462b-a6e7-e2ef5e657721', text='在 Spring AI 项目中，MCP Server 支持三种部署模式，下面是对比表格，涵盖核心特性、适用场景及配置要点：| 对比维度        | STDIO 模式                                               | WebMVC 模式                                              | WebFlux 模式                                             | | :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | | 依赖项          | spring-ai-starter-mcp-server                               | spring-ai-starter-mcp-server-webmvc                        | spring-ai-starter-mcp-server-webflux                       | | 传输机制（2.0） | STDIO（进程内标准 I/O）                                      | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | Streamable-HTTP（推荐）/ SSE（已废弃）/ Stateless            | | 启用配置        | spring.ai.mcp.server.stdio=true                            | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | spring.ai.mcp.server.protocol=STREAMABLE（或 SSE / STATELESS） | | HTTP 栈         | 无 Web 服务                                                  | Servlet 阻塞（Tomcat / Jetty）                               | 响应式非阻塞（Netty）                                        | | 服务端类型      | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | 默认 SYNC，可设 ASYNC                                        | | 服务端类型控制  | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | spring.ai.mcp.server.type=SYNC\|ASYNC                      | | 适用场景        | 命令行工具、桌面宿主、无网络环境（如 Claude Desktop、Cursor） | 传统 Spring MVC 应用                                         | 高并发微服务、云原生架构                                     | | 实践注意        | 2.0 用独立 starter，无需手动 web-application-type=none     | STDIO 可与 HTTP 协议共存（stdio=true）                     | 避免与 spring-boot-starter-web 同存，否则自动装配冲突      | | 性能特点        | 低延迟，轻量级                                               | 中等并发能力，依赖线程池                                     | 高并发，低资源消耗（线程复用）                               |这里我们选择支持更高并发的 WebFlux 模式，再次编辑 pom.xml， 添加如下依赖：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=MCP Server 三种部署模式}, score=null}, Document{id='87d4bddc-e5e1-4404-9001-3ec5289ec1f7', text='        <!-- MCP Server WebFlux -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webflux</artifactId>
+        </dependency>
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='cee16c60-9de3-4957-ba83-53c7e3ae442a', text='依赖添加完成后，记得刷新一下 Maven, 将依赖下载到本地 Maven 仓库中。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67}, score=null}, Document{id='b9d1eaef-7058-4585-bbb7-039eb7103b7b', text='然后，编辑 applicaiton.yml， 添加配置项如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=添加配置}, score=null}, Document{id='3b69f631-3444-4a59-ad75-7168c00bf02d', text='server:
+  port: 8000 # 启动端口号
+
+spring:
+  ai:
+    mcp:
+      server:
+        type: sync # 处理模式，SYNC 同步或 ASYNC 异步
+        name: mcp-server-qq # MCP Server 名称
+        version: 1.0.0 # MCP Server 版本号
+
+# 鬼鬼 API Key(替换为你自己的)
+api-key: xxx
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='d373f963-e83b-4863-ac49-a191df7741b7', text='注意：根据 QQ 号查询 QQ 信息，需要调用鬼鬼第三方平台的 API,  需要先申请 API Key, 如何申请可参考《前后端分离博客2期》的《6.2节》，本小节不再赘述。', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, category=blockquote, mdStorageId=67}, score=null}, Document{id='0339763f-9643-4f86-ae5c-3c94da110e2e', text='因为业务涉及到 Http 调用第三方平台，咱们先来配置一下 RestTemplate。新增 /config 包，并新建 RestTemplateConfig 配置类，如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=配置 RestTemplate}, score=null}, Document{id='6635fbc3-307c-4e02-8acf-77d0579fe591', text='package com.quanxiaoha.mcp.qq.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2025/7/12 19:12
+ * @Version: v1.0.0
+ * @Description: RestTemplate 配置类
+ **/
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 连接超时时间：10秒
+        factory.setReadTimeout(10000); // 读取超时时间：10秒
+        return new RestTemplate(factory);
+    }
+}
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='f56c1142-d625-4ec0-b8a5-cbb6b6ed9e7b', text='接着，新建一个 /tools 包，并通过 @Tool 注解声明一个 “根据 QQ 号获取 QQ 信息”  工具方法，模式和之前定义 Function Call 差不太多，代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=定义 Tool}, score=null}, Document{id='0ec0b62e-9748-413a-9f4f-d31b112af8c6', text='package com.quanxiaoha.mcp.qq.tool;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @Author: 犬小哈
+ * @Date: 2026/6/30 18:50
+ * @Version: v1.0.0
+ * @Description: QQ Tool 工具
+ **/
+@Component
+@Slf4j
+public class QQTool {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${api-key}")
+    private String apiKey;
+
+    @Tool(description = "根据 QQ 号获取 QQ 信息")
+    public String getQQInfo(String qq) {
+        log.info("## 获取 QQ 信息, qq: {}", qq);
+
+        // 请求第三方接口
+        String url = String.format("http://api.guiguiya.com/api/qq_info?qq=%s&apiKey=%s", qq, apiKey);
+        String result = restTemplate.getForObject(url, String.class);
+
+        log.info("## 返参: {}", result);
+        return result;
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='30e44702-28cc-45ea-b7fa-f5556c79d5fc', text='完成以上工作后，编辑 XiaohaMcpServerQqApplication 启动类，注册工具回调（Tool Callbacks），代码如下：', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=注册工具}, score=null}, Document{id='59bb5a1f-ff61-4756-af78-86389310a4ad', text='package com.quanxiaoha.mcp.server.qq;
+
+import com.quanxiaoha.mcp.server.qq.tools.QQTool;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class XiaohaMcpServerQqApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(XiaohaMcpServerQqApplication.class, args);
+    }
+
+    /**
+     * 注册工具回调（Tool Callbacks）
+     * @param qqTool
+     * @return
+     */
+    @Bean
+    public ToolCallbackProvider qqTools(QQTool qqTool) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(qqTool)
+                .build();
+    }
+
+}
+
+', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_block, lang=}, score=null}, Document{id='03137866-1539-4e6a-8e8e-69514db239d6', text='最后，重启后端项目，观察控制台日志，如下图所示，若包含提示信息 Registered tools: 1 , 表示已注册了一个工具，到此，一个简单的 MCP Server 就跑起来了！', media='null', metadata={originalFileName=7.4 搭建自定义 MCP Server：获取 QQ 信息.md, mdStorageId=67, category=code_inline, title=测试一下}, score=null}]
+2026-08-22 21:18:26.896 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-22 21:18:26.899 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-22 21:18:26.901 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-22 21:18:26.903 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
