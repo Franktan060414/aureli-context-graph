@@ -114,6 +114,7 @@ public class AiCustomerServiceController {
         advisors.add(new CustomerServiceAdvisor(vectorStore));
 
         String parentTileId = aiChatReqVO.getParentTileId();
+      //  System.out.println("parentTileId: " + parentTileId);
         if (StringUtils.isNotBlank(parentTileId)) {
             advisors.add(new CustomChatMemoryAdvisor(chatMessageMapper, parentTileId, 2));
         }

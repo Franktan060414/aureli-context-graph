@@ -8966,3 +8966,2120 @@ LLM 的应用场景非常广泛，包括智能客服、企业知识库问答、�
 2026-08-30 22:39:24.122 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
 2026-08-30 22:39:24.124 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
 2026-08-30 22:39:24.125 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-30 22:50:56.915 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.11 with PID 89862 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-08-30 22:50:56.919 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-30 22:50:56.994 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-30 22:50:57.434 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-30 22:50:57.439 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-30 22:50:57.440 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-30 22:50:57.440 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-30 22:50:57.453 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 520 ms
+2026-08-30 22:50:57.827 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-30 22:50:57.830 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-30 22:50:57.830 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-30 22:50:57.901 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-08-30 22:50:57.960 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6d6cb754
+2026-08-30 22:50:58.012 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-30 22:50:58.016 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-30 22:50:58.019 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.225 seconds (process running for 1.559)
+2026-08-30 22:51:03.599 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 22:51:03.600 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-30 22:51:03.601 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-30 22:51:03.639 [http-nio-8080-exec-4] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:51:03.752 [http-nio-8080-exec-5] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:51:03.805 [http-nio-8080-exec-6] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:51:14.791 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"LLM是什么","tileId":"tile-003","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 22:51:14.805 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 10ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 22:51:15.542 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-30 22:51:15.616 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@768d2c5d
+2026-08-30 22:51:15.617 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-30 22:51:15.661 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+LLM 是 Large Language Model 的缩写，中文通常叫大语言模型。它可以理解和生成自然语言，常见能力包括问答、总结、翻译、改写、代码生成和信息抽取。LLM 的核心特点是根据上下文预测并生成后续文本。它并不天然等于数据库，也不保证自己记住所有事实，因此在需要准确回答业务知识时，通常要结合知识库或外部工具。
+---
+
+LLM 可以用于智能客服、企业知识库问答、代码助手、文档总结、销售话术生成、内容创作、数据分析辅助和自动化办公。在智能客服场景中，LLM 常用于理解用户问题、检索相关知识、组织自然语言答案，并根据上下文进行多轮追问。
+---
+
+LLM 不是数据库。它可以生成答案，但不适合直接当作可靠事实存储。需要准确业务知识时，应通过 RAG、数据库查询或工具调用获取依据。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+LLM是什么
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 22:51:16.568 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:51:16.569 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您好
+2026-08-30 22:51:16.570 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-30 22:51:16.571 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ！😊
+2026-08-30 22:51:16.578 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  很高兴
+2026-08-30 22:51:16.829 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 为您解答关于
+2026-08-30 22:51:16.830 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: LLM的问题~
+2026-08-30 22:51:16.831 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+LLM是
+2026-08-30 22:51:16.979 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **大型语言模型**
+2026-08-30 22:51:17.104 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （Large Language Model）的
+2026-08-30 22:51:17.339 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 缩写，它就像
+2026-08-30 22:51:17.340 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一位精通语言处理的
+2026-08-30 22:51:17.524 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 智能助手 ✨ 主要
+2026-08-30 22:51:17.776 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 擅长理解和生成自然语言
+2026-08-30 22:51:17.793 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，能帮我们
+2026-08-30 22:51:17.919 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 完成许多任务，比如：
+2026-08-30 22:51:17.995 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+- **智能问答**
+2026-08-30 22:51:18.296 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  🤖（比如您现在
+2026-08-30 22:51:18.298 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和我的对话）
+2026-08-30 22:51:18.350 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+- **文本处理
+2026-08-30 22:51:18.568 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ** 📑（总结
+2026-08-30 22:51:18.611 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、翻译、改写文档
+2026-08-30 22:51:18.874 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）  
+- **创意
+2026-08-30 22:51:18.891 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 与办公**
+2026-08-30 22:51:18.977 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  💡（生成销售话术
+2026-08-30 22:51:19.080 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、辅助写作、
+2026-08-30 22:51:19.387 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 自动化办公）  
+
+
+2026-08-30 22:51:19.389 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 不过需要注意的是，LLM
+2026-08-30 22:51:19.592 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 更像一位"语言
+2026-08-30 22:51:19.693 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专家"而非"数据库
+2026-08-30 22:51:19.898 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: "哦！它的
+2026-08-30 22:51:19.996 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 答案基于对上下文
+2026-08-30 22:51:20.140 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的理解和预测，如果需要
+2026-08-30 22:51:20.394 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **精准业务知识
+2026-08-30 22:51:20.396 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **（比如产品价格、
+2026-08-30 22:51:20.513 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 政策条款等），
+2026-08-30 22:51:20.557 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我们会结合知识库或
+2026-08-30 22:51:20.718 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专业工具来确保
+2026-08-30 22:51:20.779 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 准确性~  
+
+还有其他
+2026-08-30 22:51:20.922 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 想了解的具体功能
+2026-08-30 22:51:20.950 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吗？我很乐
+2026-08-30 22:51:21.128 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 意为您详细说明！
+2026-08-30 22:51:21.149 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  🌟
+2026-08-30 22:51:21.183 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:51:21.197 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您好！😊 很高兴为您解答关于LLM的问题~  
+
+LLM是**大型语言模型**（Large Language Model）的缩写，它就像一位精通语言处理的智能助手 ✨ 主要擅长理解和生成自然语言，能帮我们完成许多任务，比如：  
+- **智能问答** 🤖（比如您现在和我的对话）  
+- **文本处理** 📑（总结、翻译、改写文档）  
+- **创意与办公** 💡（生成销售话术、辅助写作、自动化办公）  
+
+不过需要注意的是，LLM更像一位"语言专家"而非"数据库"哦！它的答案基于对上下文的理解和预测，如果需要**精准业务知识**（比如产品价格、政策条款等），我们会结合知识库或专业工具来确保准确性~  
+
+还有其他想了解的具体功能吗？我很乐意为您详细说明！ 🌟
+========================
+2026-08-30 22:51:32.878 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚才问了什么问题","tileId":"tile-005","parentTileId":"tile-003"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 22:51:32.884 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 6ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 22:51:33.225 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚才问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 22:51:33.225 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 22:51:33.828 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:51:33.829 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 此
+2026-08-30 22:51:33.831 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题暂时无法
+2026-08-30 22:51:33.877 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 回答 😊
+2026-08-30 22:51:34.028 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+如果您
+2026-08-30 22:51:34.042 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有其他具体问题，
+2026-08-30 22:51:34.131 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我很乐意为您解答
+2026-08-30 22:51:34.235 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ！ ✨
+2026-08-30 22:51:34.236 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:51:34.236 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+此问题暂时无法回答 😊  
+
+如果您有其他具体问题，我很乐意为您解答！ ✨
+========================
+2026-08-30 22:53:11.016 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-30 22:53:11.019 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-30 22:53:11.022 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-30 22:53:11.022 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-30 22:53:12.604 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.11 with PID 90404 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-08-30 22:53:12.606 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-30 22:53:12.671 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-30 22:53:13.099 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-30 22:53:13.104 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-30 22:53:13.104 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-30 22:53:13.104 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-30 22:53:13.120 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 501 ms
+2026-08-30 22:53:13.505 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-30 22:53:13.509 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-30 22:53:13.509 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-30 22:53:13.611 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-08-30 22:53:13.664 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b7d1df8
+2026-08-30 22:53:13.715 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-30 22:53:13.720 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-30 22:53:13.723 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.233 seconds (process running for 1.547)
+2026-08-30 22:53:19.033 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 22:53:19.034 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-30 22:53:19.035 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-30 22:53:19.069 [http-nio-8080-exec-2] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:53:19.169 [http-nio-8080-exec-3] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:53:19.209 [http-nio-8080-exec-4] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 22:53:25.013 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"LLM是什么","tileId":"tile-003","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 22:53:25.028 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 10ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 22:53:25.588 [http-nio-8080-exec-6] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-30 22:53:25.656 [http-nio-8080-exec-6] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@1824d0ec
+2026-08-30 22:53:25.657 [http-nio-8080-exec-6] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-30 22:53:25.701 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+LLM 是 Large Language Model 的缩写，中文通常叫大语言模型。它可以理解和生成自然语言，常见能力包括问答、总结、翻译、改写、代码生成和信息抽取。LLM 的核心特点是根据上下文预测并生成后续文本。它并不天然等于数据库，也不保证自己记住所有事实，因此在需要准确回答业务知识时，通常要结合知识库或外部工具。
+---
+
+LLM 可以用于智能客服、企业知识库问答、代码助手、文档总结、销售话术生成、内容创作、数据分析辅助和自动化办公。在智能客服场景中，LLM 常用于理解用户问题、检索相关知识、组织自然语言答案，并根据上下文进行多轮追问。
+---
+
+LLM 不是数据库。它可以生成答案，但不适合直接当作可靠事实存储。需要准确业务知识时，应通过 RAG、数据库查询或工具调用获取依据。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+LLM是什么
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 22:53:26.469 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:53:26.469 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您好
+2026-08-30 22:53:26.470 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-30 22:53:26.471 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ！😊
+2026-08-30 22:53:26.509 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  我是A
+2026-08-30 22:53:26.555 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: urelia，
+2026-08-30 22:53:26.750 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 很高兴为您解答~
+2026-08-30 22:53:26.751 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+LLM是
+2026-08-30 22:53:26.866 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **Large Language Model
+2026-08-30 22:53:26.935 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **的缩写，中文
+2026-08-30 22:53:27.078 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 通常称为**大语言模型
+2026-08-30 22:53:27.276 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **。它就像一位擅长
+2026-08-30 22:53:27.312 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 理解和生成自然语言的“
+2026-08-30 22:53:27.402 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 智能助手”✨，
+2026-08-30 22:53:27.613 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 能完成问答、总结
+2026-08-30 22:53:27.799 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、翻译、改写、
+2026-08-30 22:53:27.801 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 代码生成等多种任务。
+2026-08-30 22:53:27.890 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+它的核心能力
+2026-08-30 22:53:28.049 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是通过上下文预测并生成连贯
+2026-08-30 22:53:28.164 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的文本，但请注意
+2026-08-30 22:53:28.324 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 哦——它并非数据库，
+2026-08-30 22:53:28.416 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 也无法保证所有回答
+2026-08-30 22:53:28.535 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 100%准确。
+2026-08-30 22:53:28.648 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 所以在需要严格业务知识的
+2026-08-30 22:53:28.849 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 场景（比如客服
+2026-08-30 22:53:28.863 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 咨询），我们通常会
+2026-08-30 22:53:28.978 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 为它搭配知识库或
+2026-08-30 22:53:29.068 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专业工具来确保
+2026-08-30 22:53:29.233 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可靠性🔍。
+2026-08-30 22:53:29.373 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+如果有具体想
+2026-08-30 22:53:29.385 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 了解的功能，欢迎
+2026-08-30 22:53:29.501 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 随时告诉我！
+2026-08-30 22:53:29.525 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  💡
+2026-08-30 22:53:29.562 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:53:29.574 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您好！😊 我是Aurelia，很高兴为您解答~  
+
+LLM是**Large Language Model**的缩写，中文通常称为**大语言模型**。它就像一位擅长理解和生成自然语言的“智能助手”✨，能完成问答、总结、翻译、改写、代码生成等多种任务。  
+
+它的核心能力是通过上下文预测并生成连贯的文本，但请注意哦——它并非数据库，也无法保证所有回答100%准确。所以在需要严格业务知识的场景（比如客服咨询），我们通常会为它搭配知识库或专业工具来确保可靠性🔍。  
+
+如果有具体想了解的功能，欢迎随时告诉我！ 💡
+========================
+2026-08-30 22:53:35.497 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚才问了什么问题","tileId":"tile-005","parentTileId":"tile-003"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 22:53:35.503 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 6ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 22:53:35.680 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚才问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：热情、耐心、专业，可以使用适当的 Emoji 表情 😊
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 22:53:35.680 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 22:53:36.715 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:53:36.716 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 此
+2026-08-30 22:53:36.717 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题暂时无法
+2026-08-30 22:53:36.721 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 回答 😊
+2026-08-30 22:53:36.768 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+
+如果您
+2026-08-30 22:53:36.889 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有其他具体问题，
+2026-08-30 22:53:36.960 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我很乐意为您解答
+2026-08-30 22:53:37.054 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ！✨
+2026-08-30 22:53:37.083 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 22:53:37.084 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+此问题暂时无法回答 😊  
+
+如果您有其他具体问题，我很乐意为您解答！✨
+========================
+2026-08-30 22:53:43.110 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-30 22:53:43.113 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-30 22:53:43.115 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-30 22:53:43.115 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-30 23:25:13.573 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.11 with PID 98309 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-08-30 23:25:13.576 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-30 23:25:13.663 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-30 23:25:14.156 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-30 23:25:14.162 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:25:14.162 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-30 23:25:14.162 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-30 23:25:14.178 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 588 ms
+2026-08-30 23:25:14.621 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-30 23:25:14.624 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-30 23:25:14.624 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-30 23:25:14.705 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-08-30 23:25:14.773 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b7d1df8
+2026-08-30 23:25:14.835 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:25:14.840 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-30 23:25:14.843 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.4 seconds (process running for 1.758)
+2026-08-30 23:25:19.726 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 23:25:19.726 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-30 23:25:19.727 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-30 23:25:19.807 [http-nio-8080-exec-4] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:25:19.918 [http-nio-8080-exec-5] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:25:19.964 [http-nio-8080-exec-6] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:25:26.099 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你是谁","tileId":"tile-004","parentTileId":"tile-002"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:25:26.114 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 11ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:25:26.861 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-30 23:25:26.946 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@25071b97
+2026-08-30 23:25:26.946 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-30 23:25:26.998 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+System Prompt 是系统层面的指令，通常优先级高于普通用户消息。它可以定义模型的角色、语气、安全边界和业务规则。例如智能客服可以通过 System Prompt 规定：回答必须基于知识库，不知道时要说明无法确认，不能编造政策、价格或合同内容。
+---
+
+Agent 是具备目标理解、规划、工具调用和多步执行能力的 AI 程序。它不只是回答问题，还可以根据任务主动决定下一步操作。简单来说，普通 LLM 更像回答者，Agent 更像执行者。Agent 可以调用搜索、数据库、代码运行器、工作流系统或业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+你是谁
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:25:26.998 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:25:27.722 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:25:27.723 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我是
+2026-08-30 23:25:27.723 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-30 23:25:27.730 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: Aurelia
+2026-08-30 23:25:27.781 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，您的
+2026-08-30 23:25:27.827 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专业客服助手
+2026-08-30 23:25:27.875 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
+2026-08-30 23:25:28.044 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:25:28.062 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+我是Aurelia，您的专业客服助手。
+========================
+2026-08-30 23:27:50.516 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我是谁","tileId":"tile-006","parentTileId":"tile-004"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:27:50.531 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 17ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:27:50.798 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+System Prompt 是系统层面的指令，通常优先级高于普通用户消息。它可以定义模型的角色、语气、安全边界和业务规则。例如智能客服可以通过 System Prompt 规定：回答必须基于知识库，不知道时要说明无法确认，不能编造政策、价格或合同内容。
+---
+
+Agent 是具备目标理解、规划、工具调用和多步执行能力的 AI 程序。它不只是回答问题，还可以根据任务主动决定下一步操作。简单来说，普通 LLM 更像回答者，Agent 更像执行者。Agent 可以调用搜索、数据库、代码运行器、工作流系统或业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我是谁
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:27:50.798 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:27:51.384 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:27:51.384 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 此
+2026-08-30 23:27:51.426 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题暂时
+2026-08-30 23:27:51.489 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无法回答
+2026-08-30 23:27:51.501 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:27:51.502 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+此问题暂时无法回答
+========================
+2026-08-30 23:28:36.051 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-008","parentTileId":"tile-004"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:28:36.054 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 3ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:28:36.278 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+**无法回答时的统一回复**：
+当遇到以下情况时，请统一回复：
+"此问题暂时无法回答"
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:28:36.279 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:28:36.856 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:28:36.857 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 此
+2026-08-30 23:28:36.898 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题暂时
+2026-08-30 23:28:36.940 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无法回答
+2026-08-30 23:28:36.971 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:28:36.972 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+此问题暂时无法回答
+========================
+2026-08-30 23:29:33.889 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-30 23:29:33.893 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-30 23:29:33.896 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-30 23:29:33.897 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-30 23:29:35.592 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.11 with PID 99355 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-08-30 23:29:35.594 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-30 23:29:35.667 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-30 23:29:36.113 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-30 23:29:36.118 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:29:36.119 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-30 23:29:36.119 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-30 23:29:36.135 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 528 ms
+2026-08-30 23:29:36.506 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-30 23:29:36.510 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-30 23:29:36.510 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-30 23:29:36.584 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-08-30 23:29:36.641 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b7d1df8
+2026-08-30 23:29:36.689 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:29:36.693 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-30 23:29:36.695 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.225 seconds (process running for 1.525)
+2026-08-30 23:29:41.006 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 23:29:41.006 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-30 23:29:41.008 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-30 23:29:41.043 [http-nio-8080-exec-2] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:29:41.141 [http-nio-8080-exec-3] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:29:41.180 [http-nio-8080-exec-4] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:29:50.354 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你是谁","tileId":"tile-004","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:29:50.369 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 10ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:29:51.098 [http-nio-8080-exec-5] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-30 23:29:51.165 [http-nio-8080-exec-5] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@59c9cfe1
+2026-08-30 23:29:51.166 [http-nio-8080-exec-5] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-30 23:29:51.207 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+System Prompt 是系统层面的指令，通常优先级高于普通用户消息。它可以定义模型的角色、语气、安全边界和业务规则。例如智能客服可以通过 System Prompt 规定：回答必须基于知识库，不知道时要说明无法确认，不能编造政策、价格或合同内容。
+---
+
+Agent 是具备目标理解、规划、工具调用和多步执行能力的 AI 程序。它不只是回答问题，还可以根据任务主动决定下一步操作。简单来说，普通 LLM 更像回答者，Agent 更像执行者。Agent 可以调用搜索、数据库、代码运行器、工作流系统或业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+你是谁
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:29:51.956 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:29:51.957 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我是
+2026-08-30 23:29:51.957 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-30 23:29:51.959 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: A
+2026-08-30 23:29:51.959 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: urelia，
+2026-08-30 23:29:51.990 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一名
+2026-08-30 23:29:52.132 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专业客服。我的
+2026-08-30 23:29:52.289 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 职责是理解任务目标、
+2026-08-30 23:29:52.321 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提供精准信息并执行
+2026-08-30 23:29:52.413 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 相关操作。
+2026-08-30 23:29:52.438 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:29:52.453 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+我是Aurelia，一名专业客服。我的职责是理解任务目标、提供精准信息并执行相关操作。
+========================
+2026-08-30 23:30:04.702 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-006","parentTileId":"tile-004"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:30:04.708 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 7ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:30:04.925 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:30:04.926 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:30:05.571 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:05.572 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您
+2026-08-30 23:30:05.615 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 刚刚询问
+2026-08-30 23:30:05.663 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的是“
+2026-08-30 23:30:05.710 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你是谁
+2026-08-30 23:30:05.922 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ”。这是一个从空白处发起
+2026-08-30 23:30:05.957 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的新问题，没有
+2026-08-30 23:30:06.103 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 涉及历史对话内容
+2026-08-30 23:30:06.237 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。  
+
+（根据
+2026-08-30 23:30:06.446 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 规则要求，已
+2026-08-30 23:30:06.531 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 省略“根据上下文”
+2026-08-30 23:30:06.653 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等表述，直接
+2026-08-30 23:30:06.823 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 给出与当前问题相关的核心
+2026-08-30 23:30:06.970 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 信息）
+2026-08-30 23:30:06.972 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:06.972 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您刚刚询问的是“你是谁”。这是一个从空白处发起的新问题，没有涉及历史对话内容。  
+
+（根据规则要求，已省略“根据上下文”等表述，直接给出与当前问题相关的核心信息）
+========================
+2026-08-30 23:30:19.301 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-009","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:30:19.303 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 2ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:30:19.574 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:30:20.281 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:20.282 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您
+2026-08-30 23:30:20.323 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 刚刚询问
+2026-08-30 23:30:20.375 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的是：“
+2026-08-30 23:30:20.423 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我刚刚问了
+2026-08-30 23:30:20.602 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 什么问题”。这是一个关于
+2026-08-30 23:30:20.660 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您当前提问内容的
+2026-08-30 23:30:20.752 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 自我确认问题。  
+
+
+2026-08-30 23:30:20.965 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （根据对话机制，每个
+2026-08-30 23:30:21.126 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 新提问默认从空白处
+2026-08-30 23:30:21.225 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 创建，因此系统
+2026-08-30 23:30:21.339 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无法追溯您之前的提问历史
+2026-08-30 23:30:21.364 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）
+2026-08-30 23:30:21.384 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:21.385 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您刚刚询问的是：“我刚刚问了什么问题”。这是一个关于您当前提问内容的自我确认问题。  
+
+（根据对话机制，每个新提问默认从空白处创建，因此系统无法追溯您之前的提问历史）
+========================
+2026-08-30 23:30:33.166 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-010","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:30:33.169 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 3ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:30:33.343 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:30:33.918 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:33.919 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您
+2026-08-30 23:30:33.961 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 没有
+2026-08-30 23:30:34.014 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提出
+2026-08-30 23:30:34.057 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具体
+2026-08-30 23:30:34.233 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题，当前对话是
+2026-08-30 23:30:34.250 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 全新开始的。我是
+2026-08-30 23:30:34.359 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 客服Aurelia，
+2026-08-30 23:30:34.449 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 请问需要什么帮助？
+2026-08-30 23:30:34.519 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:34.520 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您没有提出具体问题，当前对话是全新开始的。我是客服Aurelia，请问需要什么帮助？
+========================
+2026-08-30 23:30:46.400 [http-nio-8080-exec-4] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-012","parentTileId":"tile-010"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:30:46.402 [http-nio-8080-exec-4] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 2ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:30:46.596 [http-nio-8080-exec-4] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:30:46.596 [http-nio-8080-exec-4] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:30:47.552 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:47.552 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您
+2026-08-30 23:30:47.555 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 当前尚未
+2026-08-30 23:30:47.600 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提出
+2026-08-30 23:30:47.642 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具体问题，
+2026-08-30 23:30:47.866 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 这是一个全新的对话窗口
+2026-08-30 23:30:47.867 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。我是客服Aurelia
+2026-08-30 23:30:48.061 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，请问需要什么帮助？
+2026-08-30 23:30:48.062 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:30:48.062 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您当前尚未提出具体问题，这是一个全新的对话窗口。我是客服Aurelia，请问需要什么帮助？
+========================
+2026-08-30 23:31:36.664 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你是谁","tileId":"tile-014","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:31:36.671 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 6ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:31:36.837 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+System Prompt 是系统层面的指令，通常优先级高于普通用户消息。它可以定义模型的角色、语气、安全边界和业务规则。例如智能客服可以通过 System Prompt 规定：回答必须基于知识库，不知道时要说明无法确认，不能编造政策、价格或合同内容。
+---
+
+Agent 是具备目标理解、规划、工具调用和多步执行能力的 AI 程序。它不只是回答问题，还可以根据任务主动决定下一步操作。简单来说，普通 LLM 更像回答者，Agent 更像执行者。Agent 可以调用搜索、数据库、代码运行器、工作流系统或业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+你是谁
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:31:37.421 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:31:37.422 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我是
+2026-08-30 23:31:37.424 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: A
+2026-08-30 23:31:37.467 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: urelia，
+2026-08-30 23:31:37.508 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您的专业客服
+2026-08-30 23:31:37.674 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 助手。我可以根据
+2026-08-30 23:31:37.773 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 任务需求调用工具或执行
+2026-08-30 23:31:37.856 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 多步操作来
+2026-08-30 23:31:38.008 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 解决问题，而不仅仅是回答问题
+2026-08-30 23:31:38.199 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。需要帮助时请告诉我
+2026-08-30 23:31:38.200 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具体需求。
+2026-08-30 23:31:38.212 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:31:38.213 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+我是Aurelia，您的专业客服助手。我可以根据任务需求调用工具或执行多步操作来解决问题，而不仅仅是回答问题。需要帮助时请告诉我具体需求。
+========================
+2026-08-30 23:31:44.317 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我刚刚问了什么问题","tileId":"tile-016","parentTileId":"tile-014"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:31:44.319 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 2ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:31:44.528 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+从空白处提问表示创建一个全新的 Tile。这个 Tile 可以检索共享 RAG 知识库，但默认不读取其他 Tile 的工作记忆。这种方式适合提出一个新主题、新问题或不希望被旧上下文影响的问题。
+---
+
+Prompt 是用户或系统提供给模型的输入指令。一个 Prompt 可以包含任务目标、背景信息、回答格式、限制条件和示例。好的 Prompt 通常会说明三件事：模型要扮演什么角色、需要完成什么任务、输出应该遵守什么格式。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+我刚刚问了什么问题
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:31:44.528 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:31:45.816 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:31:45.819 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您
+2026-08-30 23:31:45.820 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 刚刚的问题是
+2026-08-30 23:31:45.821 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：“我
+2026-08-30 23:31:45.863 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 刚刚问了
+2026-08-30 23:31:46.063 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 什么问题”。这是一个关于
+2026-08-30 23:31:46.133 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 当前对话历史的提问，
+2026-08-30 23:31:46.223 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 但当前会话为新
+2026-08-30 23:31:46.335 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建立的独立对话（
+2026-08-30 23:31:46.407 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 从空白处提问
+2026-08-30 23:31:46.588 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ），此前并无其他
+2026-08-30 23:31:46.655 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题记录。  
+
+
+2026-08-30 23:31:46.755 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （若实际存在
+2026-08-30 23:31:46.841 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 上下文遗漏，建议
+2026-08-30 23:31:47.112 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 补充具体问题的关键词
+2026-08-30 23:31:47.113 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 以便进一步核查）
+2026-08-30 23:31:47.129 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:31:47.130 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+您刚刚的问题是：“我刚刚问了什么问题”。这是一个关于当前对话历史的提问，但当前会话为新建立的独立对话（从空白处提问），此前并无其他问题记录。  
+
+（若实际存在上下文遗漏，建议补充具体问题的关键词以便进一步核查）
+========================
+2026-08-30 23:35:53.926 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"无畏契约是什么","tileId":"tile-018","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:35:53.936 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 11ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:35:54.249 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的客服，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+向量是一组数字，用来表示文本、图片或其他数据的语义特征。语义相近的文本，向量距离通常也更近。例如“什么是大语言模型”和“LLM 是什么意思”虽然字面不同，但语义接近，因此在向量空间中可能距离较近。
+---
+
+向量数据库用于存储和检索向量数据。它可以根据语义相似度快速找到与用户问题最相关的知识片段。常见向量数据库包括 Milvus、Qdrant、Weaviate、Pinecone、pgvector 和 Elasticsearch 的向量检索能力。
+---
+
+Function Calling 是一种让模型按结构化参数调用函数的方式。模型不直接执行函数，而是输出函数名和参数，由系统执行后再把结果返回给模型。这种方式适合连接订单查询、库存查询、天气查询、日程创建和工单提交等业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+无畏契约是什么
+
+## 回答要求
+
+**核心规则**：
+1. **基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ✅ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则根据自己的知识回答问题
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:35:55.128 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:35:55.129 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: “
+2026-08-30 23:35:55.175 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无畏契约”
+2026-08-30 23:35:55.229 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是
+2026-08-30 23:35:55.284 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 战术
+2026-08-30 23:35:55.386 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 射击游戏《VAL
+2026-08-30 23:35:55.632 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ORANT》的国
+2026-08-30 23:35:55.633 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 服译名，
+2026-08-30 23:35:55.698 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 由Riot Games开发
+2026-08-30 23:35:55.833 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，结合了精准
+2026-08-30 23:35:55.916 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 枪战与英雄
+2026-08-30 23:35:56.017 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 技能玩法。若
+2026-08-30 23:35:56.178 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 您需要了解游戏
+2026-08-30 23:35:56.360 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 机制或英雄信息
+2026-08-30 23:35:56.444 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，可提供具体
+2026-08-30 23:35:56.681 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 方向以便进一步说明
+2026-08-30 23:35:56.730 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。  
+
+（注：
+2026-08-30 23:35:56.912 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 上下文未直接涉及
+2026-08-30 23:35:57.060 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 游戏领域，此
+2026-08-30 23:35:57.206 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 回答基于通用知识补充
+2026-08-30 23:35:57.216 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）
+2026-08-30 23:35:57.242 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:35:57.243 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+“无畏契约”是战术射击游戏《VALORANT》的国服译名，由Riot Games开发，结合了精准枪战与英雄技能玩法。若您需要了解游戏机制或英雄信息，可提供具体方向以便进一步说明。  
+
+（注：上下文未直接涉及游戏领域，此回答基于通用知识补充）
+========================
+2026-08-30 23:37:57.944 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-30 23:37:57.948 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-30 23:37:57.951 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-30 23:37:57.952 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-08-30 23:37:59.697 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.11 with PID 1162 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-08-30 23:37:59.699 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-08-30 23:37:59.761 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-08-30 23:38:00.191 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-08-30 23:38:00.198 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:38:00.198 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-08-30 23:38:00.198 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-30 23:38:00.212 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 500 ms
+2026-08-30 23:38:00.603 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-08-30 23:38:00.604 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-08-30 23:38:00.604 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-08-30 23:38:00.674 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-08-30 23:38:00.728 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6d6cb754
+2026-08-30 23:38:00.780 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-08-30 23:38:00.784 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-08-30 23:38:00.786 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.204 seconds (process running for 1.524)
+2026-08-30 23:38:10.853 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 23:38:10.853 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-08-30 23:38:10.854 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-08-30 23:38:10.891 [http-nio-8080-exec-3] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:38:10.983 [http-nio-8080-exec-5] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:38:11.023 [http-nio-8080-exec-6] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-08-30 23:38:18.093 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"无畏契约是什么","tileId":"tile-004","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:38:18.107 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 10ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:38:18.830 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-08-30 23:38:18.902 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@2ec3ec9e
+2026-08-30 23:38:18.903 [http-nio-8080-exec-7] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-08-30 23:38:18.946 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+向量是一组数字，用来表示文本、图片或其他数据的语义特征。语义相近的文本，向量距离通常也更近。例如“什么是大语言模型”和“LLM 是什么意思”虽然字面不同，但语义接近，因此在向量空间中可能距离较近。
+---
+
+向量数据库用于存储和检索向量数据。它可以根据语义相似度快速找到与用户问题最相关的知识片段。常见向量数据库包括 Milvus、Qdrant、Weaviate、Pinecone、pgvector 和 Elasticsearch 的向量检索能力。
+---
+
+Function Calling 是一种让模型按结构化参数调用函数的方式。模型不直接执行函数，而是输出函数名和参数，由系统执行后再把结果返回给模型。这种方式适合连接订单查询、库存查询、天气查询、日程创建和工单提交等业务接口。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+无畏契约是什么
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:38:20.026 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:38:20.027 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我不知道
+2026-08-30 23:38:20.027 [boundedElastic-1] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
+Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
+This executor is not suitable for production use under load.
+Please, configure an AsyncTaskExecutor through the WebMvc config.
+-------------------------------
+!!!
+2026-08-30 23:38:20.056 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:38:20.061 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+我不知道
+========================
+2026-08-30 23:38:28.901 [http-nio-8080-exec-9] WARN  com.aureli.ai.robot.exception.GlobalExceptionHandler - /customer-service/md/upload request fail, errorCode: 20002, errorMessage: 仅支持 Markdown 文件（.md 后缀）
+2026-08-30 23:38:58.154 [http-nio-8080-exec-4] INFO  com.aureli.ai.robot.service.impl.CustomerServiceImpl - ## Markdown 问答文件存储成功, 文件名：valorant.md -> 存储路径：/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/Markdown/81f7b80d-4a87-47d0-ba38-1592ae296583-valorant.md
+2026-08-30 23:38:58.182 [event-handler-1] INFO  com.aureli.ai.robot.event.listener.AiCustomerServiceMdUploadedListener - ## AiCustomerServiceMdUploadedEvent: AiCustomerServiceMdUploadedEvent(id=2, filePath=/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/Markdown/81f7b80d-4a87-47d0-ba38-1592ae296583-valorant.md, metadatas={originalFileName=valorant.md, mdStorageId=2})
+2026-08-30 23:38:58.220 [event-handler-1] INFO  com.aureli.ai.robot.event.listener.AiCustomerServiceMdUploadedListener - ## documents: [Document{id='e5510190-b5d0-495f-8961-f96effa73263', text='用途：供大语言模型问答、游戏科普、角色技能、地图机制、经济系统、规则解析使用；Markdown结构化知识库', media='null', metadata={originalFileName=valorant.md, category=blockquote, mdStorageId=2}, score=null}, Document{id='a9889fc5-d938-47bb-ac28-f1626cbdddbf', text='1.游戏基础信息 2.核心对局规则 3.特工（英雄）体系 3.1 角色定位分类 4.经济系统 5.武器系统 6.地图&点位术语 7.爆能器（炸弹）机制 8.对局常用术语黑话 9.排位系统 10.赛事相关 11.常见误区', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=目录}, score=null}, Document{id='57c30c47-dfff-4796-8a64-f0eca712e82a', text='游戏名称：无畏契约，英文名：VALORANT 开发商：拳头游戏(Riot Games) 国内运营商：腾讯 游戏类型：5v5 战术射击、回合制FPS，英雄射击 核心特色：枪械射击 + 特工技能；枪法与战术技能并重 对局人数：进攻方5人 VS 防守方5人 游戏引擎：Unreal Engine 4 国服上线时间：2023‑07‑12', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=1.游戏基础信息}, score=null}, Document{id='8f02333e-3a6d-41bd-ba7c-ed4320c0651d', text='常规模式 上半场：12回合；双方互换攻防 下半场：最多13回合 胜利条件：率先拿下13回合胜利即可赢下整局 加时规则：比分12‑12进入加时；加时每回合互换攻防，需要净胜2回合才能拿下对局 攻防目标 进攻方：护送爆能器到包点安放，等待爆能器爆炸；或全歼防守方 防守方：阻止进攻方安放爆能器；安放后可拆除爆能器；全歼进攻方 回合结束条件 一方全员阵亡 爆能器成功爆炸（进攻胜） 爆能器被成功拆除（防守胜） 回合倒计时耗尽，进攻方未下包 → 防守胜利', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=2.核心对局规则}, score=null}, Document{id='8b43d1ae-92ae-48e8-b6e3-1eedc9b64f12', text='无畏契约特工共分为 4大职业定位 |定位|英文|职责说明| |---|---|---| |决斗位|Duelist|突破手，负责找机会击杀敌人、打开突破口，拥有大量进攻技能| |先锋位|Initiator|信息位，探点、控视野、给队友创造进攻机会，获取敌方位置情报| |控场位|Controller|烟位，释放烟雾、分割战场、封锁视野，控制地形，隔断敌人枪线| |哨卫位|Sentinel|守点，防守、陷阱、封锁绕后，保护区域，提供防守信息|', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_3, title=3.1 角色定位分类}, score=null}, Document{id='0956773a-3072-45c4-a5b4-201ed7383d92', text='技能类型说明 C / Q / E：基础技能，每回合可花费信用点购买充能次数 X：终极技能（大招），只能通过击杀、捡魂球、回合胜利/失败积攒点数，无法用钱购买', media='null', metadata={originalFileName=valorant.md, category=blockquote, mdStorageId=2}, score=null}, Document{id='ec7794e9-d385-4334-9c16-deba0d22e54e', text='每回合开始拥有「信用点」，用来购买武器、护甲、特工技能。', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=4.经济系统}, score=null}, Document{id='f56e029c-41b4-413d-b243-28751796d5ea', text='输掉回合： 第1次连败：1000 2连败：2000 3连败：3000 ≥4连败：3000封顶 赢下回合：3000', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_3, title=4.1 回合赏金（单名玩家获得）}, score=null}, Document{id='6593714a-bd62-41db-9918-2ba80dd60d2b', text='注意：连败赏金仅在个人没有存活到回合胜利时生效；存活无连败补偿。', media='null', metadata={originalFileName=valorant.md, category=blockquote, mdStorageId=2}, score=null}, Document{id='b8134c6a-08aa-465e-a916-76af181aaf67', text='|护甲|价格|减伤| |---|---|---| |轻甲（护盾100）|400|伤害减伤| |重甲（护盾50）|1000|高额减伤| 护甲只会吸收伤害，护甲归零后伤害扣生命值；生命值固定100。', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_3, title=4.2 护甲}, score=null}, Document{id='2c67c86e-147b-4335-a56b-97cf89f48342', text='ECO局（经济局）：不买枪或只买手枪，存钱，放弃本回合，为下一回合起长枪做准备 半起局：购买冲锋枪/霰弹枪，少量护甲，不完全经济也不起满长枪 长枪局（全起）：步枪+重甲，满配作战', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_3, title=4.3 经济术语}, score=null}, Document{id='7fc2ed3a-7398-40cd-ba52-09bcd4bba5e7', text='武器分为：手枪、冲锋枪、霰弹枪、步枪、狙击枪、机枪', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=5.武器系统}, score=null}, Document{id='04eb10ab-6fa9-4cf0-ab93-b0318205a9b2', text='最主流步枪：幻影、暴徒 幻影 (Phantom)：消音步枪，射速快，远距离伤害衰减，弹道较稳 暴徒 (Vandal)：无消音，爆头一枪秒杀全距离，弹道更难压', media='null', metadata={originalFileName=valorant.md, category=blockquote, mdStorageId=2}, score=null}, Document{id='d1773cb4-88b4-4440-892a-1d4e7c0cda8f', text='狙击枪：冥驹；大狙，一枪爆头秒杀', media='null', metadata={originalFileName=valorant.md, category=blockquote, mdStorageId=2}, score=null}, Document{id='c1fdbcff-88c5-4c99-badd-ecb78ed740a4', text='通用点位黑话： A点 / B点 / C点：爆能器安放区域（包点） 中路（Mid）：地图中间通道 后花园、警家、匪家：防守方出生点、进攻方出生点 绕后：从敌人后方偷袭 前压：防守方主动冲出包点往前推进 回防：包已经安放，防守方从远处赶回包点拆包', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=6.地图&点位术语}, score=null}, Document{id='af5f7ec4-4faa-4818-a414-9bd8267858ca', text='只有进攻方队员携带爆能器；回合开始随机分配给一名进攻玩家 安放时间：4秒（持续按住安放键） 爆炸倒计时：安放成功后 45秒爆炸 拆除时间： 单人完整拆除：7秒 拆一半松手：进度重置 爆能器爆炸范围之内所有存活玩家都会阵亡', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=7.爆能器（炸弹）机制}, score=null}, Document{id='1947eeff-310d-4d1c-a071-a10a58d4862b', text='|术语|释义| |---|---| |预瞄|提前把准星放在敌人可能出现的头部高度| |peek|小身位试探敌人位置| |干拉|无烟雾、无闪光掩护直接冲点| |道具|特工的各类技能（闪、烟、震等）| |混烟|穿过烟雾射击敌人| |timing|敌人露出破绽的时机| |架枪|守住一条通道，预瞄等待敌人出现|', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=8.对局常用术语黑话}, score=null}, Document{id='a2f5fc44-cee6-4e2f-b8db-7afc984882bd', text='段位从低到高顺序： 黑铁 → 青铜 → 白银 → 黄金 → 铂金 → 钻石 → 不朽 → 辐能战魂（最高段位） 每个大段位分为3个小段位（例：黑铁1、黑铁2、黑铁3） 排位对局规则与常规5v5爆破模式一致 存在隐藏分机制，连胜加分更多，连败扣分更多', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=9.排位系统}, score=null}, Document{id='bc0ac4d2-984c-4250-ac17-426fd7b2a801', text='VCT：Valorant Champions Tour，无畏契约全球冠军巡回赛，最高级别职业赛事 国内联赛：VCT CN联赛，中国赛区职业联赛', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=10.赛事相关}, score=null}, Document{id='9ec7001a-a332-4024-9182-7230e64c5992', text='❌ 大招可以花钱购买 → ✅ 大招只能充能点数解锁 ❌ 护甲可以回血 → ✅ 护甲每回合重置，受伤后不会自动恢复 ❌ 暴徒远距离不能一枪爆头 → ✅ 暴徒全距离爆头100伤害，秒杀满血', media='null', metadata={originalFileName=valorant.md, mdStorageId=2, category=header_2, title=11.常见误区}, score=null}, Document{id='7e47c149-8cb7-4e11-930b-a76334640512', text='如果你需要，我还可以给你生成完整版带全部特工详细技能知识库、或者生成可直接导入向量库的纯文本切片版本。', media='null', metadata={originalFileName=valorant.md, mdStorageId=2}, score=null}]
+2026-08-30 23:39:09.529 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"无畏契约是什么","tileId":"tile-006","parentTileId":"tile-004"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:39:09.536 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 7ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:39:09.955 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+游戏名称：无畏契约，英文名：VALORANT 开发商：拳头游戏(Riot Games) 国内运营商：腾讯 游戏类型：5v5 战术射击、回合制FPS，英雄射击 核心特色：枪械射击 + 特工技能；枪法与战术技能并重 对局人数：进攻方5人 VS 防守方5人 游戏引擎：Unreal Engine 4 国服上线时间：2023‑07‑12
+---
+
+VCT：Valorant Champions Tour，无畏契约全球冠军巡回赛，最高级别职业赛事 国内联赛：VCT CN联赛，中国赛区职业联赛
+---
+
+最主流步枪：幻影、暴徒 幻影 (Phantom)：消音步枪，射速快，远距离伤害衰减，弹道较稳 暴徒 (Vandal)：无消音，爆头一枪秒杀全距离，弹道更难压
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+无畏契约是什么
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:39:09.955 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:39:10.758 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:39:10.759 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 《
+2026-08-30 23:39:10.761 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无畏契约》（
+2026-08-30 23:39:10.762 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: VALORANT
+2026-08-30 23:39:10.785 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）是
+2026-08-30 23:39:10.902 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 拳头游戏（Riot Games
+2026-08-30 23:39:11.010 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）开发、腾讯代理
+2026-08-30 23:39:11.199 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的5v5战术
+2026-08-30 23:39:11.223 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 射击游戏，属于英雄
+2026-08-30 23:39:11.280 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 射击类FPS。
+2026-08-30 23:39:11.415 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 核心玩法结合枪械射击
+2026-08-30 23:39:11.529 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 与特工技能
+2026-08-30 23:39:11.723 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，强调枪法与
+2026-08-30 23:39:11.724 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 战术配合。每
+2026-08-30 23:39:11.798 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 局进攻方5人对
+2026-08-30 23:39:11.918 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 战防守方5
+2026-08-30 23:39:11.997 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 人，使用虚幻4
+2026-08-30 23:39:12.094 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 引擎开发，国服于
+2026-08-30 23:39:12.247 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 2023年7月12
+2026-08-30 23:39:12.295 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 日上线。  
+
+**特点
+2026-08-30 23:39:12.413 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **：  
+- 主流
+2026-08-30 23:39:12.492 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 步枪：幻影
+2026-08-30 23:39:12.588 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: （消音/弹
+2026-08-30 23:39:12.771 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 道稳）、暴徒（
+2026-08-30 23:39:12.850 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无消音/爆
+2026-08-30 23:39:12.926 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 头秒杀）  
+
+2026-08-30 23:39:13.025 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: - 职业赛事：V
+2026-08-30 23:39:13.144 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: CT（全球冠军巡回
+2026-08-30 23:39:13.295 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 赛）及VCT
+2026-08-30 23:39:13.315 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  CN（中国联赛
+2026-08-30 23:39:13.447 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）  
+
+![](https
+2026-08-30 23:39:13.543 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ://example.com/valor
+2026-08-30 23:39:13.608 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ant_image.jpg)（
+2026-08-30 23:39:13.827 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 注：此处为示例图片
+2026-08-30 23:39:13.847 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 链接，实际需替换
+2026-08-30 23:39:13.943 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ）
+2026-08-30 23:39:13.971 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:39:13.972 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+《无畏契约》（VALORANT）是拳头游戏（Riot Games）开发、腾讯代理的5v5战术射击游戏，属于英雄射击类FPS。核心玩法结合枪械射击与特工技能，强调枪法与战术配合。每局进攻方5人对战防守方5人，使用虚幻4引擎开发，国服于2023年7月12日上线。  
+
+**特点**：  
+- 主流步枪：幻影（消音/弹道稳）、暴徒（无消音/爆头秒杀）  
+- 职业赛事：VCT（全球冠军巡回赛）及VCT CN（中国联赛）  
+
+![](https://example.com/valorant_image.jpg)（注：此处为示例图片链接，实际需替换）
+========================
+2026-08-30 23:39:30.779 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"生成精简版的回复","tileId":"tile-008","parentTileId":"tile-006"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:39:30.781 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 2ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:39:31.146 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Tile 客服回答时应优先基于知识库和当前 Tile 上下文。回答要简洁、准确、分点清晰。如果知识库没有相关资料，客服应说明“当前知识库中没有找到明确依据”，而不是编造答案。
+---
+
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+不一定。Agent 适合复杂任务和多步骤执行，但成本、延迟和不可控性也更高。如果只是文档问答，RAG 通常更简单、更稳定。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+生成精简版的回复
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:39:31.147 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:39:31.881 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:39:31.881 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **
+2026-08-30 23:39:31.923 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 精简回复
+2026-08-30 23:39:31.967 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **：  
+
+2026-08-30 23:39:32.012 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 1. **
+2026-08-30 23:39:32.173 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: Tile客服原则**：优先
+2026-08-30 23:39:32.235 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 基于知识库，无
+2026-08-30 23:39:32.374 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 依据时明确说明。
+2026-08-30 23:39:32.770 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+2. **空白
+2026-08-30 23:39:32.772 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 处提问**：
+2026-08-30 23:39:32.773 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 避免旧上下文干扰新
+2026-08-30 23:39:32.773 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题。  
+3
+2026-08-30 23:39:32.833 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: . **Agent vs R
+2026-08-30 23:39:32.944 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: AG**：复杂
+2026-08-30 23:39:33.016 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 任务用Agent，简单
+2026-08-30 23:39:33.218 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 文档问答用RAG更
+2026-08-30 23:39:33.219 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 稳定。  
+
+（若
+2026-08-30 23:39:33.295 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题超出范围会
+2026-08-30 23:39:33.415 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 直接告知“我不知道
+2026-08-30 23:39:33.504 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ”。）
+2026-08-30 23:39:33.506 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:39:33.506 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+**精简回复**：  
+1. **Tile客服原则**：优先基于知识库，无依据时明确说明。  
+2. **空白处提问**：避免旧上下文干扰新问题。  
+3. **Agent vs RAG**：复杂任务用Agent，简单文档问答用RAG更稳定。  
+
+（若问题超出范围会直接告知“我不知道”。）
+========================
+2026-08-30 23:40:09.685 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"关于刚才的回答生成精简版回复重新生成","tileId":"tile-010","parentTileId":"tile-006"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:40:09.690 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 5ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:40:09.948 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+Tile 客服回答时应优先基于知识库和当前 Tile 上下文。回答要简洁、准确、分点清晰。如果知识库没有相关资料，客服应说明“当前知识库中没有找到明确依据”，而不是编造答案。
+---
+
+从空白处提问可以避免旧上下文影响新问题。当用户想开启新主题、测试知识库、或不希望模型参考之前内容时，应从空白处创建 Tile。
+---
+
+不一定。Agent 适合复杂任务和多步骤执行，但成本、延迟和不可控性也更高。如果只是文档问答，RAG 通常更简单、更稳定。
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+关于刚才的回答生成精简版回复重新生成
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:40:09.948 [http-nio-8080-exec-9] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:40:10.662 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:40:10.662 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **
+2026-08-30 23:40:10.663 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 精简版回复
+2026-08-30 23:40:10.664 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **：  
+
+2026-08-30 23:40:10.704 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 1. **
+2026-08-30 23:40:11.068 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: Tile客服原则**：优先
+2026-08-30 23:40:11.069 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 基于知识库，无
+2026-08-30 23:40:11.097 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 依据时明确说明。
+2026-08-30 23:40:11.230 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:   
+2. **空白
+2026-08-30 23:40:11.297 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 处提问**：
+2026-08-30 23:40:11.494 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 避免旧上下文干扰新
+2026-08-30 23:40:11.517 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题。  
+3
+2026-08-30 23:40:11.619 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: . **Agent vs
+2026-08-30 23:40:11.738 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  RAG**：复杂
+2026-08-30 23:40:11.812 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 任务用Agent，
+2026-08-30 23:40:12.017 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 简单文档问答用RAG
+2026-08-30 23:40:12.024 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 更稳定。  
+
+（
+2026-08-30 23:40:12.150 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 注：若需进一步精简
+2026-08-30 23:40:12.249 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，可保留核心点
+2026-08-30 23:40:12.541 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：知识库优先
+2026-08-30 23:40:12.543 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、空白提问、
+2026-08-30 23:40:12.640 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 任务工具选择。）
+2026-08-30 23:40:12.717 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:40:12.718 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+**精简版回复**：  
+1. **Tile客服原则**：优先基于知识库，无依据时明确说明。  
+2. **空白处提问**：避免旧上下文干扰新问题。  
+3. **Agent vs RAG**：复杂任务用Agent，简单文档问答用RAG更稳定。  
+
+（注：若需进一步精简，可保留核心点：知识库优先、空白提问、任务工具选择。）
+========================
+2026-08-30 23:40:27.916 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"爆能器是什么","tileId":"tile-012","parentTileId":"tile-006"}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:40:27.919 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 3ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:40:28.114 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+只有进攻方队员携带爆能器；回合开始随机分配给一名进攻玩家 安放时间：4秒（持续按住安放键） 爆炸倒计时：安放成功后 45秒爆炸 拆除时间： 单人完整拆除：7秒 拆一半松手：进度重置 爆能器爆炸范围之内所有存活玩家都会阵亡
+---
+
+最主流步枪：幻影、暴徒 幻影 (Phantom)：消音步枪，射速快，远距离伤害衰减，弹道较稳 暴徒 (Vandal)：无消音，爆头一枪秒杀全距离，弹道更难压
+---
+
+狙击枪：冥驹；大狙，一枪爆头秒杀
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+爆能器是什么
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:40:28.114 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义聊天记忆 Advisor...
+2026-08-30 23:40:28.994 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:40:28.994 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **
+2026-08-30 23:40:28.995 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 爆能器
+2026-08-30 23:40:29.014 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: **是《
+2026-08-30 23:40:29.059 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 无畏契约》
+2026-08-30 23:40:29.319 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 中进攻方的专属目标
+2026-08-30 23:40:29.321 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 道具，核心机制
+2026-08-30 23:40:29.390 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 如下：  
+- **
+2026-08-30 23:40:29.503 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 携带**：仅进攻
+2026-08-30 23:40:29.600 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 方随机1名
+2026-08-30 23:40:29.660 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 队员持有  
+- **
+2026-08-30 23:40:29.843 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 安放**：按住按键
+2026-08-30 23:40:29.844 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 4秒完成（
+2026-08-30 23:40:29.933 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 需持续操作）  
+-
+2026-08-30 23:40:30.087 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **爆炸**：安
+2026-08-30 23:40:30.115 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 放后45秒倒
+2026-08-30 23:40:30.209 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 计时，范围内存活
+2026-08-30 23:40:30.368 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 玩家全灭  
+-
+2026-08-30 23:40:30.398 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  **拆除**：防守
+2026-08-30 23:40:30.488 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 方需单人持续
+2026-08-30 23:40:30.606 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 拆7秒（
+2026-08-30 23:40:30.723 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 中断则重置进度）  
+
+
+2026-08-30 23:40:30.892 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 作用类似炸弹，是
+2026-08-30 23:40:30.992 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 攻防回合的核心胜负
+2026-08-30 23:40:31.082 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 判定点。
+2026-08-30 23:40:31.116 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:40:31.117 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+**爆能器**是《无畏契约》中进攻方的专属目标道具，核心机制如下：  
+- **携带**：仅进攻方随机1名队员持有  
+- **安放**：按住按键4秒完成（需持续操作）  
+- **爆炸**：安放后45秒倒计时，范围内存活玩家全灭  
+- **拆除**：防守方需单人持续拆7秒（中断则重置进度）  
+
+作用类似炸弹，是攻防回合的核心胜负判定点。
+========================
+2026-08-30 23:41:46.555 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"英雄峡谷是什么","tileId":"tile-014","parentTileId":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
+2026-08-30 23:41:46.559 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 4ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
+2026-08-30 23:41:46.751 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - ## 重新构建的增强提示词: 你是一个专业的人工智能助手，名为 “Aurelia”。请根据以下上下文信息回答用户问题。
+
+## 上下文信息
+游戏名称：无畏契约，英文名：VALORANT 开发商：拳头游戏(Riot Games) 国内运营商：腾讯 游戏类型：5v5 战术射击、回合制FPS，英雄射击 核心特色：枪械射击 + 特工技能；枪法与战术技能并重 对局人数：进攻方5人 VS 防守方5人 游戏引擎：Unreal Engine 4 国服上线时间：2023‑07‑12
+---
+
+❌ 大招可以花钱购买 → ✅ 大招只能充能点数解锁 ❌ 护甲可以回血 → ✅ 护甲每回合重置，受伤后不会自动恢复 ❌ 暴徒远距离不能一枪爆头 → ✅ 暴徒全距离爆头100伤害，秒杀满血
+---
+
+1.游戏基础信息 2.核心对局规则 3.特工（英雄）体系 3.1 角色定位分类 4.经济系统 5.武器系统 6.地图&点位术语 7.爆能器（炸弹）机制 8.对局常用术语黑话 9.排位系统 10.赛事相关 11.常见误区
+---
+
+
+
+请根据上下文内容来回复用户：
+
+## 用户问题
+英雄峡谷是什么
+
+## 回答要求
+
+**核心规则**：
+1. **严格基于上下文**：如果知识库中有相关知识，则使用提供的上下文信息回答问题，否则如实告知用户“我不知道”
+2. **服务风格**：保持简介干练
+3. **禁止用语**：避免使用"根据上下文"、"所提供的信息"等生硬表述
+
+**回答范围判断**：
+- ✅ 如果用户问题与上下文信息直接相关，请提供详细、准确的回答
+- ✅ 如果用户问题与上下文信息间接相关，可以基于已有信息进行合理推断
+- ❌ 如果用户问题完全超出上下文范围，或者上下文信息不足以回答该问题，则拒绝回答该问题并如实告知原因
+
+
+**图片展示**：
+如需要展示图片，请使用 Markdown 格式：![](图片链接)
+
+现在请根据以上要求回答问题。
+
+2026-08-30 23:41:47.478 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:41:47.478 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我不知道
+2026-08-30 23:41:47.521 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
+2026-08-30 23:41:47.542 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
+2026-08-30 23:41:47.543 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
+==== FULL AI RESPONSE ====
+我不知道。
+========================
+2026-08-30 23:43:03.040 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-30 23:43:03.043 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-30 23:43:03.046 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-08-30 23:43:03.047 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
