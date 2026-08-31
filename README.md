@@ -1,6 +1,6 @@
-# Aureli Graph AI System
+# Aureli Context Graph
 
-Aureli Graph AI System 是一个基于 Spring Boot、Spring AI、PostgreSQL 与 PGVector 构建的图式 AI 客服实验项目。
+Aureli Context Graph 是一个基于 Spring Boot、Spring AI、PostgreSQL 与 PGVector 构建的图式 AI 客服实验项目。
 
 项目将传统线性聊天改造成 Tile 图式交互：用户每次提问都会生成一个独立 Tile，不同 Tile 默认隔离工作记忆；用户可以在画布上选择多个相关 Tile，并通过单向或双向边建立关系。新建 Tile 时，系统会按照固定深度遍历相关 Tile 的工作记忆，同时继续共享 RAG 知识库。
 
