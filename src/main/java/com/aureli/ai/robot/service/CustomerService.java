@@ -43,4 +43,11 @@ public interface CustomerService {
      */
     Response<?> updateMarkdownFile(UpdateMarkdownFileReqVO updateMarkdownFileReqVO);
 
+    /**
+     * 重置 Tile 画布数据
+     *
+     * @return
+     */
+    Response<?> resetTileWorkspace();
+
 }

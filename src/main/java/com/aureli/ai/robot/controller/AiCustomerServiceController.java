@@ -5,7 +5,9 @@ import com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor;
 import com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor;
 import com.aureli.ai.robot.advisor.CustomerServiceAdvisor;
 import com.aureli.ai.robot.aspect.ApiOperationLog;
-import com.aureli.ai.robot.domain.mapper.ChatMessageMapper;
+import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
+import com.aureli.ai.robot.domain.mapper.TileMapper;
+import com.aureli.ai.robot.domain.mapper.TileMessageMapper;
 import com.aureli.ai.robot.model.vo.customerService.*;
 import com.aureli.ai.robot.service.CustomerService;
 import com.aureli.ai.robot.utils.PageResponse;
@@ -27,7 +29,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Date: 2026/8/22 15:22
@@ -45,7 +49,11 @@ public class AiCustomerServiceController {
     @Resource
     private VectorStore vectorStore;
     @Resource
-    private ChatMessageMapper chatMessageMapper;
+    private TileMapper tileMapper;
+    @Resource
+    private TileMessageMapper tileMessageMapper;
+    @Resource
+    private TileEdgeMapper tileEdgeMapper;
     @Resource
     private TransactionTemplate transactionTemplate;
 
@@ -87,14 +95,22 @@ public class AiCustomerServiceController {
         return customerService.updateMarkdownFile(updateMarkdownFileReqVO);
     }
 
+    @PostMapping("/tile/reset")
+    @ApiOperationLog(description = "重置 Tile 画布数据")
+    public Response<?> resetTileWorkspace() {
+        return customerService.resetTileWorkspace();
+    }
+
     /**
      * Tile 式智能客服对话。
-     * tileId 表示当前磁贴；parentTileId 为空时表示从空白处提问，不读取工作记忆。
+     * tileId 表示当前磁贴；relatedTileIds 为空时表示从画布空白处提问，不读取工作记忆。
      */
     @PostMapping(value = "/chat/tile/completion", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ApiOperationLog(description = "Tile 式 AI 智能客服对话")
     public Flux<AiCustomerServiceChatRspVO> tileChat(@RequestBody @Validated AiCustomerServiceChatReqVO aiChatReqVO) {
         String userMessage = aiChatReqVO.getMessage();
+        List<String> relatedTileIds = resolveRelatedTileIds(aiChatReqVO);
+        int memoryDepth = resolveMemoryDepth(aiChatReqVO.getMemoryDepth());
 
         ChatModel chatModel = OpenAiChatModel.builder()
                 .options(OpenAiChatOptions.builder()
@@ -113,15 +129,20 @@ public class AiCustomerServiceController {
         List<Advisor> advisors = Lists.newArrayList();
         advisors.add(new CustomerServiceAdvisor(vectorStore));
 
-        String parentTileId = aiChatReqVO.getParentTileId();
-      //  System.out.println("parentTileId: " + parentTileId);
-        if (StringUtils.isNotBlank(parentTileId)) {
-            advisors.add(new CustomChatMemoryAdvisor(chatMessageMapper, parentTileId, 2));
+        if (!relatedTileIds.isEmpty()) {
+            advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, relatedTileIds, memoryDepth));
         }
 
-        advisors.add(new CustomStreamLoggerAndMessage2DBAdvisor(chatMessageMapper,
+        advisors.add(new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
+                tileMessageMapper,
+                tileEdgeMapper,
                 aiChatReqVO.getTileId(),
                 userMessage,
+                relatedTileIds,
+                aiChatReqVO.getEdgeDirection(),
+                aiChatReqVO.getRelationType(),
+                aiChatReqVO.getEdgeWeight(),
+                aiChatReqVO.getEdgeDescription(),
                 transactionTemplate));
 
         chatClientRequestSpec.advisors(advisors);
@@ -130,6 +151,28 @@ public class AiCustomerServiceController {
                 .stream()
                 .content()
                 .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build());
+    }
+
+    private List<String> resolveRelatedTileIds(AiCustomerServiceChatReqVO aiChatReqVO) {
+        Set<String> relatedTileIds = new LinkedHashSet<>();
+        if (aiChatReqVO.getRelatedTileIds() != null) {
+            relatedTileIds.addAll(aiChatReqVO.getRelatedTileIds());
+        }
+
+        if (StringUtils.isNotBlank(aiChatReqVO.getParentTileId())) {
+            relatedTileIds.add(aiChatReqVO.getParentTileId());
+        }
+
+        relatedTileIds.removeIf(tileId -> StringUtils.isBlank(tileId)
+                || StringUtils.equals(tileId, aiChatReqVO.getTileId()));
+        return relatedTileIds.stream().toList();
+    }
+
+    private int resolveMemoryDepth(Integer memoryDepth) {
+        if (memoryDepth == null) {
+            return 1;
+        }
+        return Math.max(memoryDepth, 0);
     }
 
 }

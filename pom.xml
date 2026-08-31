@@ -19,7 +19,7 @@
         <spring-ai.version>2.0.0</spring-ai.version>
         <!-- 常用工具类 -->
         <commons-lang3.version>3.18.0</commons-lang3.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.46</lombok.version>
         <!-- Mybatis Plus -->
         <mybatis-plus.version>3.5.16</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
@@ -168,6 +168,19 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

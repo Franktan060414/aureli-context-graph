@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Maps;
 import com.aureli.ai.robot.domain.dos.AiCustomerServiceMdStorageDO;
 import com.aureli.ai.robot.domain.mapper.AiCustomerServiceMdStorageMapper;
+import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
+import com.aureli.ai.robot.domain.mapper.TileMapper;
+import com.aureli.ai.robot.domain.mapper.TileMessageMapper;
 import com.aureli.ai.robot.enums.AiCustomerServiceMdStatusEnum;
 import com.aureli.ai.robot.enums.ResponseCodeEnum;
 import com.aureli.ai.robot.event.AiCustomerServiceMdUploadedEvent;
@@ -55,6 +58,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Resource
     private AiCustomerServiceMdStorageMapper aiCustomerServiceMdStorageMapper;
+    @Resource
+    private TileMapper tileMapper;
+    @Resource
+    private TileMessageMapper tileMessageMapper;
+    @Resource
+    private TileEdgeMapper tileEdgeMapper;
 
     @Resource
     private ApplicationEventPublisher eventPublisher; // 注入事件发布器
@@ -240,6 +249,15 @@ public class CustomerServiceImpl implements CustomerService {
             throw new BizException(ResponseCodeEnum.MARKDOWN_FILE_NOT_FOUND);
         }
 
+        return Response.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<?> resetTileWorkspace() {
+        tileEdgeMapper.delete(null);
+        tileMessageMapper.delete(null);
+        tileMapper.delete(null);
         return Response.success();
     }
 
