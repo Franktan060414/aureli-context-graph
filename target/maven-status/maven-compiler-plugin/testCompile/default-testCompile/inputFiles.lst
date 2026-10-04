@@ -1,7 +1,10 @@
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/MybatisPlusTests.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/XiaohaAiRobotSpringbootApplicationTests.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/ModelApiSettingsControllerTest.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TileCompletionProtocolTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TileKnowledgeRoutingTest.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TilePersistenceIntegrationTest.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TileWorkspaceControllerTest.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/event/MarkdownVectorOwnershipTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/service/model/ModelApiSettingsRepositoryTest.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/service/model/ModelApiSettingsServiceTest.java

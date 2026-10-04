@@ -6,81 +6,83 @@ import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
-import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 
-/**
- * @Date: 2026/8/23 17:09
- * @Version: v1.0.0
- * @Description: 智能客服 Advisor
- **/
+/** 先读取 Tile 工作记忆，再判定是否需要检索专业资料。 */
 @Slf4j
 public class CustomerServiceAdvisor implements StreamAdvisor {
 
     private final VectorStore vectorStore;
+    private final ChatModel chatModel;
 
-    public CustomerServiceAdvisor(VectorStore vectorStore) {
+    public CustomerServiceAdvisor(VectorStore vectorStore, ChatModel chatModel) {
         this.vectorStore = vectorStore;
+        this.chatModel = chatModel;
     }
 
     @Override
-    public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
-        // 获取用户输入的提示词
-        Prompt prompt = chatClientRequest.prompt();
-        UserMessage userMessage = prompt.getUserMessage();
-
-        // 查询向量库
-        // 检索与查询相似的文档
-        List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder()
-                .query(userMessage.getText()) // 查询的关键词
-                .topK(3) // 查询相似度最高的 3 条文档
-                .build());
-
-        // 构建向量查询结果上下文信息
-        String context = buildContext(documents);
-
-        // 填充提示词占位符，转换为 Prompt 提示词对象
-        Prompt newPrompt = CustomerServicePrompts.ragAnswer(userMessage.getText(), context, prompt.getOptions());
-
-        log.info("## 重新构建的增强提示词: {}", newPrompt.getUserMessage().getText());
-
-        // 重新构建 ChatClientRequest，设置重新构建的 “增强提示词”
-        ChatClientRequest newChatClientRequest = ChatClientRequest.builder()
-                .prompt(newPrompt)
-                .build();
-
-        return streamAdvisorChain.nextStream(newChatClientRequest);
+    public Flux<ChatClientResponse> adviseStream(ChatClientRequest request, StreamAdvisorChain chain) {
+        // 判定与向量检索是阻塞调用；内部判定结果不进入回答流或消息持久化。
+        return Mono.fromCallable(() -> augment(request))
+                .subscribeOn(Schedulers.boundedElastic())
+                .flatMapMany(chain::nextStream);
     }
 
-    /**
-     * 构建上下文
-     * @param documents
-     * @return
-     */
-    private String buildContext(List<Document> documents) {
-        StringBuilder contextTemp = new StringBuilder();
-
-        for (Document document : documents) {
-            contextTemp.append(CustomerServicePrompts.knowledgeDocument(document.getText()));
+    private ChatClientRequest augment(ChatClientRequest request) {
+        Prompt prompt = request.prompt();
+        String context = "";
+        if (requiresKnowledge(prompt)) {
+            List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder()
+                    .query(prompt.getUserMessage().getText())
+                    .topK(3)
+                    .build());
+            if (documents != null) {
+                StringBuilder content = new StringBuilder();
+                for (Document document : documents) {
+                    if (document.getText() != null && !document.getText().isBlank()) {
+                        content.append(CustomerServicePrompts.knowledgeDocument(document.getText()));
+                    }
+                }
+                context = content.toString();
+            }
         }
+        return request.mutate()
+                .prompt(CustomerServicePrompts.ragAnswer(prompt, context))
+                .build();
+    }
 
-        return contextTemp.toString();
+    private boolean requiresKnowledge(Prompt prompt) {
+        try {
+            ChatResponse response = chatModel.call(CustomerServicePrompts.knowledgeDecision(prompt));
+            if (response == null || response.getResult() == null) {
+                return false;
+            }
+            String decision = response.getResult().getOutput().getText();
+            // 只有明确的肯定标记才检索；含糊回答或额外说明均按不检索处理。
+            return decision != null && CustomerServicePrompts.RAG_REQUIRED.equals(decision.trim());
+        } catch (RuntimeException error) {
+            log.warn("知识检索判定失败，继续使用工作记忆与通用回答能力", error);
+            return false;
+        }
     }
 
     @Override
     public String getName() {
-        // 获取类名称
-        return this.getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
 
     @Override
     public int getOrder() {
-        return 1; // order 值越小，越先执行
+        return 2;
     }
 }

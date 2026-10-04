@@ -56,7 +56,7 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
 
     @Override
     public int getOrder() {
-        return 2; // order 值越小，越先执行
+        return 1; // 在知识检索判定之前加载 Tile 工作记忆
     }
 
     @Override

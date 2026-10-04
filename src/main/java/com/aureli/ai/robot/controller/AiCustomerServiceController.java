@@ -109,11 +109,11 @@ public class AiCustomerServiceController {
                 .user(userMessage);
 
         List<Advisor> advisors = Lists.newArrayList();
-        advisors.add(new CustomerServiceAdvisor(vectorStore));
-
         if (!relatedTileIds.isEmpty()) {
             advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, relatedTileIds, memoryDepth));
         }
+
+        advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
 
         advisors.add(new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
                 tileMessageMapper,
