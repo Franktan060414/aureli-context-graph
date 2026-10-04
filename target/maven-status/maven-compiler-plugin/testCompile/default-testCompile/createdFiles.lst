@@ -1,0 +1,7 @@
+com/aureli/ai/robot/XiaohaAiRobotSpringbootApplicationTests.class
+com/aureli/ai/robot/controller/TileCompletionProtocolTest.class
+com/aureli/ai/robot/service/model/ModelApiSettingsServiceTest.class
+com/aureli/ai/robot/controller/TileWorkspaceControllerTest.class
+com/aureli/ai/robot/event/MarkdownVectorOwnershipTest.class
+com/aureli/ai/robot/controller/TilePersistenceIntegrationTest.class
+com/aureli/ai/robot/MybatisPlusTests.class

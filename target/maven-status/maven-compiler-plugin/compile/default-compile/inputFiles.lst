@@ -13,6 +13,8 @@
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/config/ThreadPoolConfig.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/constants/DateConstants.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/controller/AiCustomerServiceController.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/controller/ModelApiSettingsController.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/controller/TileWorkspaceController.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/domain/dos/AiCustomerServiceMdStorageDO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/domain/dos/TileDO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/domain/dos/TileEdgeDO.java
@@ -35,9 +37,13 @@
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListRspVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/UpdateMarkdownFileReqVO.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/CustomerServicePrompts.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/package-info.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/reader/MarkdownReader.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/service/CustomerService.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/service/impl/CustomerServiceImpl.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/service/model/ConfigurableEmbeddingModel.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/service/model/ModelApiSettingsService.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/utils/JsonUtil.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/utils/PageResponse.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/utils/Response.java

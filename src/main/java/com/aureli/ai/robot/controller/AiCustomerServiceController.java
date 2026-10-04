@@ -10,6 +10,7 @@ import com.aureli.ai.robot.domain.mapper.TileMapper;
 import com.aureli.ai.robot.domain.mapper.TileMessageMapper;
 import com.aureli.ai.robot.model.vo.customerService.*;
 import com.aureli.ai.robot.service.CustomerService;
+import com.aureli.ai.robot.service.model.ModelApiSettingsService;
 import com.aureli.ai.robot.utils.PageResponse;
 import com.aureli.ai.robot.utils.Response;
 import jakarta.annotation.Resource;
@@ -18,10 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -57,15 +55,8 @@ public class AiCustomerServiceController {
     @Resource
     private TransactionTemplate transactionTemplate;
 
-    @Value("${spring.ai.openai.base-url}")
-    private String baseUrl;
-    @Value("${spring.ai.openai.api-key}")
-    private String apiKey;
-    @Value("${customer-service.model}")
-    private String model;
-    @Value("${customer-service.temperature}")
-    private Double temperature;
-
+    @Resource
+    private ModelApiSettingsService modelApiSettings;
 
     /**
      * 问答 MD 文件上传
@@ -112,18 +103,9 @@ public class AiCustomerServiceController {
         List<String> relatedTileIds = resolveRelatedTileIds(aiChatReqVO);
         int memoryDepth = resolveMemoryDepth(aiChatReqVO.getMemoryDepth());
 
-        ChatModel chatModel = OpenAiChatModel.builder()
-                .options(OpenAiChatOptions.builder()
-                        .baseUrl(baseUrl)
-                        .apiKey(apiKey)
-                        .build())
-                .build();
-
+        ChatModel chatModel = modelApiSettings.chatModel();
         ChatClient.ChatClientRequestSpec chatClientRequestSpec = ChatClient.create(chatModel)
                 .prompt()
-                .options(OpenAiChatOptions.builder()
-                        .model(model)
-                        .temperature(temperature))
                 .user(userMessage);
 
         List<Advisor> advisors = Lists.newArrayList();
@@ -147,10 +129,16 @@ public class AiCustomerServiceController {
 
         chatClientRequestSpec.advisors(advisors);
 
-        return chatClientRequestSpec
-                .stream()
-                .content()
-                .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build());
+        // defer also captures synchronous embedding / advisor failures into the SSE protocol.
+        return Flux.defer(() -> chatClientRequestSpec.stream().content()
+                .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build()))
+                .concatWithValues(AiCustomerServiceChatRspVO.builder().done(true).build())
+                .onErrorResume(error -> {
+                    log.error("Tile completion failed: {}", aiChatReqVO.getTileId(), error);
+                    return Flux.just(AiCustomerServiceChatRspVO.builder()
+                            .error("回答生成或保存失败，请检查模型服务连接后重试。")
+                            .build());
+                });
     }
 
     private List<String> resolveRelatedTileIds(AiCustomerServiceChatReqVO aiChatReqVO) {

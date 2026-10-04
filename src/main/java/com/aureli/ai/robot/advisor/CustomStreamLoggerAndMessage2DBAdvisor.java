@@ -119,7 +119,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                     log.info("\n==== FULL AI RESPONSE ====\n{}\n========================", completeResponse);
 
                     // 开启编程式事务
-                    transactionTemplate.execute(status -> {
+                    Boolean saved = transactionTemplate.execute(status -> {
                         try {
                             LocalDateTime now = LocalDateTime.now();
                             saveOrUpdateTile(completeResponse, now);
@@ -149,6 +149,9 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                         }
                         return false;
                     });
+                    if (!Boolean.TRUE.equals(saved)) {
+                        throw new IllegalStateException("Tile persistence failed");
+                    }
                 })
                 .doOnError(error -> {
                     // 出错时打印已收集的部分

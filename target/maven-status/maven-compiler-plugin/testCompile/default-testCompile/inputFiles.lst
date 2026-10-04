@@ -1,2 +1,7 @@
-E:\星球项目调试\xiaoha-ai-robot-springboot\src\test\java\com\quanxiaoha\ai\robot\MybatisPlusTests.java
-E:\星球项目调试\xiaoha-ai-robot-springboot\src\test\java\com\quanxiaoha\ai\robot\XiaohaAiRobotSpringbootApplicationTests.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/MybatisPlusTests.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/XiaohaAiRobotSpringbootApplicationTests.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TileCompletionProtocolTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TilePersistenceIntegrationTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/controller/TileWorkspaceControllerTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/event/MarkdownVectorOwnershipTest.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/test/java/com/aureli/ai/robot/service/model/ModelApiSettingsServiceTest.java

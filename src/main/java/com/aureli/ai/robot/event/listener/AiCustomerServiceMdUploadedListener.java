@@ -75,9 +75,9 @@ public class AiCustomerServiceMdUploadedListener {
                 log.info("## documents: {}", documents);
 
                 // 防止重复添加相同文档到 PGVector 中
-                // 这里仅对正文内容做哈希，同一份文件重复上传才能命中同一个 ID，从而被覆盖而非新增
+                // 在文件内按内容去重，不覆盖其他文件拥有的向量与删除关联。
                 JdkSha256HexIdGenerator jdkSha256HexIdGenerator = new JdkSha256HexIdGenerator();
-                IdGenerator contentHashIdGenerator = contents -> jdkSha256HexIdGenerator.generateId(contents[0]);
+                IdGenerator contentHashIdGenerator = contents -> jdkSha256HexIdGenerator.generateId("md-storage:" + id + "\n" + contents[0]);
 
                 // 重建 Document，将随机 ID 替换为基于内容哈希的确定性 ID
                 List<Document> documentsWithStableId = documents.stream()
@@ -90,7 +90,7 @@ public class AiCustomerServiceMdUploadedListener {
 
                 // 通过向量模型，将文档分批向量化并写入 PGVector
                 // 注意：向量模型服务端限制单次批量向量化数量不能超过 10 条，这里按 10 条一批分批写入
-                // 相同内容永远落到同一个 ID 上，天然幂等，重复上传不会产生重复数据
+                // 同一文件内相同内容的 ID 稳定；不同文件保留各自 mdStorageId。
                 for (List<Document> batch : Lists.partition(documentsWithStableId, 10)) {
                     vectorStore.add(batch);
                 }
