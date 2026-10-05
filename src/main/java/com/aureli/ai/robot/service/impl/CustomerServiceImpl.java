@@ -2,9 +2,13 @@ package com.aureli.ai.robot.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Maps;
 import com.aureli.ai.robot.domain.dos.AiCustomerServiceMdStorageDO;
+import com.aureli.ai.robot.domain.dos.TileDO;
+import com.aureli.ai.robot.domain.dos.TileEdgeDO;
+import com.aureli.ai.robot.domain.dos.TileMessageDO;
 import com.aureli.ai.robot.domain.mapper.AiCustomerServiceMdStorageMapper;
 import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
 import com.aureli.ai.robot.domain.mapper.TileMapper;
@@ -14,6 +18,7 @@ import com.aureli.ai.robot.enums.ResponseCodeEnum;
 import com.aureli.ai.robot.event.AiCustomerServiceMdUploadedEvent;
 import com.aureli.ai.robot.exception.BizException;
 import com.aureli.ai.robot.model.vo.customerService.DeleteMarkdownFileReqVO;
+import com.aureli.ai.robot.model.vo.customerService.DeleteTileReqVO;
 import com.aureli.ai.robot.model.vo.customerService.FindMarkdownFilePageListReqVO;
 import com.aureli.ai.robot.model.vo.customerService.FindMarkdownFilePageListRspVO;
 import com.aureli.ai.robot.model.vo.customerService.UpdateMarkdownFileReqVO;
@@ -258,6 +263,28 @@ public class CustomerServiceImpl implements CustomerService {
         tileEdgeMapper.delete(null);
         tileMessageMapper.delete(null);
         tileMapper.delete(null);
+        return Response.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<?> deleteTile(DeleteTileReqVO deleteTileReqVO) {
+        String tileId = StringUtils.trim(deleteTileReqVO.getTileId());
+        Long tileCount = tileMapper.selectCount(Wrappers.<TileDO>lambdaQuery()
+                .eq(TileDO::getTileId, tileId));
+        if (tileCount == null || tileCount == 0) {
+            throw new BizException(ResponseCodeEnum.TILE_NOT_FOUND);
+        }
+
+        // Explicitly remove dependants so correctness does not rely on database cascades.
+        tileEdgeMapper.delete(Wrappers.<TileEdgeDO>lambdaQuery()
+                .eq(TileEdgeDO::getSourceTileId, tileId)
+                .or()
+                .eq(TileEdgeDO::getTargetTileId, tileId));
+        tileMessageMapper.delete(Wrappers.<TileMessageDO>lambdaQuery()
+                .eq(TileMessageDO::getTileId, tileId));
+        tileMapper.delete(Wrappers.<TileDO>lambdaQuery()
+                .eq(TileDO::getTileId, tileId));
         return Response.success();
     }
 

@@ -92,6 +92,12 @@ public class AiCustomerServiceController {
         return customerService.resetTileWorkspace();
     }
 
+    @PostMapping("/tile/delete")
+    @ApiOperationLog(description = "删除 Tile 节点、消息和关系边")
+    public Response<?> deleteTile(@RequestBody @Validated DeleteTileReqVO deleteTileReqVO) {
+        return customerService.deleteTile(deleteTileReqVO);
+    }
+
     /**
      * Tile 式智能客服对话。
      * tileId 表示当前磁贴；relatedTileIds 为空时表示从画布空白处提问，不读取工作记忆。

@@ -160,7 +160,7 @@ npm run build
 4. 选择一个或多个已有 Tile，设置关系方向、类型和说明，再继续提问。
 5. 刷新或点击同步，从数据库恢复完整图谱和最新回答。
 
-服务设置存入 PostgreSQL 的 `t_model_api_settings`。读取接口不会返回 API Key 原文；保存成功后，后续对话、文档向量化和 RAG 检索立即使用新配置，无需重启服务。
+服务设置存入 PostgreSQL 的 `t_model_api_settings`。读取接口不会返回 API Key 原文；保存成功后，后续对话、文档向量化和 RAG 检索立即使用新配置，无需重启服务。“测试链接”会使用后端当前已保存的对话模型配置发送固定测试消息，并返回模型回复。
 
 ## 主要接口
 
@@ -175,6 +175,7 @@ npm run build
 | `POST` | `/customer-service/md/delete` | 删除文档及相关向量 |
 | `GET` | `/customer-service/model-settings` | 读取脱敏后的模型配置 |
 | `POST` | `/customer-service/model-settings` | 保存并应用模型配置 |
+| `POST` | `/customer-service/model-settings/test` | 使用已保存配置测试对话模型连接 |
 
 Tile 问答示例：
 

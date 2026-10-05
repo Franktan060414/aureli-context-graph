@@ -1,6 +1,7 @@
 package com.aureli.ai.robot.service;
 
 import com.aureli.ai.robot.model.vo.customerService.DeleteMarkdownFileReqVO;
+import com.aureli.ai.robot.model.vo.customerService.DeleteTileReqVO;
 import com.aureli.ai.robot.model.vo.customerService.FindMarkdownFilePageListReqVO;
 import com.aureli.ai.robot.model.vo.customerService.FindMarkdownFilePageListRspVO;
 import com.aureli.ai.robot.model.vo.customerService.UpdateMarkdownFileReqVO;
@@ -49,5 +50,13 @@ public interface CustomerService {
      * @return
      */
     Response<?> resetTileWorkspace();
+
+    /**
+     * 删除单个 Tile、其消息以及所有以该 Tile 为端点的关系边。
+     *
+     * @param deleteTileReqVO Tile 标识
+     * @return 删除结果
+     */
+    Response<?> deleteTile(DeleteTileReqVO deleteTileReqVO);
 
 }
