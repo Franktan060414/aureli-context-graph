@@ -35,12 +35,12 @@ public class AiCustomerServiceChatReqVO {
     private String parentTileId;
 
     /**
-     * 相关 Tile ID 列表。新 Tile 会从这些相关 Tile 出发遍历图记忆。
+     * 显式选择的上下文来源 Tile。沿有向边向上追溯来源，不读取其子分支；无向边双向读取。
      */
     private List<String> relatedTileIds;
 
     /**
-     * 图记忆遍历深度。0 表示只读取直接相关 Tile。
+     * 从所选来源继续追溯的最大边数。0 表示只读取直接选择的 Tile。
      */
     private Integer memoryDepth;
 

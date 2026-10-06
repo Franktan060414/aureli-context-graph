@@ -1,3 +1,4 @@
+com/aureli/ai/robot/advisor/CustomChatMemoryAdvisorTest.class
 com/aureli/ai/robot/XiaohaAiRobotSpringbootApplicationTests.class
 com/aureli/ai/robot/controller/TileCompletionProtocolTest.class
 com/aureli/ai/robot/service/model/ModelApiSettingsServiceTest.class

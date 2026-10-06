@@ -34,10 +34,12 @@
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/AiCustomerServiceChatReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/AiCustomerServiceChatRspVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/DeleteMarkdownFileReqVO.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/DeleteTileReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListRspVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/UpdateMarkdownFileReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/CustomerServicePrompts.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/ModelApiTestPrompts.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/package-info.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/reader/MarkdownReader.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/service/CustomerService.java

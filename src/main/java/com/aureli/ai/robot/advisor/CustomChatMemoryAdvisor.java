@@ -69,6 +69,8 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
         log.info("## 自定义 Tile 图记忆 Advisor...");
 
         Set<String> relatedTileIds = collectRelatedTileIds();
+        log.info("## Tile 工作记忆范围: startTileIds={}, maxDepth={}, resolvedTileIds={}",
+                startTileIds, maxDepth, relatedTileIds);
         List<TileMessageDO> messages = tileMessageMapper.selectByTileIds(relatedTileIds);
 
         // 所有消息
@@ -137,9 +139,11 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
             }
         }
 
+        // 有向边保存为「上下文来源 -> 新 Tile」，读取记忆应反向追溯来源。
+        // 沿出边访问子节点会把共同父节点下的其他分支混入当前上下文。
         if (Objects.equals(edge.getDirection(), DIRECTED)
-                && Objects.equals(edge.getSourceTileId(), currentTileId)) {
-            return edge.getTargetTileId();
+                && Objects.equals(edge.getTargetTileId(), currentTileId)) {
+            return edge.getSourceTileId();
         }
 
         return null;
