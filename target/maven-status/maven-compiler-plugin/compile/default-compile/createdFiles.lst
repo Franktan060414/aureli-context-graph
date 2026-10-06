@@ -21,6 +21,7 @@ com/aureli/ai/robot/domain/mapper/TileMapper.class
 com/aureli/ai/robot/controller/TileWorkspaceController.class
 com/aureli/ai/robot/service/model/ModelApiSettingsService.class
 com/aureli/ai/robot/controller/TileWorkspaceController$Edge.class
+com/aureli/ai/robot/model/vo/customerService/UpdateTileWeightReqVO.class
 com/aureli/ai/robot/service/model/ModelApiSettingsService$SettingsRequest.class
 com/aureli/ai/robot/service/model/ModelApiSettingsRepository$StoredSettings.class
 com/aureli/ai/robot/service/model/ConfigurableEmbeddingModel.class

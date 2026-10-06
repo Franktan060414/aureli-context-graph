@@ -38,6 +38,7 @@
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/FindMarkdownFilePageListRspVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/UpdateMarkdownFileReqVO.java
+/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/model/vo/customerService/UpdateTileWeightReqVO.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/CustomerServicePrompts.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/ModelApiTestPrompts.java
 /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/src/main/java/com/aureli/ai/robot/prompt/package-info.java

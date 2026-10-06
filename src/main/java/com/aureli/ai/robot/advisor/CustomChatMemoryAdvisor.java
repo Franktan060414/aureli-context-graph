@@ -4,6 +4,8 @@ import com.aureli.ai.robot.domain.dos.TileEdgeDO;
 import com.aureli.ai.robot.domain.dos.TileMessageDO;
 import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
 import com.aureli.ai.robot.domain.mapper.TileMessageMapper;
+import com.aureli.ai.robot.domain.mapper.TileMapper;
+import com.aureli.ai.robot.prompt.CustomerServicePrompts;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClientRequest;
@@ -18,8 +20,10 @@ import reactor.core.publisher.Flux;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
@@ -36,15 +40,18 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
     private static final String UNDIRECTED = "UNDIRECTED";
 
     private final TileMessageMapper tileMessageMapper;
+    private final TileMapper tileMapper;
     private final TileEdgeMapper tileEdgeMapper;
     private final List<String> startTileIds;
     private final int maxDepth;
 
     public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper,
                                    TileEdgeMapper tileEdgeMapper,
+                                   TileMapper tileMapper,
                                    Collection<String> startTileIds,
                                    int maxDepth) {
         this.tileMessageMapper = tileMessageMapper;
+        this.tileMapper = tileMapper;
         this.tileEdgeMapper = tileEdgeMapper;
         this.startTileIds = startTileIds == null ? List.of() : startTileIds.stream()
                 .filter(Objects::nonNull)
@@ -72,6 +79,11 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
         log.info("## Tile 工作记忆范围: startTileIds={}, maxDepth={}, resolvedTileIds={}",
                 startTileIds, maxDepth, relatedTileIds);
         List<TileMessageDO> messages = tileMessageMapper.selectByTileIds(relatedTileIds);
+        Map<String, Integer> weights = new HashMap<>();
+        if (!relatedTileIds.isEmpty()) {
+            tileMapper.selectByTileIds(relatedTileIds)
+                    .forEach(tile -> weights.put(tile.getTileId(), tile.getWeight()));
+        }
 
         // 所有消息
         List<Message> messageList = Lists.newArrayList();
@@ -80,11 +92,13 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
         for (TileMessageDO tileMessageDO : messages) {
             // 消息类型
             String type  = tileMessageDO.getRole();
+            String content = CustomerServicePrompts.tileMemory(tileMessageDO.getTileId(),
+                    weights.get(tileMessageDO.getTileId()), tileMessageDO.getContent());
             if (Objects.equals(type, MessageType.USER.getValue())) { // 用户消息
-                Message userMessage = new UserMessage(tileMessageDO.getContent());
+                Message userMessage = new UserMessage(content);
                 messageList.add(userMessage);
             } else if (Objects.equals(type, MessageType.ASSISTANT.getValue())) { // AI 助手消息
-                Message assistantMessage = new AssistantMessage(tileMessageDO.getContent());
+                Message assistantMessage = new AssistantMessage(content);
                 messageList.add(assistantMessage);
             }
         }

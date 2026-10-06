@@ -1,23 +1,94 @@
-2026-10-06 00:55:36.151 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1h5m35s952ms).
-2026-10-06 01:27:08.418 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=31m32s267ms).
-2026-10-06 01:49:57.991 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=22m49s573ms).
-2026-10-06 02:06:32.950 [http-nio-8080-exec-4] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /customer-service/model-settings/test request error, 
-org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletResponse failed to flushBuffer: java.io.IOException: Broken pipe
-	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.handleIOException(StandardServletAsyncWebRequest.java:340)
-	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.flushBuffer(StandardServletAsyncWebRequest.java:319)
-	at org.springframework.http.server.ServletServerHttpResponse.flush(ServletServerHttpResponse.java:126)
-	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:264)
-	at org.springframework.web.servlet.mvc.method.annotation.ResponseEntityReturnValueHandler.handleReturnValue(ResponseEntityReturnValueHandler.java:80)
-	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:77)
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135)
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+2026-10-07 00:03:24.349 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-07 00:03:24.355 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-07 00:03:24.359 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-10-07 00:03:24.360 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-10-07 00:03:25.422 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.12 with PID 22069 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-10-07 00:03:25.424 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-10-07 00:03:25.483 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-10-07 00:03:25.963 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-07 00:03:25.968 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:03:25.969 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-07 00:03:25.969 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-07 00:03:25.981 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 543 ms
+2026-10-07 00:03:26.071 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-10-07 00:03:26.162 [main] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@5bde6148
+2026-10-07 00:03:26.162 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-10-07 00:03:26.480 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-10-07 00:03:26.481 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-10-07 00:03:26.481 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-10-07 00:03:26.543 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-10-07 00:03:26.604 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@3e6f3bae
+2026-10-07 00:03:26.665 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:03:26.671 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-07 00:03:26.673 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.37 seconds (process running for 1.7)
+2026-10-07 00:03:35.012 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-07 00:03:35.012 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-07 00:03:35.013 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-07 00:06:51.593 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-07 00:06:51.595 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-07 00:06:51.597 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-10-07 00:06:51.598 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-10-07 00:06:52.647 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.12 with PID 22552 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-10-07 00:06:52.649 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-10-07 00:06:52.703 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-10-07 00:06:53.084 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-07 00:06:53.089 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:06:53.089 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-07 00:06:53.089 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-07 00:06:53.101 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 440 ms
+2026-10-07 00:06:53.182 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-10-07 00:06:53.248 [main] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@58f290bc
+2026-10-07 00:06:53.249 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-10-07 00:06:53.559 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-10-07 00:06:53.560 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-10-07 00:06:53.560 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-10-07 00:06:53.616 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-10-07 00:06:53.669 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@73d69c0f
+2026-10-07 00:06:53.726 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:06:53.732 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-07 00:06:53.734 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.204 seconds (process running for 1.524)
+2026-10-07 00:06:56.422 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-07 00:06:56.422 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-07 00:06:56.423 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-07 00:08:42.101 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList =================================== 
+2026-10-07 00:08:42.160 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 60ms, 出参: {"current":1,"data":[{"id":20,"originalFileName":"加工调度遗传算法实验报告.md","fileSize":"30.41 KB","status":2,"createTime":"2026-10-06 22:32:56","updateTime":"2026-10-06 22:33:12","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":1} =================================== 
+2026-10-07 00:08:43.001 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList =================================== 
+2026-10-07 00:08:43.014 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 14ms, 出参: {"current":1,"data":[{"id":20,"originalFileName":"加工调度遗传算法实验报告.md","fileSize":"30.41 KB","status":2,"createTime":"2026-10-06 22:32:56","updateTime":"2026-10-06 22:33:12","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":1} =================================== 
+2026-10-07 00:09:08.901 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-07 00:09:08.903 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-07 00:09:08.905 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
+2026-10-07 00:09:08.905 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
+2026-10-07 00:09:09.957 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.12 with PID 22751 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
+2026-10-07 00:09:09.959 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
+2026-10-07 00:09:10.025 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-10-07 00:09:10.409 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-07 00:09:10.414 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:09:10.415 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-07 00:09:10.415 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-07 00:09:10.427 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 454 ms
+2026-10-07 00:09:10.507 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
+2026-10-07 00:09:10.583 [main] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@cf984d9
+2026-10-07 00:09:10.595 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
+2026-10-07 00:09:10.917 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
+2026-10-07 00:09:10.918 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
+2026-10-07 00:09:10.919 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
+2026-10-07 00:09:10.976 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-10-07 00:09:11.029 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@2caf6912
+2026-10-07 00:09:11.085 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-07 00:09:11.091 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-07 00:09:11.093 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.259 seconds (process running for 1.549)
+2026-10-07 00:09:11.904 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-07 00:09:11.904 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-07 00:09:11.905 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-07 00:09:25.494 [http-nio-8080-exec-7] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /favicon.ico request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico for request '/favicon.ico'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
-	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
@@ -48,1283 +119,81 @@ org.springframework.web.context.request.async.AsyncRequestNotUsableException: Se
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Broken pipe
-	at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:290)
-	at org.apache.catalina.connector.OutputBuffer.flush(OutputBuffer.java:252)
-	at org.apache.catalina.connector.Response.flushBuffer(Response.java:432)
-	at org.apache.catalina.connector.ResponseFacade.flushBuffer(ResponseFacade.java:175)
-	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.flushBuffer(StandardServletAsyncWebRequest.java:316)
-	... 43 more
-Caused by: java.io.IOException: Broken pipe
-	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
-	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:65)
-	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:137)
-	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:102)
-	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:58)
-	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:542)
-	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:129)
-	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1441)
-	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:747)
-	at org.apache.tomcat.util.net.SocketWrapperBase.flushBlocking(SocketWrapperBase.java:713)
-	at org.apache.tomcat.util.net.SocketWrapperBase.flush(SocketWrapperBase.java:698)
-	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.flush(Http11OutputBuffer.java:563)
-	at org.apache.coyote.http11.filters.ChunkedOutputFilter.flush(ChunkedOutputFilter.java:132)
-	at org.apache.coyote.http11.Http11OutputBuffer.flush(Http11OutputBuffer.java:216)
-	at org.apache.coyote.http11.Http11Processor.flush(Http11Processor.java:1271)
-	at org.apache.coyote.AbstractProcessor.action(AbstractProcessor.java:407)
-	at org.apache.coyote.Response.action(Response.java:197)
-	at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:286)
-	... 47 more
-2026-10-06 02:06:35.399 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=16m37s408ms).
-2026-10-06 02:57:34.366 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50m58s966ms).
-2026-10-06 03:48:11.466 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50m37s100ms).
-2026-10-06 04:39:07.472 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50m56s7ms).
-2026-10-06 05:13:12.238 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=34m4s766ms).
-2026-10-06 05:55:09.231 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=41m56s993ms).
-2026-10-06 06:11:16.967 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=16m7s736ms).
-2026-10-06 07:00:21.235 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=49m4s268ms).
-2026-10-06 07:17:36.780 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=17m15s545ms).
-2026-10-06 07:41:03.033 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=23m26s253ms).
-2026-10-06 08:08:00.622 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=26m57s589ms).
-2026-10-06 08:42:02.329 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=34m1s707ms).
-2026-10-06 09:00:14.704 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=18m12s375ms).
-2026-10-06 09:35:06.928 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=34m52s224ms).
-2026-10-06 09:42:48.755 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=7m41s827ms).
-2026-10-06 09:51:01.259 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=8m12s504ms).
-2026-10-06 09:53:24.721 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m23s461ms).
-2026-10-06 09:54:40.919 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m16s199ms).
-2026-10-06 09:56:38.617 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m57s698ms).
-2026-10-06 09:57:53.383 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m14s766ms).
-2026-10-06 09:59:38.180 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m44s796ms).
-2026-10-06 10:01:24.004 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m45s825ms).
-2026-10-06 10:02:14.658 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50s654ms).
-2026-10-06 10:07:20.103 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=5m5s445ms).
-2026-10-06 10:26:35.360 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=19m15s257ms).
-2026-10-06 10:28:03.352 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m27s991ms).
-2026-10-06 11:03:14.401 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=35m11s50ms).
-2026-10-06 11:11:06.806 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=7m52s405ms).
-2026-10-06 11:12:24.309 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m17s502ms).
-2026-10-06 11:16:44.639 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=4m20s331ms).
-2026-10-06 11:17:55.734 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m11s95ms).
-2026-10-06 11:18:58.262 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m2s528ms).
-2026-10-06 11:20:51.475 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m53s213ms).
-2026-10-06 11:22:28.060 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=55s328ms).
-2026-10-06 11:23:59.665 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m31s605ms).
-2026-10-06 11:25:08.484 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m8s818ms).
-2026-10-06 11:27:20.333 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m11s850ms).
-2026-10-06 11:28:37.230 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m16s897ms).
-2026-10-06 11:30:04.876 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m27s645ms).
-2026-10-06 11:30:58.001 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=53s126ms).
-2026-10-06 11:32:05.307 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m7s306ms).
-2026-10-06 11:33:27.041 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m21s733ms).
-2026-10-06 11:35:21.250 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m54s210ms).
-2026-10-06 11:44:51.819 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=9m30s569ms).
-2026-10-06 12:03:04.652 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=18m12s833ms).
-2026-10-06 12:37:42.807 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=34m38s154ms).
-2026-10-06 13:09:30.583 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=31m47s777ms).
-2026-10-06 13:32:17.996 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=22m47s413ms).
-2026-10-06 13:40:14.971 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=7m56s975ms).
-2026-10-06 13:41:18.359 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m3s388ms).
-2026-10-06 13:42:30.253 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m11s893ms).
-2026-10-06 13:43:16.928 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=46s676ms).
-2026-10-06 13:44:14.880 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=57s952ms).
-2026-10-06 13:45:15.270 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m390ms).
-2026-10-06 13:46:26.734 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m11s463ms).
-2026-10-06 14:19:24.914 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=32m58s181ms).
-2026-10-06 14:47:07.990 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=27m43s76ms).
-2026-10-06 15:18:48.892 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=31m40s902ms).
-2026-10-06 15:33:34.696 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=14m45s803ms).
-2026-10-06 15:38:25.904 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=4m51s209ms).
-2026-10-06 15:47:23.571 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=8m17s935ms).
-2026-10-06 15:49:29.841 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m28s307ms).
-2026-10-06 15:54:29.815 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=4m59s974ms).
-2026-10-06 15:59:34.069 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=5m4s253ms).
-2026-10-06 16:03:04.064 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=3m29s996ms).
-2026-10-06 16:12:22.693 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=9m18s629ms).
-2026-10-06 16:14:43.978 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m21s285ms).
-2026-10-06 16:15:37.694 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=53s715ms).
-2026-10-06 16:20:13.488 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m15s951ms).
-2026-10-06 16:23:57.576 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m5s410ms).
-2026-10-06 16:43:33.353 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=51s641ms).
-2026-10-06 16:44:33.886 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m533ms).
-2026-10-06 16:45:27.236 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=53s350ms).
-2026-10-06 16:47:03.165 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m35s928ms).
-2026-10-06 17:44:11.728 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=48s460ms).
-2026-10-06 17:48:11.493 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=49s410ms).
-2026-10-06 18:31:34.122 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=52s129ms).
-2026-10-06 18:35:11.381 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=54s865ms).
-2026-10-06 18:37:25.491 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m14s111ms).
-2026-10-06 18:38:16.428 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50s936ms).
-2026-10-06 18:40:43.673 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=2m27s246ms).
-2026-10-06 18:43:02.911 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=58s630ms).
-2026-10-06 18:45:48.980 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=46s101ms).
-2026-10-06 18:53:42.271 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=50s924ms).
-2026-10-06 18:56:15.371 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=48s709ms).
-2026-10-06 18:58:17.638 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=46s924ms).
-2026-10-06 19:18:09.855 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=49s102ms).
-2026-10-06 19:27:56.401 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=46s975ms).
-2026-10-06 19:29:18.441 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=46s322ms).
-2026-10-06 19:37:02.848 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m16s811ms).
-2026-10-06 19:37:51.534 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=48s686ms).
-2026-10-06 19:38:49.812 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=58s278ms).
-2026-10-06 19:42:28.326 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=3m38s513ms).
-2026-10-06 19:43:37.529 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m9s204ms).
-2026-10-06 19:45:02.247 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=1m24s718ms).
-2026-10-06 19:57:33.257 [AI-Robot-HikariCP:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Thread starvation or clock leap detected (housekeeper delta=12m31s9ms).
-2026-10-06 20:01:51.862 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-10-06 20:01:51.865 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-10-06 20:01:51.869 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
-2026-10-06 20:01:51.870 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
-2026-10-06 21:36:37.064 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.12 with PID 4353 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
-2026-10-06 21:36:37.066 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
-2026-10-06 21:36:37.141 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
-2026-10-06 21:36:37.622 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-10-06 21:36:37.628 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-10-06 21:36:37.628 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2026-10-06 21:36:37.628 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-10-06 21:36:37.642 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 563 ms
-2026-10-06 21:36:37.747 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
-2026-10-06 21:36:37.833 [main] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@3cead673
-2026-10-06 21:36:37.834 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
-2026-10-06 21:36:38.238 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
-2026-10-06 21:36:38.239 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
-2026-10-06 21:36:38.239 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
-2026-10-06 21:36:38.310 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
-2026-10-06 21:36:38.414 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@2caf6912
-2026-10-06 21:36:38.514 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-10-06 21:36:38.527 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-10-06 21:36:38.533 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.606 seconds (process running for 2.126)
-2026-10-06 21:37:06.225 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-10-06 21:37:06.226 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-10-06 21:37:06.227 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2026-10-06 21:39:21.340 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [重置 Tile 画布数据], 入参: , 请求类: AiCustomerServiceController, 请求方法: resetTileWorkspace =================================== 
-2026-10-06 21:39:21.351 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [重置 Tile 画布数据], 耗时: 11ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} =================================== 
-2026-10-06 21:39:25.489 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList =================================== 
-2026-10-06 21:39:25.539 [http-nio-8080-exec-6] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 50ms, 出参: {"current":1,"data":[{"id":19,"originalFileName":"04-插花技艺-知识库.md","fileSize":"15.46 KB","status":2,"createTime":"2026-10-05 12:55:34","updateTime":"2026-10-05 12:55:46","remark":null},{"id":18,"originalFileName":"03-知否知否应是绿肥红瘦-知识库.md","fileSize":"13.9 KB","status":2,"createTime":"2026-10-05 12:55:30","updateTime":"2026-10-05 12:55:45","remark":null},{"id":17,"originalFileName":"02-iPad-知识库.md","fileSize":"13.07 KB","status":2,"createTime":"2026-10-05 12:55:26","updateTime":"2026-10-05 12:55:45","remark":null},{"id":16,"originalFileName":"01-星露谷物语-知识库.md","fileSize":"11.61 KB","status":2,"createTime":"2026-10-05 12:55:17","updateTime":"2026-10-05 12:55:45","remark":null},{"id":15,"originalFileName":"原神_RAG知识库.md","fileSize":"2.21 KB","status":2,"createTime":"2026-10-05 12:50:14","updateTime":"2026-10-05 12:50:15","remark":null},{"id":14,"originalFileName":"小马宝莉_友谊的魔法_RAG知识库.md","fileSize":"2.33 KB","status":2,"createTime":"2026-10-05 12:50:11","updateTime":"2026-10-05 12:50:13","remark":null},{"id":13,"originalFileName":"克里斯托佛·诺兰_RAG知识库.md","fileSize":"2.29 KB","status":2,"createTime":"2026-10-05 12:50:05","updateTime":"2026-10-05 12:50:13","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":7} =================================== 
-2026-10-06 21:39:26.776 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList =================================== 
-2026-10-06 21:39:26.790 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 15ms, 出参: {"current":1,"data":[{"id":19,"originalFileName":"04-插花技艺-知识库.md","fileSize":"15.46 KB","status":2,"createTime":"2026-10-05 12:55:34","updateTime":"2026-10-05 12:55:46","remark":null},{"id":18,"originalFileName":"03-知否知否应是绿肥红瘦-知识库.md","fileSize":"13.9 KB","status":2,"createTime":"2026-10-05 12:55:30","updateTime":"2026-10-05 12:55:45","remark":null},{"id":17,"originalFileName":"02-iPad-知识库.md","fileSize":"13.07 KB","status":2,"createTime":"2026-10-05 12:55:26","updateTime":"2026-10-05 12:55:45","remark":null},{"id":16,"originalFileName":"01-星露谷物语-知识库.md","fileSize":"11.61 KB","status":2,"createTime":"2026-10-05 12:55:17","updateTime":"2026-10-05 12:55:45","remark":null},{"id":15,"originalFileName":"原神_RAG知识库.md","fileSize":"2.21 KB","status":2,"createTime":"2026-10-05 12:50:14","updateTime":"2026-10-05 12:50:15","remark":null},{"id":14,"originalFileName":"小马宝莉_友谊的魔法_RAG知识库.md","fileSize":"2.33 KB","status":2,"createTime":"2026-10-05 12:50:11","updateTime":"2026-10-05 12:50:13","remark":null},{"id":13,"originalFileName":"克里斯托佛·诺兰_RAG知识库.md","fileSize":"2.29 KB","status":2,"createTime":"2026-10-05 12:50:05","updateTime":"2026-10-05 12:50:13","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":7} =================================== 
-2026-10-06 21:40:58.367 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Markdown 问答文件分页查询], 入参: {"current":1,"size":10}, 请求类: AiCustomerServiceController, 请求方法: findMarkdownFilePageList =================================== 
-2026-10-06 21:40:58.384 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Markdown 问答文件分页查询], 耗时: 18ms, 出参: {"current":1,"data":[{"id":19,"originalFileName":"04-插花技艺-知识库.md","fileSize":"15.46 KB","status":2,"createTime":"2026-10-05 12:55:34","updateTime":"2026-10-05 12:55:46","remark":null},{"id":18,"originalFileName":"03-知否知否应是绿肥红瘦-知识库.md","fileSize":"13.9 KB","status":2,"createTime":"2026-10-05 12:55:30","updateTime":"2026-10-05 12:55:45","remark":null},{"id":17,"originalFileName":"02-iPad-知识库.md","fileSize":"13.07 KB","status":2,"createTime":"2026-10-05 12:55:26","updateTime":"2026-10-05 12:55:45","remark":null},{"id":16,"originalFileName":"01-星露谷物语-知识库.md","fileSize":"11.61 KB","status":2,"createTime":"2026-10-05 12:55:17","updateTime":"2026-10-05 12:55:45","remark":null},{"id":15,"originalFileName":"原神_RAG知识库.md","fileSize":"2.21 KB","status":2,"createTime":"2026-10-05 12:50:14","updateTime":"2026-10-05 12:50:15","remark":null},{"id":14,"originalFileName":"小马宝莉_友谊的魔法_RAG知识库.md","fileSize":"2.33 KB","status":2,"createTime":"2026-10-05 12:50:11","updateTime":"2026-10-05 12:50:13","remark":null},{"id":13,"originalFileName":"克里斯托佛·诺兰_RAG知识库.md","fileSize":"2.29 KB","status":2,"createTime":"2026-10-05 12:50:05","updateTime":"2026-10-05 12:50:13","remark":null}],"errorCode":null,"message":null,"pages":1,"size":10,"success":true,"total":7} =================================== 
-2026-10-06 21:41:41.820 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你好","tileId":"tile-muwq95qd-edc470","parentTileId":null,"relatedTileIds":[],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:41:41.840 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 15ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:41:43.607 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:41:43.607 [boundedElastic-2] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
-Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
-This executor is not suitable for production use under load.
-Please, configure an AsyncTaskExecutor through the WebMvc config.
--------------------------------
-!!!
-2026-10-06 21:41:43.609 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 好
-2026-10-06 21:41:43.637 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ！
-2026-10-06 21:41:43.676 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
-2026-10-06 21:41:43.716 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是
-2026-10-06 21:41:43.755 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  Aure
-2026-10-06 21:41:43.794 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: lia
-2026-10-06 21:41:43.835 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:41:43.882 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 欢
-2026-10-06 21:41:43.928 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 迎
-2026-10-06 21:41:43.967 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:41:44.006 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 来
-2026-10-06 21:41:44.045 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 到
-2026-10-06 21:41:44.088 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 这里
-2026-10-06 21:41:44.129 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:44.169 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 请
-2026-10-06 21:41:44.208 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 随
-2026-10-06 21:41:44.247 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 时
-2026-10-06 21:41:44.290 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提出
-2026-10-06 21:41:44.332 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你的
-2026-10-06 21:41:44.371 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问题
-2026-10-06 21:41:44.410 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或
-2026-10-06 21:41:44.448 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 需求
-2026-10-06 21:41:44.491 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:41:44.533 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 将
-2026-10-06 21:41:44.572 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 尽
-2026-10-06 21:41:44.612 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 力
-2026-10-06 21:41:44.651 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:41:44.694 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:41:44.734 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 理解
-2026-10-06 21:41:44.774 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知识
-2026-10-06 21:41:44.813 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:41:44.894 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 梳
-2026-10-06 21:41:44.936 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 理
-2026-10-06 21:41:44.975 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 思
-2026-10-06 21:41:45.015 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 路
-2026-10-06 21:41:45.054 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:41:45.093 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建立
-2026-10-06 21:41:45.135 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知识
-2026-10-06 21:41:45.178 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 关
-2026-10-06 21:41:45.217 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 联
-2026-10-06 21:41:45.256 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:45.305 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:41:45.306 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-你好！我是 Aurelia，欢迎你来到这里。请随时提出你的问题或需求，我将尽力帮助你理解知识、梳理思路和建立知识关联。
-========================
-2026-10-06 21:41:52.569 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"我有溃疡","tileId":"tile-muwq9fac-71d88d","parentTileId":null,"relatedTileIds":["tile-muwq95qd-edc470"],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:41:52.574 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 5ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:41:52.575 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:41:53.086 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:41:53.125 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有
-2026-10-06 21:41:53.202 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:41:53.279 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:41:53.320 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:53.401 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:41:53.478 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:41:53.517 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是一
-2026-10-06 21:41:53.560 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 种
-2026-10-06 21:41:53.601 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 常
-2026-10-06 21:41:53.640 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 见
-2026-10-06 21:41:53.679 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:41:53.718 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 皮
-2026-10-06 21:41:53.800 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肤
-2026-10-06 21:41:53.843 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疾
-2026-10-06 21:41:53.882 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 病
-2026-10-06 21:41:53.921 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:41:53.960 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 通常
-2026-10-06 21:41:53.999 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是
-2026-10-06 21:41:54.041 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 由
-2026-10-06 21:41:54.083 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 细
-2026-10-06 21:41:54.122 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 菌
-2026-10-06 21:41:54.162 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 感
-2026-10-06 21:41:54.201 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 染
-2026-10-06 21:41:54.240 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 引
-2026-10-06 21:41:54.281 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 起
-2026-10-06 21:41:54.325 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:41:54.365 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:54.443 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:41:54.524 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:41:54.565 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:41:54.605 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 症
-2026-10-06 21:41:54.644 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 状
-2026-10-06 21:41:54.683 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 包括
-2026-10-06 21:41:54.722 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 皮
-2026-10-06 21:41:54.806 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肤
-2026-10-06 21:41:54.846 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 红
-2026-10-06 21:41:54.925 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肿
-2026-10-06 21:41:54.964 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:41:55.046 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疼
-2026-10-06 21:41:55.086 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 痛
-2026-10-06 21:41:55.126 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:41:55.166 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 出
-2026-10-06 21:41:55.205 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 血
-2026-10-06 21:41:55.245 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:41:55.331 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 脓
-2026-10-06 21:41:55.371 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 液
-2026-10-06 21:41:55.411 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等
-2026-10-06 21:41:55.450 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:55.529 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:41:55.614 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:41:55.653 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:41:55.693 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 治疗
-2026-10-06 21:41:55.732 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 方法
-2026-10-06 21:41:55.772 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 包括
-2026-10-06 21:41:55.812 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 药
-2026-10-06 21:41:55.856 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:41:55.900 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 治疗
-2026-10-06 21:41:55.938 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:41:55.979 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 手
-2026-10-06 21:41:56.018 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 术
-2026-10-06 21:41:56.058 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 治疗
-2026-10-06 21:41:56.101 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:41:56.143 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物理
-2026-10-06 21:41:56.182 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 治疗
-2026-10-06 21:41:56.221 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等
-2026-10-06 21:41:56.261 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:41:56.303 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  
-
-
-2026-10-06 21:41:56.347 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:41:56.387 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 想
-2026-10-06 21:41:56.426 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知道
-2026-10-06 21:41:56.465 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 更多
-2026-10-06 21:41:56.504 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 关于
-2026-10-06 21:41:56.591 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:41:56.671 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:41:56.712 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:41:56.759 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 信息
-2026-10-06 21:41:56.797 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吗
-2026-10-06 21:41:56.836 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ？
-2026-10-06 21:41:56.876 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:41:56.876 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-你有溃疡。溃疡是一种常见的皮肤疾病，通常是由细菌感染引起的。溃疡的症状包括皮肤红肿、疼痛、出血和脓液等。溃疡的治疗方法包括药物治疗、手术治疗和物理治疗等。 
-
-你想知道更多关于溃疡的信息吗？
-========================
-2026-10-06 21:42:06.553 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你建议我吃些什么？","tileId":"tile-muwq9o3x-8fffb7","parentTileId":null,"relatedTileIds":["tile-muwq95qd-edc470"],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:42:06.554 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 1ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:42:06.554 [http-nio-8080-exec-2] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:42:07.070 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 如果
-2026-10-06 21:42:07.110 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:42:07.148 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有
-2026-10-06 21:42:07.226 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:42:07.306 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:42:07.348 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:42:07.388 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:42:07.428 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:42:07.467 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吃
-2026-10-06 21:42:07.506 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:42:07.549 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 营
-2026-10-06 21:42:07.592 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 养
-2026-10-06 21:42:07.631 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:42:07.670 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:42:07.709 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:07.749 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:07.794 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:07.834 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:42:07.873 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:42:07.913 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 身体
-2026-10-06 21:42:07.953 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 恢
-2026-10-06 21:42:07.994 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 复
-2026-10-06 21:42:08.041 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:08.087 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 修
-2026-10-06 21:42:08.127 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 复
-2026-10-06 21:42:08.167 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:42:08.208 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 以下
-2026-10-06 21:42:08.250 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是一
-2026-10-06 21:42:08.300 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:42:08.342 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 好的
-2026-10-06 21:42:08.383 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 选择
-2026-10-06 21:42:08.424 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：
-
-
-2026-10-06 21:42:08.467 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:42:08.603 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  蛋
-2026-10-06 21:42:08.645 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 白
-2026-10-06 21:42:08.688 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 质
-2026-10-06 21:42:08.732 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:42:08.773 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:42:08.813 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:08.853 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:08.894 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:08.944 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:42:08.984 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鸡
-2026-10-06 21:42:09.026 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:42:09.067 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:09.109 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鱼
-2026-10-06 21:42:09.156 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:42:09.198 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:09.239 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:42:09.281 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:42:09.321 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:09.367 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 奶
-2026-10-06 21:42:09.407 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 制
-2026-10-06 21:42:09.447 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 品
-2026-10-06 21:42:09.487 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:42:09.526 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:42:09.614 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  维
-2026-10-06 21:42:09.654 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:42:09.696 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:42:09.737 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: C
-2026-10-06 21:42:09.781 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:42:09.822 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:42:09.861 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:09.900 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:09.940 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:09.984 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:42:10.026 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  citrus
-2026-10-06 21:42:10.065 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  fruits
-2026-10-06 21:42:10.104 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:10.144 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 苹果
-2026-10-06 21:42:10.188 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:10.233 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 绿
-2026-10-06 21:42:10.276 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 叶
-2026-10-06 21:42:10.370 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 蔬
-2026-10-06 21:42:10.415 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 菜
-2026-10-06 21:42:10.458 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:42:10.498 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:42:10.582 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  维
-2026-10-06 21:42:10.625 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:42:10.667 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:42:10.709 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: E
-2026-10-06 21:42:10.751 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:42:10.791 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:42:10.838 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:10.881 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:10.922 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:10.962 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:42:11.003 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 核
-2026-10-06 21:42:11.048 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 桃
-2026-10-06 21:42:11.090 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:11.171 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 杏
-2026-10-06 21:42:11.212 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 仁
-2026-10-06 21:42:11.265 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:11.314 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大
-2026-10-06 21:42:11.363 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:42:11.413 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:42:11.460 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:42:11.588 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  蛋
-2026-10-06 21:42:11.628 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 白
-2026-10-06 21:42:11.669 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 质
-2026-10-06 21:42:11.713 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:11.753 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 维
-2026-10-06 21:42:11.792 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:42:11.831 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:42:11.875 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: C
-2026-10-06 21:42:11.922 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 同时
-2026-10-06 21:42:11.976 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:42:12.020 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:42:12.063 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:12.107 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:12.149 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:12.192 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:42:12.233 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鱼
-2026-10-06 21:42:12.276 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:42:12.316 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:12.356 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鸡
-2026-10-06 21:42:12.400 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:42:12.446 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:12.489 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:42:12.530 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:42:12.573 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-
-2026-10-06 21:42:12.616 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 同时
-2026-10-06 21:42:12.660 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，也
-2026-10-06 21:42:12.700 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:42:12.739 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 考虑
-2026-10-06 21:42:12.780 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吃
-2026-10-06 21:42:12.822 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:42:12.865 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 益
-2026-10-06 21:42:12.953 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肠
-2026-10-06 21:42:12.996 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 菌
-2026-10-06 21:42:13.040 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:13.081 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:13.121 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:13.163 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:42:13.205 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 酸
-2026-10-06 21:42:13.247 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 奶
-2026-10-06 21:42:13.292 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:42:13.334 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:42:13.377 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:42:13.419 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:13.461 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大
-2026-10-06 21:42:13.501 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:42:13.542 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等
-2026-10-06 21:42:13.584 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，这
-2026-10-06 21:42:13.626 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:42:13.673 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:13.715 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:42:13.755 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:42:13.794 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:42:13.833 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 改
-2026-10-06 21:42:13.873 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 善
-2026-10-06 21:42:13.953 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肠
-2026-10-06 21:42:13.992 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 道
-2026-10-06 21:42:14.031 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 健康
-2026-10-06 21:42:14.071 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-
-
-2026-10-06 21:42:14.113 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 记
-2026-10-06 21:42:14.156 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 住
-2026-10-06 21:42:14.198 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，这
-2026-10-06 21:42:14.237 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:42:14.276 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:42:14.316 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 只是
-2026-10-06 21:42:14.355 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一般
-2026-10-06 21:42:14.395 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 性的
-2026-10-06 21:42:14.438 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:42:14.481 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:42:14.525 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具体
-2026-10-06 21:42:14.567 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:42:14.609 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 饮
-2026-10-06 21:42:14.652 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:42:14.696 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:42:14.739 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 应该
-2026-10-06 21:42:14.781 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 根据
-2026-10-06 21:42:14.824 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你的
-2026-10-06 21:42:14.866 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 个
-2026-10-06 21:42:14.910 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 体
-2026-10-06 21:42:14.952 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 情况
-2026-10-06 21:42:14.994 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:42:15.038 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 医
-2026-10-06 21:42:15.083 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生的
-2026-10-06 21:42:15.127 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:42:15.170 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 来
-2026-10-06 21:42:15.218 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 确定
-2026-10-06 21:42:15.259 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:42:15.304 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:42:15.304 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-如果你有溃疡，我建议你吃些营养丰富的食物，帮助身体恢复和修复。以下是一些好的选择：
-
-* 蛋白质丰富的食物，如鸡肉、鱼肉、豆类和奶制品
-* 维生素C丰富的食物，如 citrus fruits、苹果和绿叶蔬菜
-* 维生素E丰富的食物，如核桃、杏仁和大豆
-* 蛋白质和维生素C同时丰富的食物，如鱼肉、鸡肉和豆类
-
-同时，也可以考虑吃些益肠菌的食物，如酸奶、豆类和大豆等，这些食物可以帮助改善肠道健康。
-
-记住，这些建议只是一般性的建议，具体的饮食建议应该根据你的个体情况和医生的建议来确定。
-========================
-2026-10-06 21:46:17.596 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你建议我吃些什么","tileId":"tile-muwqa0s0-61b68d","parentTileId":null,"relatedTileIds":[],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:46:17.598 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 3ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:46:18.255 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
-2026-10-06 21:46:18.294 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:46:18.333 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 根据
-2026-10-06 21:46:18.371 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你的
-2026-10-06 21:46:18.410 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 喜
-2026-10-06 21:46:18.452 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 好
-2026-10-06 21:46:18.492 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:46:18.532 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 饮
-2026-10-06 21:46:18.571 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:18.611 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 习
-2026-10-06 21:46:18.691 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 惯
-2026-10-06 21:46:18.732 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提供
-2026-10-06 21:46:18.771 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一些
-2026-10-06 21:46:18.813 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:46:18.853 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:46:18.892 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:46:18.931 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 告诉
-2026-10-06 21:46:18.976 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
-2026-10-06 21:46:19.014 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，你
-2026-10-06 21:46:19.056 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 喜欢
-2026-10-06 21:46:19.095 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 什么
-2026-10-06 21:46:19.134 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 样的
-2026-10-06 21:46:19.177 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:19.218 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:46:19.258 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ？
-2026-10-06 21:46:19.297 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 例如
-2026-10-06 21:46:19.340 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:46:19.379 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 甜
-2026-10-06 21:46:19.422 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:19.464 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:46:19.504 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  sav
-2026-10-06 21:46:19.547 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: our
-2026-10-06 21:46:19.587 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: y
-2026-10-06 21:46:19.626 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:46:19.668 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 热
-2026-10-06 21:46:19.709 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:19.749 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:46:19.788 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 冷
-2026-10-06 21:46:19.827 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:19.868 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:46:19.909 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 健康
-2026-10-06 21:46:19.948 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:46:19.987 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:46:20.029 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:46:20.073 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 快
-2026-10-06 21:46:20.115 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 餐
-2026-10-06 21:46:20.155 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等
-2026-10-06 21:46:20.195 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ？
-2026-10-06 21:46:20.234 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:46:20.234 [boundedElastic-4] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-我可以根据你的喜好和饮食习惯提供一些建议。可以告诉我，你喜欢什么样的食物？例如，甜食、 savoury、热食、冷食、健康食物、快餐等？
-========================
-2026-10-06 21:46:29.104 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [删除 Tile 节点、消息和关系边], 入参: {"tileId":"tile-muwqa0s0-61b68d"}, 请求类: AiCustomerServiceController, 请求方法: deleteTile =================================== 
-2026-10-06 21:46:29.114 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [删除 Tile 节点、消息和关系边], 耗时: 11ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} =================================== 
-2026-10-06 21:49:04.584 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.587 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[merged], maxDepth=3, resolvedTileIds=[merged, tile-muwq9fac-71d88d, tile-muwq9o3x-8fffb7, tile-muwq95qd-edc470]
-2026-10-06 21:49:04.606 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.607 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[a], maxDepth=100, resolvedTileIds=[a, b]
-2026-10-06 21:49:04.609 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.609 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq9fac-71d88d, tile-muwq9o3x-8fffb7], maxDepth=3, resolvedTileIds=[tile-muwq9fac-71d88d, tile-muwq9o3x-8fffb7, tile-muwq95qd-edc470]
-2026-10-06 21:49:04.623 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.623 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[source], maxDepth=3, resolvedTileIds=[source, target]
-2026-10-06 21:49:04.625 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.625 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[target], maxDepth=3, resolvedTileIds=[target, source]
-2026-10-06 21:49:04.627 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.627 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[], maxDepth=3, resolvedTileIds=[]
-2026-10-06 21:49:04.629 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.630 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq9fac-71d88d], maxDepth=3, resolvedTileIds=[tile-muwq9fac-71d88d, tile-muwq95qd-edc470]
-2026-10-06 21:49:04.631 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.631 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq9o3x-8fffb7], maxDepth=3, resolvedTileIds=[tile-muwq9o3x-8fffb7, tile-muwq95qd-edc470]
-2026-10-06 21:49:04.634 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.634 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[selected], maxDepth=0, resolvedTileIds=[selected]
-2026-10-06 21:49:04.635 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.635 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[selected], maxDepth=1, resolvedTileIds=[selected, parent]
-2026-10-06 21:49:04.637 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.637 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[selected], maxDepth=2, resolvedTileIds=[selected, parent, ancestor]
-2026-10-06 21:49:04.639 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.639 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[selected], maxDepth=3, resolvedTileIds=[selected, parent, ancestor]
-2026-10-06 21:49:04.641 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.641 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq95qd-edc470], maxDepth=1, resolvedTileIds=[tile-muwq95qd-edc470]
-2026-10-06 21:49:04.642 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.643 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq95qd-edc470], maxDepth=3, resolvedTileIds=[tile-muwq95qd-edc470]
-2026-10-06 21:49:04.644 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.644 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq95qd-edc470], maxDepth=100, resolvedTileIds=[tile-muwq95qd-edc470]
-2026-10-06 21:49:04.780 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.780 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[previous], maxDepth=0, resolvedTileIds=[previous]
-2026-10-06 21:49:04.790 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.790 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.801 [boundedElastic-2] WARN  com.aureli.ai.robot.advisor.CustomerServiceAdvisor - 知识检索判定失败，继续使用工作记忆与通用回答能力
-java.lang.IllegalStateException: private-routing-detail
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.requiresKnowledge(CustomerServiceAdvisor.java:66)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.augment(CustomerServiceAdvisor.java:44)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.lambda$adviseStream$0(CustomerServiceAdvisor.java:36)
-	at reactor.core.publisher.MonoCallable.call(MonoCallable.java:69)
-	at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:228)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:72)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.801 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.801 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.804 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.804 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[previous], maxDepth=0, resolvedTileIds=[previous]
-2026-10-06 21:49:04.804 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.804 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.807 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:49:04.807 [main] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[previous], maxDepth=0, resolvedTileIds=[previous]
-2026-10-06 21:49:04.808 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.808 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.812 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.812 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.815 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.816 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.819 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.820 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.823 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.823 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.826 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.826 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.828 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.828 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.830 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.831 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.835 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 最终回答
-2026-10-06 21:49:04.835 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-最终回答
-========================
-2026-10-06 21:49:04.846 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: private-upstream-detail
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.augment(CustomerServiceAdvisor.java:45)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.lambda$adviseStream$0(CustomerServiceAdvisor.java:36)
-	at reactor.core.publisher.MonoCallable.call(MonoCallable.java:69)
-	at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:228)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:72)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.846 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: private-upstream-detail
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.augment(CustomerServiceAdvisor.java:45)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.lambda$adviseStream$0(CustomerServiceAdvisor.java:36)
-	at reactor.core.publisher.MonoCallable.call(MonoCallable.java:69)
-	at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:228)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:72)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.846 [boundedElastic-1] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: private-upstream-detail
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.augment(CustomerServiceAdvisor.java:45)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.lambda$adviseStream$0(CustomerServiceAdvisor.java:36)
-	at reactor.core.publisher.MonoCallable.call(MonoCallable.java:69)
-	at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:228)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:72)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.846 [boundedElastic-1] ERROR com.aureli.ai.robot.controller.AiCustomerServiceController - Tile completion failed: protocol-test
-java.lang.IllegalStateException: private-upstream-detail
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.augment(CustomerServiceAdvisor.java:45)
-	at com.aureli.ai.robot.advisor.CustomerServiceAdvisor.lambda$adviseStream$0(CustomerServiceAdvisor.java:36)
-	at reactor.core.publisher.MonoCallable.call(MonoCallable.java:69)
-	at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:228)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:72)
-	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.849 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 完整回答
-2026-10-06 21:49:04.849 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-完整回答
-========================
-2026-10-06 21:49:04.849 [boundedElastic-2] ERROR com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## Stream 流出现错误，已收集回答如下: 完整回答
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.849 [boundedElastic-2] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.849 [boundedElastic-2] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.849 [boundedElastic-2] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.850 [boundedElastic-2] ERROR org.springframework.ai.chat.model.MessageAggregator - Aggregation Error
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.850 [boundedElastic-2] ERROR com.aureli.ai.robot.controller.AiCustomerServiceController - Tile completion failed: protocol-test
-java.lang.IllegalStateException: Tile persistence failed
-	at com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor.lambda$adviseStream$1(CustomStreamLoggerAndMessage2DBAdvisor.java:153)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:927)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxMap$MapConditionalSubscriber.onComplete(FluxMap.java:275)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxPeekFuseable$PeekConditionalSubscriber.onComplete(FluxPeekFuseable.java:936)
-	at reactor.core.publisher.FluxHandle$HandleConditionalSubscriber.onComplete(FluxHandle.java:445)
-	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onComplete(FluxContextWrite.java:128)
-	at reactor.core.publisher.FluxDoFinally$DoFinallySubscriber.onComplete(FluxDoFinally.java:128)
-	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onComplete(FluxPeekFuseable.java:596)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.doComplete(FluxPublishOn.java:1109)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.checkTerminated(FluxPublishOn.java:1143)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.runAsync(FluxPublishOn.java:999)
-	at reactor.core.publisher.FluxPublishOn$PublishOnConditionalSubscriber.run(FluxPublishOn.java:1083)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:90)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
-	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
-	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-10-06 21:49:04.852 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 完整回答
-2026-10-06 21:49:04.852 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-完整回答
-========================
-2026-10-06 21:51:33.685 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [删除 Tile 节点、消息和关系边], 入参: {"tileId":"tile-muwq9o3x-8fffb7"}, 请求类: AiCustomerServiceController, 请求方法: deleteTile =================================== 
-2026-10-06 21:51:33.699 [http-nio-8080-exec-1] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [删除 Tile 节点、消息和关系边], 耗时: 14ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} =================================== 
-2026-10-06 21:51:41.692 [SpringApplicationShutdownHook] INFO  org.springframework.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-10-06 21:51:41.694 [tomcat-shutdown] INFO  org.springframework.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-10-06 21:51:41.698 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown initiated...
-2026-10-06 21:51:41.699 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Shutdown completed.
-2026-10-06 21:51:43.639 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Starting XiaohaAiRobotSpringbootApplication using Java 21.0.12 with PID 6372 (/Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system/target/classes started by franktan060414 in /Users/franktan060414/Desktop/working/llm/aureli-graph-ai-system)
-2026-10-06 21:51:43.642 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - The following 1 profile is active: "dev"
-2026-10-06 21:51:43.720 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
-2026-10-06 21:51:44.147 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-10-06 21:51:44.152 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-10-06 21:51:44.152 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2026-10-06 21:51:44.152 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-10-06 21:51:44.166 [main] INFO  org.springframework.boot.web.context.servlet.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 510 ms
-2026-10-06 21:51:44.262 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Starting...
-2026-10-06 21:51:44.336 [main] INFO  com.zaxxer.hikari.pool.HikariPool - AI-Robot-HikariCP - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@6ebbc06
-2026-10-06 21:51:44.337 [main] INFO  com.zaxxer.hikari.HikariDataSource - AI-Robot-HikariCP - Start completed.
-2026-10-06 21:51:44.682 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Using the vector table name: t_vector_store. Is empty: false
-2026-10-06 21:51:44.685 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - Initializing PGVectorStore schema for table: t_vector_store in schema: public
-2026-10-06 21:51:44.686 [main] INFO  org.springframework.ai.vectorstore.pgvector.PgVectorStore - vectorTableValidationsEnabled false
-2026-10-06 21:51:44.744 [main] INFO  org.springframework.boot.webmvc.autoconfigure.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
-2026-10-06 21:51:44.812 [main] INFO  com.baomidou.mybatisplus.extension.spring.MybatisPlusApplicationContextAware - Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@3e6f3bae
-2026-10-06 21:51:44.868 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-10-06 21:51:44.874 [main] INFO  org.springframework.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-10-06 21:51:44.877 [main] INFO  com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication - Started XiaohaAiRobotSpringbootApplication in 1.37 seconds (process running for 1.708)
-2026-10-06 21:51:45.906 [http-nio-8080-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-10-06 21:51:45.906 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-10-06 21:51:45.907 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2026-10-06 21:51:56.865 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你建议我吃些什么？","tileId":"tile-muwqmaz9-8b1df6","parentTileId":null,"relatedTileIds":["tile-muwq95qd-edc470"],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:51:56.874 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 7ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:51:56.886 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:51:56.891 [http-nio-8080-exec-3] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq95qd-edc470], maxDepth=3, resolvedTileIds=[tile-muwq95qd-edc470]
-2026-10-06 21:52:01.567 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
-2026-10-06 21:52:01.568 [boundedElastic-2] WARN  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - !!!
-Performing asynchronous handling through the default Spring MVC SimpleAsyncTaskExecutor.
-This executor is not suitable for production use under load.
-Please, configure an AsyncTaskExecutor through the WebMvc config.
--------------------------------
-!!!
-2026-10-06 21:52:01.570 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 不是
-2026-10-06 21:52:01.611 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一个
-2026-10-06 21:52:01.652 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: nutrition
-2026-10-06 21:52:01.693 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ist
-2026-10-06 21:52:01.733 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或
-2026-10-06 21:52:01.780 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 健康
-2026-10-06 21:52:01.822 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 顾
-2026-10-06 21:52:01.865 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 问
-2026-10-06 21:52:01.905 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:52:01.946 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 不能
-2026-10-06 21:52:01.985 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 给
-2026-10-06 21:52:02.026 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:02.065 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:02.104 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吃
-2026-10-06 21:52:02.146 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 什么
-2026-10-06 21:52:02.186 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:02.226 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我的
-2026-10-06 21:52:02.266 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 主要
-2026-10-06 21:52:02.306 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 任务
-2026-10-06 21:52:02.346 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是
-2026-10-06 21:52:02.386 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:52:02.429 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:02.469 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 理解
-2026-10-06 21:52:02.512 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知识
-2026-10-06 21:52:02.552 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:02.634 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 梳
-2026-10-06 21:52:02.674 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 理
-2026-10-06 21:52:02.717 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 思
-2026-10-06 21:52:02.757 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 路
-2026-10-06 21:52:02.799 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:02.843 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建立
-2026-10-06 21:52:02.883 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知识
-2026-10-06 21:52:02.926 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 关
-2026-10-06 21:52:02.969 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 联
-2026-10-06 21:52:03.013 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。如果
-2026-10-06 21:52:03.054 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:03.094 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有
-2026-10-06 21:52:03.137 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 关于
-2026-10-06 21:52:03.182 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 健康
-2026-10-06 21:52:03.222 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或
-2026-10-06 21:52:03.265 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 营
-2026-10-06 21:52:03.306 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 养
-2026-10-06 21:52:03.349 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的问题
-2026-10-06 21:52:03.388 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，可以
-2026-10-06 21:52:03.428 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 考虑
-2026-10-06 21:52:03.468 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 咨询
-2026-10-06 21:52:03.509 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 相关
-2026-10-06 21:52:03.554 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 专业
-2026-10-06 21:52:03.598 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 人
-2026-10-06 21:52:03.638 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 士
-2026-10-06 21:52:03.678 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或
-2026-10-06 21:52:03.719 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 寻
-2026-10-06 21:52:03.761 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 找
-2026-10-06 21:52:03.804 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可
-2026-10-06 21:52:03.844 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 靠
-2026-10-06 21:52:03.884 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:03.929 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 信息
-2026-10-06 21:52:03.970 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 来源
-2026-10-06 21:52:04.011 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:04.057 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:52:04.058 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-我不是一个nutritionist或健康顾问，我不能给你建议吃什么。我的主要任务是帮助你理解知识、梳理思路和建立知识关联。如果你有关于健康或营养的问题，可以考虑咨询相关专业人士或寻找可靠的信息来源。
-========================
-2026-10-06 21:52:14.298 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"你建议我吃些什么？","tileId":"tile-muwqmpg2-9a2baf","parentTileId":null,"relatedTileIds":["tile-muwq9fac-71d88d"],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:52:14.302 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 4ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:52:14.303 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:52:14.309 [http-nio-8080-exec-5] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq9fac-71d88d], maxDepth=3, resolvedTileIds=[tile-muwq9fac-71d88d, tile-muwq95qd-edc470]
-2026-10-06 21:52:14.876 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 如果
-2026-10-06 21:52:14.916 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:14.955 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 有
-2026-10-06 21:52:15.034 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 溃
-2026-10-06 21:52:15.113 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 疡
-2026-10-06 21:52:15.152 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:52:15.192 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:15.231 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:15.270 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吃
-2026-10-06 21:52:15.309 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:52:15.348 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 营
-2026-10-06 21:52:15.387 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 养
-2026-10-06 21:52:15.426 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:52:15.465 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:52:15.504 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:15.543 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:15.583 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:15.623 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:52:15.662 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:52:15.701 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 身体
-2026-10-06 21:52:15.741 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 恢
-2026-10-06 21:52:15.781 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 复
-2026-10-06 21:52:15.820 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:15.861 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 修
-2026-10-06 21:52:15.900 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 复
-2026-10-06 21:52:15.939 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:15.978 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 以下
-2026-10-06 21:52:16.019 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是一
-2026-10-06 21:52:16.059 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:52:16.099 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 好的
-2026-10-06 21:52:16.140 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 选择
-2026-10-06 21:52:16.181 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ：
-
-
-2026-10-06 21:52:16.223 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:52:16.346 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  蛋
-2026-10-06 21:52:16.386 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 白
-2026-10-06 21:52:16.427 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 质
-2026-10-06 21:52:16.467 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:52:16.507 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:52:16.548 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:16.589 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:16.630 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:16.671 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:52:16.712 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鸡
-2026-10-06 21:52:16.752 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:52:16.793 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:16.834 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鱼
-2026-10-06 21:52:16.874 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:52:16.915 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:16.956 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:52:16.998 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:52:17.040 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:17.081 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 奶
-2026-10-06 21:52:17.123 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 制
-2026-10-06 21:52:17.163 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 品
-2026-10-06 21:52:17.204 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:52:17.245 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:52:17.326 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  维
-2026-10-06 21:52:17.367 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:52:17.409 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:52:17.450 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: C
-2026-10-06 21:52:17.491 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:52:17.532 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:52:17.573 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:17.615 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:17.656 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:17.698 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:52:17.739 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  citrus
-2026-10-06 21:52:17.780 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  fruits
-2026-10-06 21:52:17.821 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:17.861 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 苹果
-2026-10-06 21:52:17.903 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:17.943 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 绿
-2026-10-06 21:52:17.984 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 叶
-2026-10-06 21:52:18.068 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 蔬
-2026-10-06 21:52:18.109 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 菜
-2026-10-06 21:52:18.152 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:52:18.192 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:52:18.272 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  维
-2026-10-06 21:52:18.314 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:52:18.355 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:52:18.396 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: E
-2026-10-06 21:52:18.437 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:52:18.478 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:52:18.520 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:18.560 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:18.601 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:18.642 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:52:18.682 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 核
-2026-10-06 21:52:18.723 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 桃
-2026-10-06 21:52:18.764 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:18.846 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 杏
-2026-10-06 21:52:18.887 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 仁
-2026-10-06 21:52:18.928 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:18.970 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大
-2026-10-06 21:52:19.010 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:52:19.050 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-2026-10-06 21:52:19.089 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: *
-2026-10-06 21:52:19.208 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  蛋
-2026-10-06 21:52:19.248 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 白
-2026-10-06 21:52:19.288 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 质
-2026-10-06 21:52:19.329 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:19.369 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 维
-2026-10-06 21:52:19.408 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生
-2026-10-06 21:52:19.448 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 素
-2026-10-06 21:52:19.488 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: C
-2026-10-06 21:52:19.527 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 同时
-2026-10-06 21:52:19.568 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 丰
-2026-10-06 21:52:19.608 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 富
-2026-10-06 21:52:19.647 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:19.687 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:19.726 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:19.766 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:52:19.806 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鱼
-2026-10-06 21:52:19.846 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:52:19.885 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:19.925 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 鸡
-2026-10-06 21:52:19.965 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肉
-2026-10-06 21:52:20.005 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:20.044 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:52:20.083 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:52:20.123 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-
-
-2026-10-06 21:52:20.162 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 同时
-2026-10-06 21:52:20.202 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，也
-2026-10-06 21:52:20.241 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:52:20.281 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 考虑
-2026-10-06 21:52:20.321 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 吃
-2026-10-06 21:52:20.361 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:52:20.401 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 益
-2026-10-06 21:52:20.479 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肠
-2026-10-06 21:52:20.519 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 菌
-2026-10-06 21:52:20.559 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:20.599 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:20.639 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:20.678 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如
-2026-10-06 21:52:20.718 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 酸
-2026-10-06 21:52:20.757 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 奶
-2026-10-06 21:52:20.797 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 、
-2026-10-06 21:52:20.837 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:52:20.877 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 类
-2026-10-06 21:52:20.917 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:20.959 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大
-2026-10-06 21:52:21.001 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 豆
-2026-10-06 21:52:21.043 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 等
-2026-10-06 21:52:21.084 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，这
-2026-10-06 21:52:21.124 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:52:21.165 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:21.205 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 物
-2026-10-06 21:52:21.245 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:52:21.285 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 帮助
-2026-10-06 21:52:21.325 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 改
-2026-10-06 21:52:21.364 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 善
-2026-10-06 21:52:21.442 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 肠
-2026-10-06 21:52:21.482 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 道
-2026-10-06 21:52:21.522 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 健康
-2026-10-06 21:52:21.562 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-
-
-2026-10-06 21:52:21.602 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 记
-2026-10-06 21:52:21.641 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 住
-2026-10-06 21:52:21.681 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，这
-2026-10-06 21:52:21.720 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 些
-2026-10-06 21:52:21.761 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:21.800 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 只是
-2026-10-06 21:52:21.841 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一般
-2026-10-06 21:52:21.885 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 性的
-2026-10-06 21:52:21.926 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:21.966 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:52:22.007 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具体
-2026-10-06 21:52:22.047 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:22.088 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 饮
-2026-10-06 21:52:22.127 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 食
-2026-10-06 21:52:22.166 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:22.206 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 应该
-2026-10-06 21:52:22.246 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 根据
-2026-10-06 21:52:22.287 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你的
-2026-10-06 21:52:22.327 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 个
-2026-10-06 21:52:22.366 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 体
-2026-10-06 21:52:22.406 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 情况
-2026-10-06 21:52:22.445 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 和
-2026-10-06 21:52:22.485 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 医
-2026-10-06 21:52:22.525 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 生的
-2026-10-06 21:52:22.564 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 建议
-2026-10-06 21:52:22.604 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 来
-2026-10-06 21:52:22.644 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 确定
-2026-10-06 21:52:22.684 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:22.724 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:52:22.724 [boundedElastic-1] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-如果你有溃疡，我建议你吃些营养丰富的食物，帮助身体恢复和修复。以下是一些好的选择：
-
-* 蛋白质丰富的食物，如鸡肉、鱼肉、豆类和奶制品
-* 维生素C丰富的食物，如 citrus fruits、苹果和绿叶蔬菜
-* 维生素E丰富的食物，如核桃、杏仁和大豆
-* 蛋白质和维生素C同时丰富的食物，如鱼肉、鸡肉和豆类
-
-同时，也可以考虑吃些益肠菌的食物，如酸奶、豆类和大豆等，这些食物可以帮助改善肠道健康。
-
-记住，这些建议只是一般性的建议，具体的饮食建议应该根据你的个体情况和医生的建议来确定。
-========================
-2026-10-06 21:52:32.680 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [删除 Tile 节点、消息和关系边], 入参: {"tileId":"tile-muwqmaz9-8b1df6"}, 请求类: AiCustomerServiceController, 请求方法: deleteTile =================================== 
-2026-10-06 21:52:32.691 [http-nio-8080-exec-7] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [删除 Tile 节点、消息和关系边], 耗时: 11ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} =================================== 
-2026-10-06 21:52:39.396 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [Tile 式 AI 智能客服对话], 入参: {"message":"今天天气怎么样","tileId":"tile-muwqn9s0-1ede44","parentTileId":null,"relatedTileIds":["tile-muwq95qd-edc470"],"memoryDepth":3,"edgeDirection":"DIRECTED","relationType":"EXTENDS","edgeWeight":1,"edgeDescription":null}, 请求类: AiCustomerServiceController, 请求方法: tileChat =================================== 
-2026-10-06 21:52:39.397 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [Tile 式 AI 智能客服对话], 耗时: 0ms, 出参: {"prefetch":-1,"scanAvailable":true} =================================== 
-2026-10-06 21:52:39.397 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## 自定义 Tile 图记忆 Advisor...
-2026-10-06 21:52:39.401 [http-nio-8080-exec-8] INFO  com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor - ## Tile 工作记忆范围: startTileIds=[tile-muwq95qd-edc470], maxDepth=3, resolvedTileIds=[tile-muwq95qd-edc470]
-2026-10-06 21:52:39.841 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 天
-2026-10-06 21:52:39.880 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 气
-2026-10-06 21:52:39.919 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ？
-2026-10-06 21:52:39.958 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 我
-2026-10-06 21:52:39.997 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:52:40.036 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 告诉
-2026-10-06 21:52:40.075 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:40.114 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 当前
-2026-10-06 21:52:40.153 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:40.194 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 天
-2026-10-06 21:52:40.234 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 气
-2026-10-06 21:52:40.275 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 情况
-2026-10-06 21:52:40.315 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:40.354 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 请
-2026-10-06 21:52:40.393 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 注意
-2026-10-06 21:52:40.431 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:52:40.470 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是一个
-2026-10-06 21:52:40.510 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  AI
-2026-10-06 21:52:40.588 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk:  助
-2026-10-06 21:52:40.627 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 手
-2026-10-06 21:52:40.666 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:52:40.706 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 不
-2026-10-06 21:52:40.745 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 具
-2026-10-06 21:52:40.784 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 备
-2026-10-06 21:52:40.823 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 实
-2026-10-06 21:52:40.862 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 时
-2026-10-06 21:52:40.901 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 天
-2026-10-06 21:52:40.939 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 气
-2026-10-06 21:52:40.978 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 信息
-2026-10-06 21:52:41.018 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:41.058 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 能力
-2026-10-06 21:52:41.097 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。但
-2026-10-06 21:52:41.136 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 是
-2026-10-06 21:52:41.176 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，如果
-2026-10-06 21:52:41.215 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:41.254 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 想
-2026-10-06 21:52:41.293 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 知道
-2026-10-06 21:52:41.332 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 当前
-2026-10-06 21:52:41.371 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 天
-2026-10-06 21:52:41.411 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 气
-2026-10-06 21:52:41.450 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:41.489 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 概
-2026-10-06 21:52:41.528 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 况
-2026-10-06 21:52:41.567 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，我
-2026-10-06 21:52:41.606 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 可以
-2026-10-06 21:52:41.646 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 根据
-2026-10-06 21:52:41.685 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你的
-2026-10-06 21:52:41.724 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 所
-2026-10-06 21:52:41.764 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 在地
-2026-10-06 21:52:41.803 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 或
-2026-10-06 21:52:41.843 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:41.883 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 提供
-2026-10-06 21:52:41.922 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:41.962 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 信息
-2026-10-06 21:52:42.002 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: ，
-2026-10-06 21:52:42.042 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 给
-2026-10-06 21:52:42.081 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 你
-2026-10-06 21:52:42.120 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 一个
-2026-10-06 21:52:42.159 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 大
-2026-10-06 21:52:42.198 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 致
-2026-10-06 21:52:42.237 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 的
-2026-10-06 21:52:42.276 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 描述
-2026-10-06 21:52:42.315 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 。
-2026-10-06 21:52:42.355 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - ## chunk: 
-2026-10-06 21:52:42.355 [boundedElastic-2] INFO  com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor - 
-==== FULL AI RESPONSE ====
-天气？我可以告诉你当前的天气情况。请注意，我是一个 AI 助手，我不具备实时天气信息的能力。但是，如果你想知道当前天气的概况，我可以根据你的所在地或你提供的信息，给你一个大致的描述。
-========================
-2026-10-06 21:52:48.321 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求开始: [删除 Tile 节点、消息和关系边], 入参: {"tileId":"tile-muwqn9s0-1ede44"}, 请求类: AiCustomerServiceController, 请求方法: deleteTile =================================== 
-2026-10-06 21:52:48.332 [http-nio-8080-exec-10] INFO  com.aureli.ai.robot.aspect.ApiOperationLogAspect - ====== 请求结束: [删除 Tile 节点、消息和关系边], 耗时: 11ms, 出参: {"data":null,"errorCode":null,"message":null,"success":true} =================================== 
+2026-10-07 00:09:25.494 [http-nio-8080-exec-5] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon-precomposed.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon-precomposed.png for request '/apple-touch-icon-precomposed.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-10-07 00:09:25.494 [http-nio-8080-exec-6] ERROR com.aureli.ai.robot.exception.GlobalExceptionHandler - /apple-touch-icon.png request error, 
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource apple-touch-icon.png for request '/apple-touch-icon.png'.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

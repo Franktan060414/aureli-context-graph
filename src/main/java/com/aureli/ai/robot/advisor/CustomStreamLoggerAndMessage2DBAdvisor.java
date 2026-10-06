@@ -170,6 +170,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                 .title(abbreviate(userMessage, 80))
                 .userMessage(userMessage)
                 .answerSummary(abbreviate(completeResponse, 240))
+                .weight(existTile == null || existTile.getWeight() == null ? 1 : existTile.getWeight())
                 .createTime(existTile == null ? now : existTile.getCreateTime())
                 .updateTime(now)
                 .build();
