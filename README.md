@@ -1,4 +1,4 @@
-# Aureli Graph AI System
+# 锐理 Aureli Graph AI 
 <img width="1194" height="260" alt="aureli-logo" src="https://github.com/user-attachments/assets/877c6e0d-667e-4f63-b6d9-638ab8100cdc" />
 
 
