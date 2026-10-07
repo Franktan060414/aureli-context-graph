@@ -1,10 +1,13 @@
 # Aureli Graph AI System
+<img width="2172" height="724" alt="ruili-logo-concept-v2" src="https://github.com/user-attachments/assets/f972dd22-7b70-4b9f-afb6-35a75c937a5e" />
+<img width="1254" height="1254" alt="aureli-logo-edited-v3" src="https://github.com/user-attachments/assets/605efe70-4080-40ae-b131-ed8d23643269" />
 
 **把 AI 对话、便签与文件组织成可连接、可追溯的上下文图谱。**
 
 Aureli（界面名称：Aureli Context Graph）是一个基于 Spring Boot、Spring AI 和 Vue 3 的图式 AI 工作台。项目以 **Tile（节点）** 为基本单元：每次问答可以独立开始，也可以显式关联已有节点，让模型沿指定关系读取历史信息，再按需检索共享知识库。
 
 你可以在画布上拆解问题、记录想法、添加文档，并从一个或多个节点继续推演。节点内容、消息和关系保存到 PostgreSQL，支持刷新恢复；既可通过浏览器使用，也可通过 Electron 桌面窗口打开。
+<img width="1470" height="956" alt="截屏2026-10-07 00 29 37" src="https://github.com/user-attachments/assets/75d4c3e5-c4f4-423d-8b25-d9b2280f0478" />
 
 ## 目录
 
