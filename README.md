@@ -1,6 +1,6 @@
 # Aureli Graph AI System
-<img width="2172" height="724" alt="ruili-logo-concept-v2" src="https://github.com/user-attachments/assets/f972dd22-7b70-4b9f-afb6-35a75c937a5e" />
-<img width="1254" height="1254" alt="aureli-logo-edited-v3" src="https://github.com/user-attachments/assets/605efe70-4080-40ae-b131-ed8d23643269" />
+<img width="1194" height="260" alt="aureli-logo" src="https://github.com/user-attachments/assets/877c6e0d-667e-4f63-b6d9-638ab8100cdc" />
+
 
 **把 AI 对话、便签与文件组织成可连接、可追溯的上下文图谱。**
 
