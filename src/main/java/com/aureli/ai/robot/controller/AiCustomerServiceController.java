@@ -114,14 +114,7 @@ public class AiCustomerServiceController {
                 .prompt()
                 .user(userMessage);
 
-        List<Advisor> advisors = Lists.newArrayList();
-        if (!relatedTileIds.isEmpty()) {
-            advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, tileMapper, relatedTileIds, memoryDepth));
-        }
-
-        advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
-
-        advisors.add(new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
+        var persistenceAdvisor = new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
                 tileMessageMapper,
                 tileEdgeMapper,
                 aiChatReqVO.getTileId(),
@@ -131,7 +124,16 @@ public class AiCustomerServiceController {
                 aiChatReqVO.getRelationType(),
                 aiChatReqVO.getEdgeWeight(),
                 aiChatReqVO.getEdgeDescription(),
-                transactionTemplate));
+                transactionTemplate);
+
+        List<Advisor> advisors = Lists.newArrayList();
+        if (!relatedTileIds.isEmpty()) {
+            advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, tileMapper,
+                    relatedTileIds, memoryDepth, persistenceAdvisor.pendingEdges()));
+        }
+
+        advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
+        advisors.add(persistenceAdvisor);
 
         chatClientRequestSpec.advisors(advisors);
 

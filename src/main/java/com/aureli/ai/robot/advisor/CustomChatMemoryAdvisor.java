@@ -44,12 +44,22 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
     private final TileEdgeMapper tileEdgeMapper;
     private final List<String> startTileIds;
     private final int maxDepth;
+    private final List<TileEdgeDO> pendingEdges;
 
     public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper,
                                    TileEdgeMapper tileEdgeMapper,
                                    TileMapper tileMapper,
                                    Collection<String> startTileIds,
                                    int maxDepth) {
+        this(tileMessageMapper, tileEdgeMapper, tileMapper, startTileIds, maxDepth, List.of());
+    }
+
+    public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper,
+                                   TileEdgeMapper tileEdgeMapper,
+                                   TileMapper tileMapper,
+                                   Collection<String> startTileIds,
+                                   int maxDepth,
+                                   Collection<TileEdgeDO> pendingEdges) {
         this.tileMessageMapper = tileMessageMapper;
         this.tileMapper = tileMapper;
         this.tileEdgeMapper = tileEdgeMapper;
@@ -59,6 +69,7 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
                 .distinct()
                 .toList();
         this.maxDepth = Math.max(maxDepth, 0);
+        this.pendingEdges = pendingEdges == null ? List.of() : List.copyOf(pendingEdges);
     }
 
     @Override
@@ -80,13 +91,27 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
                 startTileIds, maxDepth, relatedTileIds);
         List<TileMessageDO> messages = tileMessageMapper.selectByTileIds(relatedTileIds);
         Map<String, Integer> weights = new HashMap<>();
+        List<Message> artifactMessages = Lists.newArrayList();
         if (!relatedTileIds.isEmpty()) {
             tileMapper.selectByTileIds(relatedTileIds)
-                    .forEach(tile -> weights.put(tile.getTileId(), tile.getWeight()));
+                    .forEach(tile -> {
+                        weights.put(tile.getTileId(), tile.getWeight());
+                        if ("NOTE".equals(tile.getTileType())) {
+                            artifactMessages.add(new UserMessage(CustomerServicePrompts.tileMemory(
+                                    tile.getTileId(), tile.getWeight(),
+                                    "便签：" + tile.getTitle() + "\n" + tile.getContent())));
+                        } else if ("FILE".equals(tile.getTileType()) && tile.getContent() != null && !tile.getContent().isBlank()) {
+                            artifactMessages.add(new UserMessage(CustomerServicePrompts.tileMemory(
+                                    tile.getTileId(), tile.getWeight(),
+                                    "文件正文：" + (tile.getFileName() == null ? tile.getTitle() : tile.getFileName())
+                                            + "\n" + tile.getContent())));
+                        }
+                    });
         }
 
         // 所有消息
         List<Message> messageList = Lists.newArrayList();
+        messageList.addAll(artifactMessages);
 
         // 将数据库记录转换为对应类型的消息
         for (TileMessageDO tileMessageDO : messages) {
@@ -101,6 +126,16 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
                 Message assistantMessage = new AssistantMessage(content);
                 messageList.add(assistantMessage);
             }
+        }
+
+        // 关系只作为参考数据注入；保持历史角色、顺序和原始用户问题。
+        List<TileEdgeDO> storedEdges = relatedTileIds.size() < 2 ? List.of()
+                : tileEdgeMapper.selectWithinTileIds(relatedTileIds);
+        List<TileEdgeDO> visiblePendingEdges = pendingEdges.stream()
+                .filter(edge -> startTileIds.contains(edge.getSourceTileId()))
+                .toList();
+        if (!storedEdges.isEmpty() || !visiblePendingEdges.isEmpty()) {
+            messageList.add(new UserMessage(CustomerServicePrompts.tileRelations(storedEdges, visiblePendingEdges)));
         }
 
         // 除了记忆消息，还需要添加当前用户消息

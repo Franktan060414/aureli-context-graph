@@ -2,6 +2,10 @@ server:
   port: 8080 # 项目启动端口
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
   profiles:
     active: dev # 激活 dev 开发环境
   ai:

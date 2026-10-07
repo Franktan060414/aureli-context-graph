@@ -1,8 +1,12 @@
+com/aureli/ai/robot/support/DocxFixtures.class
 com/aureli/ai/robot/controller/TileCompletionProtocolTest.class
 com/aureli/ai/robot/controller/TileWeightControllerTest.class
 com/aureli/ai/robot/service/model/ModelApiSettingsRepositoryTest.class
 com/aureli/ai/robot/event/MarkdownVectorOwnershipTest.class
 com/aureli/ai/robot/controller/TilePersistenceIntegrationTest.class
+com/aureli/ai/robot/controller/TileArtifactPersistenceIntegrationTest.class
+com/aureli/ai/robot/controller/TileArtifactControllerTest.class
+com/aureli/ai/robot/reader/TileFileContentReaderTest.class
 com/aureli/ai/robot/advisor/CustomChatMemoryAdvisorTest.class
 com/aureli/ai/robot/XiaohaAiRobotSpringbootApplicationTests.class
 com/aureli/ai/robot/service/model/ModelApiSettingsServiceTest.class

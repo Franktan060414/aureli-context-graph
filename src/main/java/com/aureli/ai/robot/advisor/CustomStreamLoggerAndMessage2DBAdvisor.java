@@ -164,6 +164,10 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
         TileDO existTile = tileMapper.selectOne(Wrappers.<TileDO>lambdaQuery()
                 .eq(TileDO::getTileId, tileId));
 
+        if (existTile != null && existTile.getTileType() != null && !"QA".equals(existTile.getTileType())) {
+            throw new IllegalStateException("节点 ID 已被便签或附件使用，不能覆盖为问答");
+        }
+
         TileDO tileDO = TileDO.builder()
                 .id(existTile == null ? null : existTile.getId())
                 .tileId(tileId)
@@ -182,8 +186,21 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
         }
     }
 
+    /** 为本次回答提供尚未落库的关系，沿用与持久化相同的默认值与归一化规则。 */
+    public List<TileEdgeDO> pendingEdges() {
+        return relatedTileIds.stream().map(relatedTileId -> TileEdgeDO.builder()
+                .sourceTileId(relatedTileId)
+                .targetTileId(tileId)
+                .direction(edgeDirection)
+                .relationType(relationType)
+                .weight(edgeWeight)
+                .description(edgeDescription)
+                .build()).toList();
+    }
+
     private void saveEdges(LocalDateTime now) {
-        for (String relatedTileId : relatedTileIds) {
+        for (TileEdgeDO edge : pendingEdges()) {
+            String relatedTileId = edge.getSourceTileId();
             Long relatedTileCount = tileMapper.selectCount(Wrappers.<TileDO>lambdaQuery()
                     .eq(TileDO::getTileId, relatedTileId));
             if (relatedTileCount == null || relatedTileCount == 0) {
@@ -198,17 +215,10 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                 continue;
             }
 
-            tileEdgeMapper.insert(TileEdgeDO.builder()
-                    .edgeId("edge-" + UUID.randomUUID())
-                    .sourceTileId(relatedTileId)
-                    .targetTileId(tileId)
-                    .direction(edgeDirection)
-                    .relationType(relationType)
-                    .weight(edgeWeight)
-                    .description(edgeDescription)
-                    .createTime(now)
-                    .updateTime(now)
-                    .build());
+            edge.setEdgeId("edge-" + UUID.randomUUID());
+            edge.setCreateTime(now);
+            edge.setUpdateTime(now);
+            tileEdgeMapper.insert(edge);
         }
     }
 

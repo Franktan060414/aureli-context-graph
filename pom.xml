@@ -158,6 +158,13 @@
             <artifactId>spring-ai-markdown-document-reader</artifactId>
         </dependency>
 
+        <!-- 提取图谱附件中的 Word DOCX 正文 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
         <!-- PGvector 向量化存储 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
