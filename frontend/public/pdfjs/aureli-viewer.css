@@ -1,0 +1,18 @@
+/* Aureli's local reader theme; the downloaded PDF.js distribution stays intact. */
+:root {
+  color-scheme: light;
+  --main-color: #101010;
+  --body-bg-color: #f3f3f3;
+  --toolbar-bg-color: #ffffff;
+  --sidebar-toolbar-bg-color: #eef5ff;
+  --toolbar-icon-bg-color: #004080;
+  --toolbar-icon-hover-bg-color: #0066cc;
+  --focus-ring-color: #0066cc;
+}
+#toolbarContainer { border-bottom: 2px solid #0066cc; box-shadow: none; }
+.toolbarButton:focus-visible, .toolbarField:focus-visible, .dropdownToolbarButton:focus-within {
+  outline: 2px solid #0066cc;
+  outline-offset: -2px;
+}
+/* This reader displays the selected Tile; opening a different file belongs to the workspace. */
+#secondaryOpenFile { display: none; }

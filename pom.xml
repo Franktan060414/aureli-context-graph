@@ -165,6 +165,13 @@
             <version>5.5.1</version>
         </dependency>
 
+        <!-- 提取图谱附件中的 PDF 文字，不解析图片、不执行 OCR -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.8</version>
+        </dependency>
+
         <!-- PGvector 向量化存储 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>

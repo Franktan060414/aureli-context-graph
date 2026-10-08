@@ -1,0 +1,40 @@
+# User uploads, knowledge documents and local model configuration
+/Markdown/
+/markdown/
+/knowledge-base/
+/config/
+
+# Logs, dependencies and generated build/test output
+/logs/
+*.log
+**/target/
+**/node_modules/
+**/dist/
+**/.vite/
+/frontend/artifacts/
+/frontend/test-results/
+/frontend/playwright-report/
+
+# Vite copies frontend/public and emits bundles here; keep the legacy sources
+/src/main/resources/static/*
+!/src/main/resources/static/app.js
+!/src/main/resources/static/app.css
+!/src/main/resources/static/legacy/
+
+# Machine-specific Spring profiles (copy the tracked example for local use)
+/src/main/resources/application-dev.yml
+/src/main/resources/application-prod.yml
+/src/main/resources/application-local*.yml
+/src/main/resources/application-local*.yaml
+*.local
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local editor/agent settings and OS metadata
+/.idea/
+/.vscode/
+/.agents/
+.DS_Store
+*.iml

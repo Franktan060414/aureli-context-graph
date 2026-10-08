@@ -1,0 +1,193 @@
+/* A moving accent layer keeps the label and icon stationary. */
+:root { --motion-button-fill: 320ms; }
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-accent: var(--yellow);
+  --button-on-accent: var(--text);
+  --button-rest-text: var(--blue-ink);
+  position: var(--button-position, relative);
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--button-rest-fill, var(--surface));
+  color: var(--button-rest-text);
+  transition: background-color var(--motion-button-fill) ease, color var(--motion-button-fill) ease, border-color var(--motion-button-fill) ease;
+}
+:is(.primary,.view-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-accent: var(--primary);
+  --button-on-accent: #fff;
+}
+.sidebar nav a.active:not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-rest-fill: var(--primary);
+  --button-rest-text: #fff;
+  --button-accent: var(--primary-hover);
+  --button-on-accent: #fff;
+}
+.graph-toolbar-actions .graph-search-action.icon-button:not(:disabled) {
+  --button-rest-text: var(--search-accent);
+  --button-accent: var(--search-accent);
+  --button-on-accent: #fff;
+}
+.app-shell .sidebar nav a:not(:disabled):not(:has(input:disabled,select:disabled)) {
+  transition-duration: 0s;
+}
+.api-settings-actions .test-connection:not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-rest-fill: var(--yellow);
+  --button-accent: #dca300;
+  --button-rest-text: var(--text);
+  --button-on-accent: var(--text);
+}
+.api-settings-actions .test-connection.is-success:not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-rest-fill: #157a3b;
+  --button-accent: #0f5f2d;
+  --button-rest-text: #fff;
+  --button-on-accent: #fff;
+}
+.api-settings-actions .test-connection.is-error:not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-rest-fill: #b4232f;
+  --button-accent: #861a23;
+  --button-rest-text: #fff;
+  --button-on-accent: #fff;
+}
+:is(.danger-icon.danger-icon,.node-delete-action.node-delete-action):not(:disabled):not(:has(input:disabled,select:disabled)) {
+  --button-accent: var(--danger);
+  --button-on-accent: #fff;
+  --button-rest-text: var(--danger);
+}
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: inherit;
+  background: var(--button-accent);
+  pointer-events: none;
+  z-index: -1;
+  transform: translate3d(-101%,0,0);
+  transition: transform var(--motion-button-fill) linear;
+}
+.node-expand,.sidebar-close { --button-position: absolute; }
+.app-shell .inspector .tile-weight-control[data-weight] {
+  --button-rest-fill: var(--surface);
+  --button-accent: var(--weight-normal);
+  --button-rest-text: var(--weight-normal);
+  --button-on-accent: #fff;
+  background: var(--button-rest-fill);
+  color: var(--button-rest-text);
+}
+.app-shell .inspector .tile-weight-control[data-weight="2"] {
+  --button-accent: var(--weight-important);
+  --button-rest-text: var(--weight-important);
+}
+.app-shell .inspector .tile-weight-control[data-weight="3"] {
+  --button-accent: var(--weight-critical);
+  --button-rest-text: var(--weight-critical);
+}
+/* Selection is still identifiable when the accent layer is outside the control. */
+.provider-options label.selected { box-shadow: inset 0 -3px 0 var(--primary); }
+.node-bottom button { border: 1px solid transparent; border-radius: 5px; }
+.node-bottom button[aria-pressed=true] { border-color: var(--primary); box-shadow: inset 0 -3px 0 var(--yellow); }
+
+@media (hover: hover) and (pointer: fine) {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover {
+    background: var(--button-rest-fill, var(--surface));
+    color: var(--button-on-accent);
+  }
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover::after {
+    transform: translate3d(0,0,0);
+  }
+}
+/* Keyboard feedback and a real press are immediate; touch never depends on hover. */
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible)) {
+  color: var(--button-on-accent);
+  transition-duration: 0s;
+}
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible))::after {
+  transform: translate3d(0,0,0);
+  transition-duration: 0s;
+}
+@media (hover: none), (pointer: coarse) {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
+    transition-duration: 0s;
+  }
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
+    transition-duration: 0s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.provider-options label,.tile-weight-control)::after {
+    transition: none;
+  }
+}
+
+/* Both Tile creation actions share a saturated, seamless color ribbon. */
+.graph-toolbar-actions .ai-accent-button.icon-button:not(:disabled),
+.inspector .inspector-tabs button.ai-accent-button:not(:disabled) {
+  --button-on-accent: #fff;
+  transition: color var(--motion-button-fill) ease, border-color var(--motion-button-fill) ease;
+}
+.graph-toolbar-actions .ai-accent-button.icon-button:not(:disabled)::after,
+.inspector .inspector-tabs button.ai-accent-button:not(:disabled)::after {
+  content: none;
+}
+.ai-accent-button > .ai-accent-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background: #1762d8;
+  transform: translate3d(-101%,0,0);
+  transition: transform var(--motion-button-fill) linear;
+}
+.ai-accent-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgb(255 255 255 / 16%), transparent 35%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 20%);
+}
+.ai-accent-button:disabled > .ai-accent-fill {
+  display: none;
+}
+.ai-accent-fill > .ai-accent-colors {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 300%;
+  background: linear-gradient(90deg,
+    #1762d8 0%, #6246d8 10%, #923cbd 20%, #c02d78 30%, #087c91 40%,
+    #1762d8 50%, #6246d8 60%, #923cbd 70%, #c02d78 80%, #087c91 90%, #1762d8 100%);
+  transform: translate3d(0,0,0);
+  animation: ai-accent-flow 6s linear infinite paused;
+}
+@keyframes ai-accent-flow {
+  to { transform: translate3d(-50%,0,0); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .ai-accent-button:not(:disabled):hover > .ai-accent-fill {
+    transform: translate3d(0,0,0);
+  }
+  .ai-accent-button:not(:disabled):hover .ai-accent-colors {
+    animation-play-state: running;
+  }
+}
+.ai-accent-button:not(:disabled):is(:focus-visible,:active) > .ai-accent-fill {
+  transform: translate3d(0,0,0);
+  transition-duration: 0s;
+}
+@media (hover: none), (pointer: coarse) {
+  .ai-accent-button > .ai-accent-fill {
+    transition-duration: 0s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-accent-button > .ai-accent-fill {
+    transition-duration: 0s;
+  }
+  .ai-accent-fill > .ai-accent-colors {
+    animation: none;
+    transform: none;
+  }
+}
