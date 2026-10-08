@@ -12,7 +12,8 @@ const tiles = [
   { id: 'search-file', tileType: 'FILE', message: '附件文档', answer: '附件.docx', relatedTileIds: [] },
 ].map(tile => ({ ...tile, status: 'ready', weight: 1 }));
 await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
-await page.route('**/customer-service/tile/workspace', route => route.fulfill({ json: { success: true, data: { tiles, edges: [] } } }));
+await page.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } }));
+await page.route('**/customer-service/tile/workspace?*', route => route.fulfill({ json: { success: true, data: { tiles, edges: [] } } }));
 const trigger = page.getByRole('button', { name: '搜索与筛选', exact: true });
 const dialog = page.getByRole('dialog', { name: '搜索与筛选', exact: true });
 const query = page.getByRole('textbox', { name: '搜索 Tile', exact: true });

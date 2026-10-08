@@ -18,13 +18,13 @@ import org.apache.ibatis.type.ByteArrayTypeHandler;
  * @Description: Tile 节点 Mapper
  **/
 public interface TileMapper extends BaseMapper<TileDO> {
-    @Select("SELECT file_data FROM t_tile WHERE tile_id = #{tileId} AND tile_type = 'FILE'")
+    @Select("SELECT file_data FROM t_tile WHERE map_id = #{mapId} AND tile_id = #{tileId} AND tile_type = 'FILE'")
     @Results(@Result(column = "file_data", property = "fileData", typeHandler = ByteArrayTypeHandler.class))
-    TileDO selectFileData(@Param("tileId") String tileId);
-    default List<TileDO> selectByTileIds(Collection<String> tileIds) {
+    TileDO selectFileData(@Param("mapId") String mapId, @Param("tileId") String tileId);
+    default List<TileDO> selectByTileIds(String mapId, Collection<String> tileIds) {
         if (tileIds == null || tileIds.isEmpty()) {
             return List.of();
         }
-        return selectList(Wrappers.<TileDO>lambdaQuery().in(TileDO::getTileId, tileIds));
+        return selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId).in(TileDO::getTileId, tileIds));
     }
 }

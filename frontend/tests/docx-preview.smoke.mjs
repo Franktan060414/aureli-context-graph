@@ -43,6 +43,7 @@ const errors = [];
 page.on("pageerror", error => errors.push(error.message));
 await page.addInitScript(() => { localStorage.setItem("aureli-mode", "live"); localStorage.setItem("aureli-api-base", "http://backend.test"); });
 await page.route("http://backend.test/customer-service/**", async route => {
+  if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
   const path = new URL(route.request().url()).pathname;
   if (path.endsWith("/workspace")) return route.fulfill({ json:{ success:true, data:{ tiles, edges:[] } } });
   if (path.endsWith("/file")) {

@@ -25,6 +25,7 @@ public class TileEdgeDO {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String mapId;
     private String edgeId;
     private String sourceTileId;
     private String targetTileId;

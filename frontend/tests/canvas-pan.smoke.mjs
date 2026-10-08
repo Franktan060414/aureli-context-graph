@@ -15,8 +15,9 @@ async function prepare(page) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   await page.route('**/customer-service/**', route => {
+  if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
     if (route.request().method() !== 'GET') writes.push(route.request().url());
-    return route.fulfill({ json: { success: true, data: route.request().url().endsWith('/tile/workspace') ? workspace : {} } });
+    return route.fulfill({ json: { success: true, data: new URL(route.request().url()).pathname.endsWith('/tile/workspace') ? workspace : {} } });
   });
   await page.goto(baseUrl);
   await page.locator('.graph-node').last().waitFor();

@@ -14,13 +14,13 @@ import java.util.List;
  **/
 public interface TileMessageMapper extends BaseMapper<TileMessageDO> {
 
-    default List<TileMessageDO> selectByTileIds(Collection<String> tileIds) {
+    default List<TileMessageDO> selectByTileIds(String mapId, Collection<String> tileIds) {
         if (tileIds == null || tileIds.isEmpty()) {
             return List.of();
         }
 
         return selectList(Wrappers.<TileMessageDO>lambdaQuery()
-                .in(TileMessageDO::getTileId, tileIds)
+                .eq(TileMessageDO::getMapId, mapId).in(TileMessageDO::getTileId, tileIds)
                 .orderByAsc(TileMessageDO::getCreateTime));
     }
 

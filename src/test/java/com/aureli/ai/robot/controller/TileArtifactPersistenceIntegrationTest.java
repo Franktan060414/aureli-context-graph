@@ -18,6 +18,19 @@ class TileArtifactPersistenceIntegrationTest {
     @Autowired TileWorkspaceController controller;
     @Autowired JdbcTemplate jdbc;
 
+    private String testMapId;
+
+    @org.junit.jupiter.api.BeforeEach
+    void createTestMap() {
+        testMapId = "test-map-" + UUID.randomUUID();
+        jdbc.update("INSERT INTO t_map(map_id, name) VALUES (?, '测试图谱')", testMapId);
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    void removeTestMap() {
+        jdbc.update("DELETE FROM t_map WHERE map_id = ?", testMapId);
+    }
+
     @org.junit.jupiter.params.ParameterizedTest
     @org.junit.jupiter.params.provider.ValueSource(strings = {"docx", "pdf"})
     void notesAndBinaryAttachmentsPersistWithoutCreatingChatOrKnowledgeRecords(String format) throws Exception {
@@ -29,16 +42,16 @@ class TileArtifactPersistenceIntegrationTest {
         String text = pdf ? com.aureli.ai.robot.support.PdfFixtures.TEXT : com.aureli.ai.robot.support.DocxFixtures.TEXT;
         try {
             owned.add(noteId);
-            assertTrue(controller.createNote(new SaveTileNoteReqVO(noteId, "测试便签", "第一行\n第二行")).isSuccess());
-            assertTrue(controller.updateNote(new SaveTileNoteReqVO(noteId, "新标题", "更新正文")).isSuccess());
+            assertTrue(controller.createNote(new SaveTileNoteReqVO(noteId, "测试便签", "第一行\n第二行", null, testMapId)).isSuccess());
+            assertTrue(controller.updateNote(new SaveTileNoteReqVO(noteId, "新标题", "更新正文", null, testMapId)).isSuccess());
             var file = controller.uploadFile(new MockMultipartFile("file", "附件." + format,
-                    pdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes), null).getData();
+                    pdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes), null, testMapId).getData();
             owned.add(file.id());
             assertEquals(text, jdbc.queryForObject("SELECT content FROM t_tile WHERE tile_id = ?", String.class, file.id()));
             assertArrayEquals(bytes, jdbc.queryForObject("SELECT file_data FROM t_tile WHERE tile_id = ?", byte[].class, file.id()));
             // Verifies the real MyBatis mapping rather than a mocked download.
-            assertArrayEquals(bytes, controller.downloadFile(file.id()).getBody());
-            var snapshot = controller.workspace().getBody().getData();
+            assertArrayEquals(bytes, controller.downloadFile(file.id(), testMapId).getBody());
+            var snapshot = controller.workspace(testMapId).getBody().getData();
             var note = snapshot.tiles().stream().filter(n -> n.id().equals(noteId)).findFirst().orElseThrow();
             assertEquals("NOTE", note.tileType());
             assertEquals("新标题", note.message());
@@ -63,28 +76,28 @@ class TileArtifactPersistenceIntegrationTest {
             String parentA = prefix + "-a", parentB = prefix + "-b", noteId = prefix + "-note";
             owned.addAll(java.util.List.of(parentA, parentB, noteId));
             for (String id : java.util.List.of(parentA, parentB))
-                assertTrue(controller.createNote(new SaveTileNoteReqVO(id, "关联来源", "上下文")).isSuccess());
+                assertTrue(controller.createNote(new SaveTileNoteReqVO(id, "关联来源", "上下文", null, testMapId)).isSuccess());
             var note = controller.createNote(new SaveTileNoteReqVO(noteId, "关联便签", "正文",
-                    java.util.List.of(parentA, " " + parentA + " ", parentB))).getData();
+                    java.util.List.of(parentA, " " + parentA + " ", parentB), testMapId)).getData();
             assertEquals(java.util.List.of(parentA, parentB), note.relatedTileIds());
             assertEquals(2, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile_edge WHERE target_tile_id = ?", Integer.class, noteId));
             jdbc.update("UPDATE t_tile_edge SET direction = 'UNDIRECTED', weight = 0.7, description = '保留备注' WHERE source_tile_id = ? AND target_tile_id = ?", parentA, noteId);
             var file = controller.uploadFile(new MockMultipartFile("file", "关联附件.docx", null, com.aureli.ai.robot.support.DocxFixtures.textAndTable()),
-                    java.util.List.of(noteId)).getData();
+                    java.util.List.of(noteId), testMapId).getData();
             owned.add(file.id());
-            var changed = controller.updateNote(new SaveTileNoteReqVO(noteId, "更新标题", "更新正文", java.util.List.of(parentA))).getData();
+            var changed = controller.updateNote(new SaveTileNoteReqVO(noteId, "更新标题", "更新正文", java.util.List.of(parentA), testMapId)).getData();
             assertEquals(java.util.List.of(parentA), changed.relatedTileIds());
             assertEquals("保留备注", jdbc.queryForObject("SELECT description FROM t_tile_edge WHERE source_tile_id = ? AND target_tile_id = ?", String.class, parentA, noteId));
             assertEquals("UNDIRECTED", jdbc.queryForObject("SELECT direction FROM t_tile_edge WHERE source_tile_id = ? AND target_tile_id = ?", String.class, parentA, noteId));
-            assertThrows(RuntimeException.class, () -> controller.updateNote(new SaveTileNoteReqVO(noteId, "不可保存", "不可保存", java.util.List.of(prefix + "-missing"))));
+            assertThrows(RuntimeException.class, () -> controller.updateNote(new SaveTileNoteReqVO(noteId, "不可保存", "不可保存", java.util.List.of(prefix + "-missing"), testMapId)));
             assertEquals("更新标题", jdbc.queryForObject("SELECT title FROM t_tile WHERE tile_id = ?", String.class, noteId));
-            assertThrows(RuntimeException.class, () -> controller.updateNote(new SaveTileNoteReqVO(noteId, "自身", "正文", java.util.List.of(noteId))));
+            assertThrows(RuntimeException.class, () -> controller.updateNote(new SaveTileNoteReqVO(noteId, "自身", "正文", java.util.List.of(noteId), testMapId)));
             // Older callers omit the field; that must preserve the current links.
-            controller.updateNote(new SaveTileNoteReqVO(noteId, "旧接口更新", "正文"));
-            var snapshot = controller.workspace().getBody().getData();
+            controller.updateNote(new SaveTileNoteReqVO(noteId, "旧接口更新", "正文", null, testMapId));
+            var snapshot = controller.workspace(testMapId).getBody().getData();
             assertEquals(java.util.List.of(parentA), snapshot.tiles().stream().filter(n -> n.id().equals(noteId)).findFirst().orElseThrow().relatedTileIds());
             assertEquals(java.util.List.of(noteId), snapshot.tiles().stream().filter(n -> n.id().equals(file.id())).findFirst().orElseThrow().relatedTileIds());
-            controller.updateNote(new SaveTileNoteReqVO(noteId, "清空关联", "正文", java.util.List.of()));
+            controller.updateNote(new SaveTileNoteReqVO(noteId, "清空关联", "正文", java.util.List.of(), testMapId));
             assertEquals(0, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile_edge WHERE target_tile_id = ?", Integer.class, noteId));
             assertEquals(1, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile_edge WHERE source_tile_id = ? AND target_tile_id = ?", Integer.class, noteId, file.id()));
         } finally {

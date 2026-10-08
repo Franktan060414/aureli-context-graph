@@ -30,6 +30,19 @@ class TileFusionPersistenceIntegrationTest {
     @Autowired TransactionTemplate transactions;
     @Autowired JdbcTemplate jdbc;
 
+    private String testMapId;
+
+    @org.junit.jupiter.api.BeforeEach
+    void createTestMap() {
+        testMapId = "test-map-" + UUID.randomUUID();
+        jdbc.update("INSERT INTO t_map(map_id, name) VALUES (?, '测试图谱')", testMapId);
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    void removeTestMap() {
+        jdbc.update("DELETE FROM t_map WHERE map_id = ?", testMapId);
+    }
+
     @Test void fusionRoundTripAndFailedEdgeSaveRollback() {
         String prefix = "fusion-check-" + UUID.randomUUID();
         List<String> ids = List.of(prefix + "-a", prefix + "-b", prefix + "-note", prefix + "-file", prefix + "-fused", prefix + "-failed");
@@ -41,15 +54,15 @@ class TileFusionPersistenceIntegrationTest {
                 new AssistantMessage("{\"userMessage\":\"融合后的用户问题\",\"answer\":\"" + answer + "\"}")))));
         try {
             for (int i = 0; i < 4; i++) {
-                jdbc.update("INSERT INTO t_tile (tile_id, tile_type, user_message, answer_summary, weight) VALUES (?, ?, ?, ?, ?)",
-                        ids.get(i), i < 2 ? "QA" : i == 2 ? "NOTE" : "FILE", "来源问题 " + i, "来源摘要 " + i, i == 0 ? 1 : 3);
-                if (i < 2) jdbc.update("INSERT INTO t_tile_message (tile_id, role, content) VALUES (?, 'assistant', ?)", ids.get(i), "来源完整回答 " + i);
+                jdbc.update("INSERT INTO t_tile (map_id, tile_id, tile_type, user_message, answer_summary, weight) VALUES (?, ?, ?, ?, ?, ?)",
+                        testMapId, ids.get(i), i < 2 ? "QA" : i == 2 ? "NOTE" : "FILE", "来源问题 " + i, "来源摘要 " + i, i == 0 ? 1 : 3);
+                if (i < 2) jdbc.update("INSERT INTO t_tile_message (map_id, tile_id, role, content) VALUES (?, ?, 'assistant', ?)", testMapId, ids.get(i), "来源完整回答 " + i);
             }
             var service = new TileFusionService(tiles, messages, edges, settings, transactions);
-            var fused = service.fuse(new FuseTilesReqVO(ids.get(4), ids.subList(0, 4)));
+            var fused = service.fuse(new FuseTilesReqVO(ids.get(4), ids.subList(0, 4), testMapId));
             assertEquals(3, fused.tile().getWeight());
             assertEquals(2, fused.edges().size());
-            var restored = workspace.workspace().getBody().getData().tiles().stream()
+            var restored = workspace.workspace(testMapId).getBody().getData().tiles().stream()
                     .filter(tile -> tile.id().equals(ids.get(4))).findFirst().orElseThrow();
             assertEquals("融合后的用户问题", restored.message());
             assertEquals(answer, restored.answer());
@@ -63,7 +76,7 @@ class TileFusionPersistenceIntegrationTest {
             var brokenEdges = mock(TileEdgeMapper.class);
             doThrow(new IllegalStateException("fixture edge save failure")).when(brokenEdges).insert(any(TileEdgeDO.class));
             var failingService = new TileFusionService(tiles, messages, brokenEdges, settings, transactions);
-            assertThrows(IllegalStateException.class, () -> failingService.fuse(new FuseTilesReqVO(ids.get(5), ids.subList(0, 2))));
+            assertThrows(IllegalStateException.class, () -> failingService.fuse(new FuseTilesReqVO(ids.get(5), ids.subList(0, 2), testMapId)));
             assertEquals(0, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile WHERE tile_id = ?", Integer.class, ids.get(5)));
             assertEquals(0, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile_message WHERE tile_id = ?", Integer.class, ids.get(5)));
         } finally {

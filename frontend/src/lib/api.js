@@ -111,24 +111,42 @@ export async function readSse(response, onText, { requireDone = false } = {}) {
   }
 }
 
-export function createApiClient(getBase = () => "") {
+export function createApiClient(getBase = () => "", getMap = () => undefined) {
   const base = () => typeof getBase === "function" ? getBase() : getBase;
+  const scoped = (data) => {
+    const mapId = getMap();
+    return mapId === undefined ? data : { ...data, mapId };
+  };
+  const mapPath = (path) => {
+    const mapId = getMap();
+    return mapId === undefined ? path : `${path}?mapId=${encodeURIComponent(mapId)}`;
+  };
   const get = async (path) => checkedResponse(await request(endpoint(base(), path), { signal: AbortSignal.timeout(30000), cache: "no-store" }));
   const post = (path, data) => postJson(base(), path, data);
   return {
-    workspace: () => get("/customer-service/tile/workspace"),
-    createNote: (data) => post("/customer-service/tile/note", data),
-    updateNote: (data) => post("/customer-service/tile/note/update", data),
+    listMaps: () => get("/customer-service/maps"),
+    deleteMap: async (mapId) => checkedResponse(await request(endpoint(base(), `/customer-service/maps/${encodeURIComponent(mapId)}`), {
+      method: "DELETE", signal: AbortSignal.timeout(30000),
+    })),
+    createMap: (name) => post("/customer-service/maps", { name }),
+    updateMapZoom: async (mapId, zoom) => checkedResponse(await request(endpoint(base(), `/customer-service/maps/${encodeURIComponent(mapId)}/zoom`), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ zoom }), keepalive: true, signal: AbortSignal.timeout(30000),
+    })),
+    workspace: () => get(mapPath("/customer-service/tile/workspace")),
+    createNote: (data) => post("/customer-service/tile/note", scoped(data)),
+    updateNote: (data) => post("/customer-service/tile/note/update", scoped(data)),
     async uploadTileFile(file, relatedTileIds = []) {
       const data = new FormData();
       data.append("file", file);
+      if (getMap() !== undefined) data.append("mapId", getMap());
       for (const id of relatedTileIds) data.append("relatedTileIds", id);
       return checkedResponse(await request(endpoint(base(), "/customer-service/tile/file"), {
         method: "POST", body: data, signal: AbortSignal.timeout(60000),
       }));
     },
     async downloadTileFile(tileId) {
-      const response = await request(endpoint(base(), `/customer-service/tile/${encodeURIComponent(tileId)}/file`), {
+      const response = await request(endpoint(base(), mapPath(`/customer-service/tile/${encodeURIComponent(tileId)}/file`)), {
         signal: AbortSignal.timeout(60000), cache: "no-store",
       });
       if (!response.ok || response.headers.get("content-type")?.includes("application/json")) {
@@ -144,15 +162,21 @@ export function createApiClient(getBase = () => "") {
     listMarkdown: (data) => post("/customer-service/md/list", data),
     updateMarkdown: (data) => post("/customer-service/md/update", data),
     deleteMarkdown: (id) => post("/customer-service/md/delete", { id }),
-    deleteTile: (tileId) => post("/customer-service/tile/delete", { tileId }),
-    updateTileWeight: (tileId, weight) => post("/customer-service/tile/weight", { tileId, weight }),
+    deleteTile: (tileId) => post("/customer-service/tile/delete", scoped({ tileId })),
+    updateTileWeight: (tileId, weight) => post("/customer-service/tile/weight", scoped({ tileId, weight })),
     async fuseTiles(data) {
       return checkedResponse(await request(endpoint(base(), "/customer-service/tile/fusion"), {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data), signal: AbortSignal.timeout(180000),
+        body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
       }));
     },
-    resetWorkspace: () => post("/customer-service/tile/reset", {}),
+    async splitTile(data) {
+      return checkedResponse(await request(endpoint(base(), "/customer-service/tile/split"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
+      }));
+    },
+    resetWorkspace: () => post("/customer-service/tile/reset", scoped({})),
     async uploadMarkdown(file) {
       const data = new FormData();
       data.append("file", file);
@@ -164,7 +188,7 @@ export function createApiClient(getBase = () => "") {
       try {
         return await readSse(await request(endpoint(base(), "/customer-service/chat/tile/completion"), {
           method: "POST", headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
-          body: JSON.stringify(data), signal: AbortSignal.timeout(180000),
+          body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
         }), onText, { requireDone: true });
       } catch (error) { throw connectionError(error); }
     },

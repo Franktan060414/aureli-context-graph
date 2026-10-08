@@ -14,20 +14,19 @@ import java.util.List;
  **/
 public interface TileEdgeMapper extends BaseMapper<TileEdgeDO> {
 
-    default List<TileEdgeDO> selectRelatedEdges(String tileId) {
+    default List<TileEdgeDO> selectRelatedEdges(String mapId, String tileId) {
         return selectList(Wrappers.<TileEdgeDO>lambdaQuery()
-                .eq(TileEdgeDO::getSourceTileId, tileId)
-                .or()
-                .eq(TileEdgeDO::getTargetTileId, tileId));
+                .eq(TileEdgeDO::getMapId, mapId)
+                .and(q -> q.eq(TileEdgeDO::getSourceTileId, tileId).or().eq(TileEdgeDO::getTargetTileId, tileId)));
     }
 
     /** 只读取工作记忆范围内两端均可见的关系，不引入其他分支。 */
-    default List<TileEdgeDO> selectWithinTileIds(Collection<String> tileIds) {
+    default List<TileEdgeDO> selectWithinTileIds(String mapId, Collection<String> tileIds) {
         if (tileIds == null || tileIds.size() < 2) {
             return List.of();
         }
         return selectList(Wrappers.<TileEdgeDO>lambdaQuery()
-                .in(TileEdgeDO::getSourceTileId, tileIds)
+                .eq(TileEdgeDO::getMapId, mapId).in(TileEdgeDO::getSourceTileId, tileIds)
                 .in(TileEdgeDO::getTargetTileId, tileIds)
                 .orderByAsc(TileEdgeDO::getId));
     }

@@ -1,5 +1,7 @@
 package com.aureli.ai.robot.service;
 
+import com.aureli.ai.robot.domain.maps.MapIds;
+
 import com.aureli.ai.robot.domain.dos.TileDO;
 import com.aureli.ai.robot.domain.dos.TileEdgeDO;
 import com.aureli.ai.robot.domain.dos.TileMessageDO;
@@ -43,11 +45,12 @@ public class TileFusionService {
 
     public Result fuse(FuseTilesReqVO request) {
         String tileId = request.tileId().trim();
+        String mapId = MapIds.normalize(request.mapId());
         List<String> ids = request.sourceTileIds().stream().map(String::trim).distinct().toList();
         if (ids.contains(tileId)) throw new IllegalArgumentException("新 Tile ID 不能与来源 Tile 相同。");
         List<Source> sources = transactions.execute(status -> {
             requireNewId(tileId);
-            return readSources(ids);
+            return readSources(mapId, ids);
         });
 
         // 网络调用不占用数据库事务；模型输出通过校验后才写入任何数据。
@@ -70,19 +73,19 @@ public class TileFusionService {
         }
         return transactions.execute(status -> {
             requireNewId(tileId);
-            if (!sources.equals(readSources(ids)))
+            if (!sources.equals(readSources(mapId, ids)))
                 throw new IllegalArgumentException("来源 Tile 已发生变化，请同步图谱后重新融合。");
             LocalDateTime now = LocalDateTime.now();
             String question = content.userMessage().trim(), answer = content.answer().trim();
-            TileDO tile = TileDO.builder().tileId(tileId).tileType("QA")
+            TileDO tile = TileDO.builder().mapId(mapId).tileId(tileId).tileType("QA")
                     .title(question.substring(0, Math.min(255, question.length())))
                     .userMessage(question).answerSummary(answer.substring(0, Math.min(1000, answer.length())))
                     .weight(sources.stream().mapToInt(Source::weight).max().orElseThrow())
                     .createTime(now).updateTime(now).build();
             tiles.insert(tile);
-            messages.insert(TileMessageDO.builder().tileId(tileId).role("user").content(question).createTime(now).build());
-            messages.insert(TileMessageDO.builder().tileId(tileId).role("assistant").content(answer).createTime(now).build());
-            List<TileEdgeDO> links = sources.stream().map(source -> TileEdgeDO.builder()
+            messages.insert(TileMessageDO.builder().mapId(mapId).tileId(tileId).role("user").content(question).createTime(now).build());
+            messages.insert(TileMessageDO.builder().mapId(mapId).tileId(tileId).role("assistant").content(answer).createTime(now).build());
+            List<TileEdgeDO> links = sources.stream().map(source -> TileEdgeDO.builder().mapId(mapId)
                     .edgeId("edge-" + UUID.randomUUID()).sourceTileId(source.tileId()).targetTileId(tileId)
                     .direction("DIRECTED").relationType("FUSES").weight(BigDecimal.ONE)
                     .createTime(now).updateTime(now).build()).toList();
@@ -96,9 +99,9 @@ public class TileFusionService {
             throw new IllegalArgumentException("新 Tile ID 已存在，请同步图谱后重试。");
     }
 
-    private List<Source> readSources(List<String> ids) {
+    private List<Source> readSources(String mapId, List<String> ids) {
         Map<String, TileDO> byId = new HashMap<>();
-        tiles.selectList(Wrappers.<TileDO>lambdaQuery().in(TileDO::getTileId, ids))
+        tiles.selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId).in(TileDO::getTileId, ids))
                 .forEach(tile -> byId.put(tile.getTileId(), tile));
         if (!byId.keySet().containsAll(ids)) throw new IllegalArgumentException("选中的 Tile 已不存在，请同步图谱后重试。");
         List<TileDO> qa = ids.stream().map(byId::get)
@@ -106,7 +109,7 @@ public class TileFusionService {
         if (qa.size() < 2) throw new IllegalArgumentException("请至少选择两个 AI 问答 Tile；便签和文件不会参与融合。");
         Map<String, String> answers = new HashMap<>();
         messages.selectList(Wrappers.<TileMessageDO>lambdaQuery()
-                .in(TileMessageDO::getTileId, qa.stream().map(TileDO::getTileId).toList())
+                .eq(TileMessageDO::getMapId, mapId).in(TileMessageDO::getTileId, qa.stream().map(TileDO::getTileId).toList())
                 .eq(TileMessageDO::getRole, "assistant").orderByAsc(TileMessageDO::getId))
                 .forEach(message -> answers.put(message.getTileId(), message.getContent()));
         return qa.stream().map(tile -> {

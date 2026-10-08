@@ -1,5 +1,7 @@
 package com.aureli.ai.robot.controller;
 
+import com.aureli.ai.robot.domain.maps.MapIds;
+
 import com.google.common.collect.Lists;
 import com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor;
 import com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor;
@@ -88,9 +90,11 @@ public class AiCustomerServiceController {
 
     @PostMapping("/tile/reset")
     @ApiOperationLog(description = "重置 Tile 画布数据")
-    public Response<?> resetTileWorkspace() {
-        return customerService.resetTileWorkspace();
+    public Response<?> resetTileWorkspace(@RequestBody @Validated ResetWorkspace request) {
+        return customerService.resetTileWorkspace(MapIds.normalize(request.mapId()));
     }
+
+    public record ResetWorkspace(@jakarta.validation.constraints.NotBlank(message = "请先创建或选择图谱") String mapId) {}
 
     @PostMapping("/tile/delete")
     @ApiOperationLog(description = "删除 Tile 节点、消息和关系边")
@@ -106,6 +110,7 @@ public class AiCustomerServiceController {
     @ApiOperationLog(description = "Tile 式 AI 智能客服对话")
     public Flux<AiCustomerServiceChatRspVO> tileChat(@RequestBody @Validated AiCustomerServiceChatReqVO aiChatReqVO) {
         String userMessage = aiChatReqVO.getMessage();
+        String mapId = MapIds.normalize(aiChatReqVO.getMapId());
         List<String> relatedTileIds = resolveRelatedTileIds(aiChatReqVO);
         int memoryDepth = resolveMemoryDepth(aiChatReqVO.getMemoryDepth());
 
@@ -124,12 +129,12 @@ public class AiCustomerServiceController {
                 aiChatReqVO.getRelationType(),
                 aiChatReqVO.getEdgeWeight(),
                 aiChatReqVO.getEdgeDescription(),
-                transactionTemplate);
+                transactionTemplate, mapId);
 
         List<Advisor> advisors = Lists.newArrayList();
         if (!relatedTileIds.isEmpty()) {
             advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, tileMapper,
-                    relatedTileIds, memoryDepth, persistenceAdvisor.pendingEdges()));
+                    relatedTileIds, memoryDepth, persistenceAdvisor.pendingEdges(), mapId));
         }
 
         advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));

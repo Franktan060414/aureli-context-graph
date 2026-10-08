@@ -47,6 +47,21 @@ test("business errors reject even with HTTP 200", async () => {
     /生成失败/,
   );
 });
+
+test("manual split sends scoped source and optional requirements and preserves AI rejection reason", async (context) => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, options });
+    return Response.json({ success: true, data: { tiles: [], edges: [] } });
+  });
+  const api = createApiClient('http://localhost:8080', () => 'map-split');
+  await api.splitTile({ sourceTileId: 'source', requirements: '面向初学者' });
+  assert.equal(calls[0].url, 'http://localhost:8080/customer-service/tile/split');
+  assert.deepEqual(JSON.parse(calls[0].options.body), { sourceTileId: 'source', requirements: '面向初学者', mapId: 'map-split' });
+  assert.equal(calls[0].options.method, 'POST');
+  globalThis.fetch = async () => Response.json({ success: false, errorCode: 'TILE_NOT_SPLITTABLE', message: '拆分失败：内容只是一个简单定义。' }, { status: 422 });
+  await assert.rejects(api.splitTile({ sourceTileId: 'source' }), /拆分失败：内容只是一个简单定义/);
+});
 test("empty streams and incorrect endpoints do not become successful answers", async () => {
   await assert.rejects(
     readSse(stream("data: [DONE]\n\n"), () => {}),
@@ -148,4 +163,62 @@ test("note and file creation send selected context IDs and note updates can clea
   assert.deepEqual(JSON.parse(calls[1].options.body).relatedTileIds, []);
   assert.deepEqual(calls[2].options.body.getAll("relatedTileIds"), ["qa", "note-parent"]);
   assert.equal(calls[2].options.body.get("file").name, "测试.docx");
+});
+
+test("map-scoped client captures ownership on every Tile request and leaves shared knowledge global", async (context) => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url.includes('/completion')) return stream('data: {"v":"回答"}\n\ndata: {"done":true}\n\n');
+    if (url.includes('/file?')) return new Response('attachment');
+    return Response.json({ success: true, data: {} });
+  });
+  let mapId = 'map A';
+  const api = createApiClient('', () => mapId);
+  await api.listMaps();
+  await api.createMap('第二张图谱');
+  await api.workspace();
+  await api.createNote({ tileId: 'note', title: '标题', content: '正文' });
+  await api.updateNote({ tileId: 'note', title: '标题', content: '正文' });
+  await api.uploadTileFile(new File(['text'], 'private.docx'));
+  await api.downloadTileFile('attachment');
+  await api.fuseTiles({ tileId: 'merged', sourceTileIds: ['a', 'b'] });
+  const generation = api.completeTile({ tileId: 'question', message: '问题' }, () => {});
+  mapId = 'map B';
+  await generation;
+  await api.deleteTile('note');
+  await api.updateTileWeight('note', 3);
+  await api.resetWorkspace();
+  await api.listMarkdown({ current: 1, size: 10 });
+  assert.equal(calls[0].url, '/customer-service/maps');
+  assert.deepEqual(JSON.parse(calls[1].options.body), { name: '第二张图谱' });
+  assert.equal(new URL(calls[2].url, 'http://test').searchParams.get('mapId'), 'map A');
+  for (const index of [3, 4, 7, 8]) assert.equal(JSON.parse(calls[index].options.body).mapId, 'map A');
+  assert.equal(calls[5].options.body.get('mapId'), 'map A');
+  assert.equal(new URL(calls[6].url, 'http://test').searchParams.get('mapId'), 'map A');
+  for (const index of [9, 10, 11]) assert.equal(JSON.parse(calls[index].options.body).mapId, 'map B');
+  assert.equal(JSON.parse(calls[12].options.body).mapId, undefined);
+});
+
+test('map zoom updates use an explicit captured map ID and retain the request on navigation', async context => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options) => { calls.push({ url, options }); return Response.json({ success: true }); });
+  await createApiClient('http://backend.test', () => 'map-b').updateMapZoom('map/a', 0.75);
+  assert.equal(calls[0].url, 'http://backend.test/customer-service/maps/map%2Fa/zoom');
+  assert.deepEqual(JSON.parse(calls[0].options.body), { zoom: 0.75 });
+  assert.equal(calls[0].options.keepalive, true);
+});
+
+test('map deletion explicitly addresses its own encoded ID, independent of active map', async context => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, options });
+    return Response.json({ success: true });
+  });
+  const api = createApiClient('http://localhost:8080', () => 'active-map');
+  await api.deleteMap('other/map');
+  assert.equal(calls[0].url, 'http://localhost:8080/customer-service/maps/other%2Fmap');
+  assert.equal(calls[0].options.method, 'DELETE');
+  globalThis.fetch = async () => Response.json({ success: false, message: '删除失败' });
+  await assert.rejects(api.deleteMap('other-map'), /删除失败/);
 });

@@ -6,6 +6,7 @@ let unavailable = true, listCalls = 0;
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 await page.route('**/customer-service/**', async route => {
+  if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
   const path = new URL(route.request().url()).pathname;
   if (path.endsWith('/tile/workspace')) {
     if (unavailable) return route.abort('connectionrefused');

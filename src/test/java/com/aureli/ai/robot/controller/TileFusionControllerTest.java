@@ -36,7 +36,7 @@ class TileFusionControllerTest {
     private final String fullAnswer = "完整回答，保留关键条件。".repeat(150);
 
     private TileDO qa(String id, int weight) {
-        return TileDO.builder().tileId(id).tileType("QA").weight(weight)
+        return TileDO.builder().mapId("map-test").tileId(id).tileType("QA").weight(weight)
                 .userMessage("问题 " + id).answerSummary("截断摘要").build();
     }
     private ChatResponse reply(String text) {
@@ -58,17 +58,17 @@ class TileFusionControllerTest {
         mvc = MockMvcBuilders.standaloneSetup(new TileFusionController(service)).build();
         when(tiles.selectCount(any())).thenReturn(0L);
         when(tiles.selectList(any())).thenReturn(List.of(qa("a", 1), qa("b", 2),
-                TileDO.builder().tileId("note").tileType("NOTE").content("便签秘密").weight(3).build(),
-                TileDO.builder().tileId("file").tileType("FILE").content("文件秘密").weight(3).build()));
+                TileDO.builder().mapId("map-test").tileId("note").tileType("NOTE").content("便签秘密").weight(3).build(),
+                TileDO.builder().mapId("map-test").tileId("file").tileType("FILE").content("文件秘密").weight(3).build()));
         when(messages.selectList(any())).thenReturn(List.of(
-                TileMessageDO.builder().tileId("a").role("assistant").content(fullAnswer).build(),
-                TileMessageDO.builder().tileId("b").role("assistant").content("互补回答").build()));
+                TileMessageDO.builder().mapId("map-test").tileId("a").role("assistant").content(fullAnswer).build(),
+                TileMessageDO.builder().mapId("map-test").tileId("b").role("assistant").content("互补回答").build()));
         when(model.call(any(Prompt.class))).thenReturn(reply("{\"userMessage\":\"融合问题\",\"answer\":\"融合回答\"}"));
     }
 
     @Test void mixedSelectionFusesOnlyDistinctQaWithFullAnswersAndHighestQaWeight() throws Exception {
         mvc.perform(post("/customer-service/tile/fusion").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"note\",\" a \",\"file\",\"b\"]}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"note\",\" a \",\"file\",\"b\"]}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.tiles[0].message").value("融合问题"))
                 .andExpect(jsonPath("$.data.tiles[0].answer").value("融合回答"))
@@ -103,7 +103,7 @@ class TileFusionControllerTest {
     })
     void fewerThanTwoDistinctQaOrMissingSourceDoesNotCallModel(String ids) throws Exception {
         mvc.perform(post("/customer-service/tile/fusion").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"fused\",\"sourceTileIds\":" + ids + "}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":" + ids + "}"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.success").value(false));
         verifyNoInteractions(model);
         verify(tiles, never()).insert(any(TileDO.class));
@@ -117,7 +117,7 @@ class TileFusionControllerTest {
     void invalidModelOutputDoesNotCreatePartialTile(String json) throws Exception {
         when(model.call(any(Prompt.class))).thenReturn(reply(json));
         mvc.perform(post("/customer-service/tile/fusion").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"b\"]}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"b\"]}"))
                 .andExpect(status().isInternalServerError()).andExpect(jsonPath("$.success").value(false));
         verify(tiles, never()).insert(any(TileDO.class));
         verify(messages, never()).insert(any(TileMessageDO.class));
@@ -127,7 +127,7 @@ class TileFusionControllerTest {
     @Test void sourceChangesDuringGenerationPreventSavingStaleContent() {
         when(tiles.selectList(any())).thenReturn(List.of(qa("a", 1), qa("b", 2)), List.of(qa("a", 3), qa("b", 2)));
         var error = assertThrows(IllegalArgumentException.class,
-                () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"))));
+                () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test")));
         assertTrue(error.getMessage().contains("已发生变化"));
         verify(tiles, never()).insert(any(TileDO.class));
     }
@@ -135,7 +135,7 @@ class TileFusionControllerTest {
     @Test void modelFailureLeavesSourcesAndWorkspaceUnchanged() {
         when(model.call(any(Prompt.class))).thenThrow(new IllegalStateException("secret credential"));
         var error = assertThrows(IllegalStateException.class,
-                () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"))));
+                () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test")));
         assertFalse(error.getMessage().contains("secret"));
         verify(tiles, never()).insert(any(TileDO.class));
         verify(messages, never()).insert(any(TileMessageDO.class));
@@ -147,7 +147,7 @@ class TileFusionControllerTest {
         incomplete.setAnswerSummary(null);
         when(tiles.selectList(any())).thenReturn(List.of(qa("a", 1), incomplete));
         when(messages.selectList(any())).thenReturn(List.of());
-        assertThrows(IllegalArgumentException.class, () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"))));
+        assertThrows(IllegalArgumentException.class, () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test")));
         verifyNoInteractions(model);
     }
 
@@ -156,17 +156,17 @@ class TileFusionControllerTest {
         legacy.setTileType(null);
         when(tiles.selectList(any())).thenReturn(List.of(legacy, qa("b", 1)));
         when(model.call(any(Prompt.class))).thenReturn(reply("```json\n{\"userMessage\":\"融合问题\",\"answer\":\"" + fullAnswer + "\"}\n```"));
-        assertEquals(3, service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"))).tile().getWeight());
+        assertEquals(3, service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test")).tile().getWeight());
         var chat = ArgumentCaptor.forClass(TileMessageDO.class);
         verify(messages, times(2)).insert(chat.capture());
         assertEquals(fullAnswer, chat.getAllValues().get(1).getContent());
     }
 
     @ParameterizedTest @ValueSource(strings = {
-        "{\"tileId\":\"fused\",\"sourceTileIds\":null}",
-        "{\"tileId\":\"fused\",\"sourceTileIds\":[\"a\"]}",
-        "{\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\" \"]}",
-        "{\"tileId\":\" \",\"sourceTileIds\":[\"a\",\"b\"]}"
+        "{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":null}",
+        "{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\"]}",
+        "{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\" \"]}",
+        "{\"mapId\":\"map-test\",\"tileId\":\" \",\"sourceTileIds\":[\"a\",\"b\"]}"
     })
     void invalidRequestIsRejectedBeforeDatabaseAccess(String json) throws Exception {
         mvc.perform(post("/customer-service/tile/fusion").contentType(MediaType.APPLICATION_JSON).content(json))
@@ -176,7 +176,7 @@ class TileFusionControllerTest {
 
     @Test void existingTargetIdDoesNotOverwriteAnExistingTile() {
         when(tiles.selectCount(any())).thenReturn(1L);
-        assertThrows(IllegalArgumentException.class, () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"))));
+        assertThrows(IllegalArgumentException.class, () -> service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test")));
         verifyNoInteractions(model);
         verify(tiles, never()).insert(any(TileDO.class));
     }

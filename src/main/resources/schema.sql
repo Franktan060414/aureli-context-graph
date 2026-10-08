@@ -1,3 +1,15 @@
+CREATE TABLE IF NOT EXISTS t_map (
+    id BIGSERIAL PRIMARY KEY,
+    map_id VARCHAR(128) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    zoom NUMERIC(7, 6) NOT NULL DEFAULT 1.0 CONSTRAINT chk_map_zoom CHECK (zoom BETWEEN 0.35 AND 1.5),
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+-- 旧图谱默认使用 100% 缩放；与画布支持的 35%–150% 范围一致。
+ALTER TABLE t_map ADD COLUMN IF NOT EXISTS zoom NUMERIC(7, 6) NOT NULL DEFAULT 1.0
+    CONSTRAINT chk_map_zoom CHECK (zoom BETWEEN 0.35 AND 1.5);
+
 CREATE TABLE IF NOT EXISTS t_tile (
     id BIGSERIAL PRIMARY KEY,
     tile_id VARCHAR(128) NOT NULL UNIQUE,
@@ -79,6 +91,37 @@ CREATE INDEX IF NOT EXISTS idx_t_tile_edge_target
 CREATE INDEX IF NOT EXISTS idx_t_tile_edge_relation_type
     ON t_tile_edge (relation_type);
 
+-- 多图谱字段必须显式赋值；不创建图谱，也不为旧数据推断归属。
+-- 若尚有未分配图谱的旧数据，应先明确归属再升级，避免无意删除。
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile_message ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile_edge ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile_message ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile_edge ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile ALTER COLUMN map_id SET NOT NULL;
+ALTER TABLE t_tile_message ALTER COLUMN map_id SET NOT NULL;
+ALTER TABLE t_tile_edge ALTER COLUMN map_id SET NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_t_tile_map_tile ON t_tile (map_id, tile_id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_map_order ON t_tile (map_id, id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_message_map_tile_time ON t_tile_message (map_id, tile_id, create_time);
+CREATE INDEX IF NOT EXISTS idx_t_tile_edge_map_source ON t_tile_edge (map_id, source_tile_id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_edge_map_target ON t_tile_edge (map_id, target_tile_id);
+
+-- 重复启动可重入；复合外键确保消息、边的两个端点与 Tile 属于同一个 Map。
+ALTER TABLE t_tile DROP CONSTRAINT IF EXISTS fk_tile_map;
+ALTER TABLE t_tile ADD CONSTRAINT fk_tile_map FOREIGN KEY (map_id) REFERENCES t_map (map_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_message DROP CONSTRAINT IF EXISTS fk_tile_message_tile;
+ALTER TABLE t_tile_message ADD CONSTRAINT fk_tile_message_tile FOREIGN KEY (map_id, tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_edge DROP CONSTRAINT IF EXISTS fk_tile_edge_source;
+ALTER TABLE t_tile_edge ADD CONSTRAINT fk_tile_edge_source FOREIGN KEY (map_id, source_tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_edge DROP CONSTRAINT IF EXISTS fk_tile_edge_target;
+ALTER TABLE t_tile_edge ADD CONSTRAINT fk_tile_edge_target FOREIGN KEY (map_id, target_tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+
 CREATE TABLE IF NOT EXISTS t_ai_customer_service_md_storage (
     id BIGSERIAL PRIMARY KEY,
     original_file_name VARCHAR(512) NOT NULL,
@@ -106,3 +149,14 @@ CREATE TABLE IF NOT EXISTS t_model_api_settings (
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 拆分关系升级：仅转换带有系统拆分 ID 和拆分备注的旧连线，不修改普通延伸关系。
+UPDATE t_tile_edge e
+SET relation_type = 'DEVIDES', update_time = CURRENT_TIMESTAMP
+FROM t_tile child
+WHERE e.map_id = child.map_id AND e.target_tile_id = child.tile_id
+  AND child.tile_type = 'QA'
+  AND e.direction = 'DIRECTED' AND e.relation_type = 'EXTENDS'
+  AND e.target_tile_id ~ '^tile-split-[A-Za-z0-9-]+-[0-3]$'
+  AND (e.description = '手动拆分' OR e.description LIKE '手动拆分：%');
+-- 拆分关系升级结束

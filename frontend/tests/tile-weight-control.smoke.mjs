@@ -6,7 +6,8 @@ const errors = [], writes = [];
 page.on('pageerror', error => errors.push(error.message));
 const tiles = [1, 2].map(weight => ({ id: `tile-${weight}`, weight, message: '验证当前 Tile 的权重', answer: '完整 AI 回答。'.repeat(60), relatedTileIds: [], status: 'ready', kind: 'root' }));
 let fail = false, finishSave;
-await page.route('**/customer-service/tile/workspace', route => route.fulfill({ json: { success: true, data: { tiles, edges: [] } } }));
+await page.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } }));
+await page.route('**/customer-service/tile/workspace?*', route => route.fulfill({ json: { success: true, data: { tiles, edges: [] } } }));
 await page.route('**/customer-service/tile/weight', async route => {
   const body = route.request().postDataJSON();
   writes.push(body);
@@ -44,7 +45,7 @@ try {
     assert.equal(await page.locator('.graph-node').first().evaluate(e => parseFloat(e.style.width)), dimensions[weight - 1]);
     assert.equal(await page.locator('.tile-weight').textContent(), ['普通', '重要', '非常重要'][weight - 1]);
   }
-  assert.deepEqual(writes, [{ tileId: 'tile-1', weight: 2 }, { tileId: 'tile-1', weight: 3 }, { tileId: 'tile-1', weight: 1 }]);
+  assert.deepEqual(writes, [{ mapId: 'default', tileId: 'tile-1', weight: 2 }, { mapId: 'default', tileId: 'tile-1', weight: 3 }, { mapId: 'default', tileId: 'tile-1', weight: 1 }]);
   await select.selectOption('3'); await saved(3);
   await page.reload(); await saved(3);
   fail = true;

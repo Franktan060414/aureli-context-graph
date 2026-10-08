@@ -38,7 +38,7 @@ class TileWeightControllerTest {
     void updatesOnlyRequestedTileWeightAndTimestamp(int weight) throws Exception {
         when(tiles.update(isNull(), any())).thenReturn(1);
         mvc.perform(post("/customer-service/tile/weight").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"current-tile\",\"weight\":" + weight + "}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"current-tile\",\"weight\":" + weight + "}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true));
         var captor = ArgumentCaptor.forClass(LambdaUpdateWrapper.class);
         verify(tiles).update(isNull(), captor.capture());
@@ -55,14 +55,14 @@ class TileWeightControllerTest {
     @ValueSource(strings = {"0", "4", "-1", "null"})
     void rejectsInvalidWeightWithoutWriting(String weight) throws Exception {
         mvc.perform(post("/customer-service/tile/weight").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"current-tile\",\"weight\":" + weight + "}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"current-tile\",\"weight\":" + weight + "}"))
                 .andExpect(status().isBadRequest());
         verifyNoInteractions(tiles);
     }
 
     @Test void rejectsBlankIdWithoutWriting() throws Exception {
         mvc.perform(post("/customer-service/tile/weight").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\" \",\"weight\":2}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\" \",\"weight\":2}"))
                 .andExpect(status().isBadRequest());
         verifyNoInteractions(tiles);
     }
@@ -70,7 +70,7 @@ class TileWeightControllerTest {
     @Test void missingTileReturnsFailure() throws Exception {
         when(tiles.update(isNull(), any())).thenReturn(0);
         mvc.perform(post("/customer-service/tile/weight").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"tileId\":\"missing\",\"weight\":2}"))
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"missing\",\"weight\":2}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(false));
     }
 }

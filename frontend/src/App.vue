@@ -21,6 +21,7 @@ import {
   Layers3,
   GitBranch,
   Merge,
+  Split,
   Check,
   CircleHelp,
   Menu,
@@ -51,13 +52,16 @@ import GraphCanvas from "./components/GraphCanvas.vue";
 import QuestionForm from "./components/QuestionForm.vue";
 import ContextPicker from "./components/ContextPicker.vue";
 import FullscreenViewer from "./components/FullscreenViewer.vue";
+import MarkdownAnswer from "./components/MarkdownAnswer.vue";
 import ApiSettings from "./components/ApiSettings.vue";
 import { useMotion } from "./composables/useMotion.js";
 import { useCanvasZoom } from "./composables/useCanvasZoom.js";
 const { animateSurface, motionEnabled } = useMotion();
 const canvasZoom = useCanvasZoom();
 import { createApiClient } from "./lib/api.js";
-import { readLayouts } from "./lib/graph-layout.js";
+import { relationTypeForDirection, relationTypeForEdge } from "./lib/tile-relations.js";
+import { createMapZoomSaver } from "./lib/map-zoom.js";
+import { readLayouts, positionTiles, tileDimensions } from "./lib/graph-layout.js";
 import { demoGraph, demoFiles } from "./lib/demo.js";
 const nav = [
   { id: "graph", label: "图谱工作台", icon: Network },
@@ -88,9 +92,25 @@ const demo = ref(localStorage.getItem("aureli-mode") === "demo"),
   inspectorMinimized = ref(false),
   query = ref(""),
   filter = ref("all");
-const example = reactive(demoGraph()),
-  live = reactive({ tiles: [], edges: [] });
-const workspace = computed(() => (demo.value ? example : live));
+const apiBase = ref(localStorage.getItem("aureli-api-base") || "");
+const serverKey = computed(() => apiBase.value.trim().replace(/\/+$/, "") || location.origin);
+const maps = ref([]), demoMaps = ref([{ mapId: "demo", name: "示例图谱", zoom: canvasZoom.value }]);
+const liveMapId = ref(new URL(location.href).searchParams.get("map") || localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null);
+const demoMapId = ref("demo");
+const currentMapId = computed(() => demo.value ? demoMapId.value : liveMapId.value);
+const visibleMaps = computed(() => demo.value ? demoMaps.value : maps.value);
+const currentMap = computed(() => visibleMaps.value.find(map => map.mapId === currentMapId.value));
+const mapStates = reactive({});
+function mapState(key, graph = { tiles: [], edges: [] }) {
+  return mapStates[key] ||= { ...graph, generating: false, loading: false, error: "", ui: null };
+}
+mapState("demo:demo", demoGraph());
+const workspaceKey = computed(() => demo.value ? `demo:${demoMapId.value}` : `live:${serverKey.value}:${liveMapId.value}`);
+const workspace = computed(() => mapState(workspaceKey.value));
+const live = computed(() => mapState(`live:${serverKey.value}:${liveMapId.value}`));
+const mapListLoading = ref(false), mapListError = ref(""), mapCreating = ref(false), showMapForm = ref(false), mapName = ref(""), mapNameInput = ref(null);
+const mapSwitchDisabled = computed(() => weightBusy.value || nodeBusy.value || modalBusy.value || mapCreating.value);
+let mapListRequest = 0;
 const related = ref([]),
   selected = ref(demo.value ? "tile-003" : null);
 const selectedTile = computed(() =>
@@ -181,13 +201,30 @@ const statuses = [
   { label: "处理失败", class: "error" },
 ];
 const toast = ref(null),
-  generating = ref(false),
+  generating = computed(() => workspace.value.generating),
   formError = ref(""),
   connection = ref("unknown");
-const apiBase = ref(localStorage.getItem("aureli-api-base") || "");
-const api = createApiClient(() => apiBase.value);
+const api = createApiClient(() => apiBase.value, () => liveMapId.value);
+let restoringMapZoom = false;
+const zoomSaves = createMapZoomSaver(error => notify(`缩放比例保存失败：${error.message}。调整比例后可重试。`, true));
+function restoreMapZoom() {
+  const value = Number(currentMap.value?.zoom ?? 1);
+  restoringMapZoom = true;
+  try { canvasZoom.value = Number.isFinite(value) ? Math.min(1.5, Math.max(0.35, value)) : 1; }
+  finally { restoringMapZoom = false; }
+}
+watch(canvasZoom, zoom => {
+  const map = currentMap.value;
+  if (restoringMapZoom || !map) return;
+  map.zoom = zoom;
+  if (demo.value) return;
+  const mapId = map.mapId, client = createApiClient(apiBase.value);
+  zoomSaves.save(workspaceKey.value, zoom, value => client.updateMapZoom(mapId, value));
+}, { flush: "sync" });
 const layouts = reactive(readLayouts());
-const layoutKey = computed(() => demo.value ? 'demo' : `live:${apiBase.value.trim().replace(/\/+$/, '') || location.origin}`);
+const layoutKey = computed(() => workspaceKey.value);
+// Carry existing demo positions into its map once.
+if (layouts.demo && !layouts["demo:demo"]) layouts["demo:demo"] = { ...layouts.demo };
 const tileLayout = computed(() => layouts[layoutKey.value] || {});
 function moveTile({ id, x, y, reset }) {
   const layout = layouts[layoutKey.value] ||= {};
@@ -205,15 +242,13 @@ function arrangeCanvas(positions) {
 }
 function changeApiBase(base) {
   if (base === apiBase.value) { connection.value = 'connected'; return; }
+  stashMapUi();
   apiBase.value = base;
   connection.value = 'unknown';
-  if (!demo.value) {
-    live.tiles = [];
-    live.edges = [];
-    selected.value = null;
-    related.value = [];
-    loadWorkspace();
-  }
+  maps.value = [];
+  liveMapId.value = localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null;
+  resetMapUi();
+  if (!demo.value) loadMaps();
 }
 const expanded = ref(null);
 let fullscreenOrigin;
@@ -223,21 +258,143 @@ watch(expanded, (value, previous) => {
 function restoreFullscreenFocus() {
   if (!expanded.value && fullscreenOrigin?.isConnected) fullscreenOrigin.focus({ preventScroll: true });
 }
-const graphLoading = ref(false), graphError = ref("");
+const graphLoading = computed(() => workspace.value.loading || !currentMap.value || (!demo.value && mapListLoading.value));
+const graphError = computed(() => workspace.value.error);
 async function loadWorkspace() {
-  if (graphLoading.value || generating.value || weightBusy.value || nodeBusy.value || modalBusy.value) return;
-  graphLoading.value = true;
-  graphError.value = "";
+  if (!liveMapId.value) return;
+  const state = live.value, key = workspaceKey.value;
+  if (state.loading || state.generating || weightBusy.value || nodeBusy.value || modalBusy.value) return;
+  state.loading = true;
+  state.error = "";
   try {
     const result = await api.workspace();
-    live.tiles = result.data.tiles;
-    live.edges = result.data.edges;
-    if (!live.tiles.some(t => t.id === selected.value)) selected.value = live.tiles[0]?.id || null;
-    connection.value = "connected";
+    state.tiles = result.data.tiles;
+    state.edges = result.data.edges;
+    if (key === workspaceKey.value) {
+      if (!state.tiles.some(t => t.id === selected.value)) selected.value = state.tiles[0]?.id || null;
+      related.value = related.value.filter(id => state.tiles.some(t => t.id === id));
+      connection.value = "connected";
+    }
   } catch (error) {
-    graphError.value = error.message;
-    connection.value = "error";
-  } finally { graphLoading.value = false; }
+    state.error = error.message;
+    if (key === workspaceKey.value) connection.value = "error";
+  } finally { state.loading = false; }
+}
+async function loadMaps() {
+  const requestId = ++mapListRequest;
+  mapListLoading.value = true;
+  mapListError.value = "";
+  try {
+    const result = await api.listMaps();
+    if (requestId !== mapListRequest) return;
+    maps.value = result.data.map(map => ({ ...map,
+      zoom: zoomSaves.pending(`live:${serverKey.value}:${map.mapId}`) ?? map.zoom ?? canvasZoom.value,
+    }));
+    if (!maps.value.some(map => map.mapId === liveMapId.value)) {
+      liveMapId.value = maps.value[0]?.mapId || null;
+      resetMapUi();
+    }
+    rememberMap();
+    if (!demo.value) restoreMapZoom();
+    mapListLoading.value = false;
+    if (!demo.value) await loadWorkspace();
+  } catch (error) {
+    if (requestId === mapListRequest) { mapListError.value = error.message; connection.value = "error"; }
+  } finally { if (requestId === mapListRequest) mapListLoading.value = false; }
+}
+function rememberMap() {
+  if (demo.value) return;
+  const key = `aureli-active-map:${serverKey.value}`;
+  if (liveMapId.value) localStorage.setItem(key, liveMapId.value);
+  else localStorage.removeItem(key);
+  const url = new URL(location.href);
+  if (liveMapId.value) url.searchParams.set("map", liveMapId.value);
+  else url.searchParams.delete("map");
+  history.replaceState(null, "", url);
+}
+function stashMapUi() {
+  workspace.value.ui = { selected: selected.value, related: [...related.value], form: { ...form },
+    query: query.value, filter: filter.value, panel: panel.value };
+}
+function resetMapUi() {
+  const ui = workspace.value.ui;
+  selected.value = ui?.selected || workspace.value.tiles[0]?.id || null;
+  related.value = [...(ui?.related || [])];
+  Object.assign(form, ui?.form || { message: "", tileId: newId(), edgeDirection: "DIRECTED", edgeDescription: "" });
+  query.value = ui?.query || "";
+  filter.value = ui?.filter || "all";
+  panel.value = ui?.panel || "detail";
+  formError.value = "";
+  expanded.value = null;
+  resetInspectorPosition();
+  restoreMapZoom();
+}
+async function switchMap(mapId) {
+  if (mapSwitchDisabled.value || !visibleMaps.value.some(map => map.mapId === mapId)) return;
+  if (mapId !== currentMapId.value) {
+    stashMapUi();
+    if (demo.value) demoMapId.value = mapId;
+    else liveMapId.value = mapId;
+    resetMapUi();
+    rememberMap();
+    if (!demo.value && !workspace.value.generating) loadWorkspace();
+  }
+  await navigate("graph");
+}
+function setMapNameInput(element) { mapNameInput.value = element; }
+async function openMapForm() {
+  if (mapSwitchDisabled.value) return;
+  showMapForm.value = true;
+  mapListError.value = "";
+  await nextTick();
+  mapNameInput.value?.focus();
+}
+async function createMap() {
+  if (mapSwitchDisabled.value || !mapName.value.trim()) return;
+  mapCreating.value = true;
+  mapListError.value = "";
+  try {
+    const map = demo.value ? { mapId: `demo-${uniqueId()}`, name: mapName.value.trim(), zoom: 1 }
+      : (await api.createMap(mapName.value.trim())).data;
+    (demo.value ? demoMaps.value : maps.value).push(map);
+    mapName.value = "";
+    showMapForm.value = false;
+    mapCreating.value = false;
+    await switchMap(map.mapId);
+    notify(demo.value ? "示例图谱已创建" : "图谱已创建");
+  } catch (error) { mapListError.value = error.message; }
+  finally { mapCreating.value = false; }
+}
+function mapDeleteDisabled(map) {
+  const key = demo.value ? `demo:${map.mapId}` : `live:${serverKey.value}:${map.mapId}`;
+  return mapSwitchDisabled.value || mapListLoading.value || !!mapStates[key]?.generating;
+}
+async function requestMapDelete(map) {
+  if (mapDeleteDisabled(map)) return;
+  await openModal("deleteMap", map);
+}
+async function deleteMap(map) {
+  if (!demo.value) await api.deleteMap(map.mapId);
+  // Invalidate any map list already in flight so it cannot restore the deleted row.
+  ++mapListRequest;
+  mapListLoading.value = false;
+  const index = visibleMaps.value.findIndex(item => item.mapId === map.mapId);
+  const remaining = visibleMaps.value.filter(item => item.mapId !== map.mapId);
+  const key = demo.value ? `demo:${map.mapId}` : `live:${serverKey.value}:${map.mapId}`;
+  zoomSaves.discard(key);
+  delete layouts[key];
+  if (demo.value && map.mapId === "demo") delete layouts.demo;
+  saveLayout();
+  delete mapStates[key];
+  if (demo.value) demoMaps.value = remaining;
+  else maps.value = remaining;
+  if (currentMapId.value === map.mapId) {
+    const nextId = (remaining[index] || remaining[index - 1])?.mapId || null;
+    if (demo.value) demoMapId.value = nextId;
+    else liveMapId.value = nextId;
+    resetMapUi();
+    rememberMap();
+  }
 }
 const expandedTile = computed(() =>
   workspace.value.tiles.find((t) => t.id === expanded.value?.tileId),
@@ -277,6 +434,65 @@ const fusionTiles = computed(() => workspace.value.tiles.filter(tile =>
   related.value.includes(tile.id) && nodeType(tile) === "QA" && tile.status === "ready"
   && tile.message?.trim() && tile.answer?.trim()));
 const fusionBusy = computed(() => generating.value || graphLoading.value || nodeBusy.value || modalBusy.value || weightBusy.value);
+const splitRequirements = ref("");
+const splitTile = computed(() => {
+  if (related.value.length > 1) return null;
+  const tile = related.value.length === 1
+    ? workspace.value.tiles.find(tile => tile.id === related.value[0]) : selectedTile.value;
+  return tile && nodeType(tile) === "QA" && tile.status === "ready"
+    && tile.message?.trim() && tile.answer?.trim() ? tile : null;
+});
+async function requestSplit() {
+  if (fusionBusy.value || !splitTile.value) return;
+  splitRequirements.value = "";
+  await openModal("split", { id: splitTile.value.id, message: splitTile.value.message, splitId: uniqueId() });
+  dialog.value.querySelector('#split-requirements')?.focus();
+}
+async function splitSelectedTile(source) {
+  const requirements = splitRequirements.value.trim();
+  if (requirements.length > 2000) throw new Error("拆分要求最多 2000 个字符。");
+  let result;
+  if (demo.value) {
+    const original = workspace.value.tiles.find(tile => tile.id === source.id);
+    const tiles = ["核心要点", "条件与应用"].map(topic => ({
+      id: newId(), tileType: "QA", kind: "memory", status: "ready", weight: original.weight ?? 1,
+      message: `${original.message}：${topic}`,
+      answer: `这是拆分示例，用于演示子 Tile 的关联与阅读。真实工作区会先由 AI 判断拆分价值，再细分回答。${requirements ? `\n\n本次要求：${requirements}` : ""}\n\n来源问答：\n${original.answer}`,
+      relatedTileIds: [source.id],
+    }));
+    result = { tiles, edges: tiles.map(tile => ({
+      id: `edge-${uniqueId()}`, sourceTileId: source.id, targetTileId: tile.id,
+      direction: "DIRECTED", relationType: "DEVIDES", weight: 1,
+      description: requirements ? `手动拆分：${requirements}` : "手动拆分",
+    })) };
+  } else {
+    result = (await api.splitTile({ sourceTileId: source.id, requirements, splitId: source.splitId })).data;
+    connection.value = "connected";
+  }
+  // Preserve the existing graph positions and place the new branch beside its source.
+  const positions = positionTiles(workspace.value.tiles, tileLayout.value);
+  const origin = positions.find(tile => tile.id === source.id);
+  const layout = { ...tileLayout.value, ...Object.fromEntries(positions.map(tile => [tile.id, { x: tile.x, y: tile.y }])) };
+  let y = origin.y;
+  for (const tile of result.tiles) {
+    const point = { x: origin.x + origin.width + 96, y, ...tileDimensions(tile) };
+    let overlap;
+    while ((overlap = positions.find(other => point.x < other.x + other.width + 32
+      && point.x + point.width + 32 > other.x && point.y < other.y + other.height + 32
+      && point.y + point.height + 32 > other.y))) point.y = overlap.y + overlap.height + 32;
+    layout[tile.id] = { x: point.x, y: point.y };
+    positions.push({ ...tile, ...point });
+    y = point.y + point.height + 32;
+  }
+  layouts[layoutKey.value] = layout;
+  saveLayout();
+  workspace.value.tiles.push(...result.tiles);
+  workspace.value.edges.push(...result.edges);
+  related.value = [];
+  select(result.tiles[0].id);
+  inspectorMinimized.value = false;
+  return result.tiles.length;
+}
 async function requestFusion() {
   if (fusionBusy.value || fusionTiles.value.length < 2) return;
   await openModal("fusion", {
@@ -317,7 +533,6 @@ const form = reactive({
   message: "",
   tileId: newId(),
   edgeDirection: "DIRECTED",
-  relationType: "EXTENDS",
   edgeDescription: "",
 });
 let toastTimer, filePollTimer;
@@ -373,7 +588,7 @@ watch(mobileNav, async (open) => {
   }
 });
 onMounted(() => {
-  if (!demo.value) loadWorkspace();
+  if (!demo.value) loadMaps();
   if (section.value === "knowledge") loadFiles();
   document.addEventListener("visibilitychange", scheduleFileRefresh);
   window.addEventListener("hashchange", hashChanged);
@@ -408,7 +623,9 @@ async function switchMode() {
     nodeBusy.value
   )
     return;
+  stashMapUi();
   demo.value = !demo.value;
+  resetMapUi();
   localStorage.setItem("aureli-mode", demo.value ? "demo" : "live");
   related.value = [];
   selected.value = workspace.value.tiles[0]?.id || null;
@@ -418,7 +635,7 @@ async function switchMode() {
   panel.value = "detail";
   page.value = 1;
   fileError.value = "";
-  if (!demo.value) await loadWorkspace();
+  if (!demo.value) await loadMaps();
   if (section.value === "knowledge") await loadFiles();
   notify(
     demo.value ? "已切换到示例模式，操作仅影响示例数据" : "已切换到真实工作区",
@@ -595,6 +812,7 @@ async function sendTile(retryTile) {
     formError.value = "Tile ID 已存在，请使用一个新的 ID。";
     return;
   }
+  const origin = workspace.value, originKey = workspaceKey.value, isDemo = demo.value;
   const payload = retryTile?.payload || {
     message: form.message.trim(),
     tileId: form.tileId.trim(),
@@ -602,9 +820,10 @@ async function sendTile(retryTile) {
     memoryDepth: 3,
     edgeWeight: 1,
     edgeDirection: form.edgeDirection,
-    relationType: form.relationType.trim() || "EXTENDS",
+    relationType: relationTypeForDirection(form.edgeDirection),
     edgeDescription: form.edgeDescription.trim() || undefined,
   };
+  payload.relationType = relationTypeForDirection(payload.edgeDirection);
   if (modal.value?.type === "question") {
     closeModal();
     inspectorMinimized.value = false;
@@ -638,12 +857,12 @@ async function sendTile(retryTile) {
   }
   selected.value = tile.id;
   panel.value = "detail";
-  generating.value = true;
+  origin.generating = true;
   tile.status = "loading";
   tile.answer = "";
   tile.error = "";
   try {
-    if (demo.value)
+    if (isDemo)
       tile.answer =
         "这是一条示例回答，用于演示 Tile 创建与上下文关联。\n\n在真实工作区中，系统会结合共享 RAG 知识库" +
         (payload.relatedTileIds.length
@@ -652,20 +871,25 @@ async function sendTile(retryTile) {
         "，流式生成问题的回答。";
     else {
       await api.completeTile(payload, (answer) => (tile.answer = answer));
-      connection.value = "connected";
+      if (originKey === workspaceKey.value) connection.value = "connected";
     }
     tile.status = "ready";
-    form.message = "";
-    form.tileId = newId();
-    related.value = [];
-    notify(demo.value ? "示例 Tile 已创建" : "Tile 已生成");
+    if (originKey === workspaceKey.value) {
+      form.message = "";
+      form.tileId = newId();
+      related.value = [];
+      notify(isDemo ? "示例 Tile 已创建" : "Tile 已生成");
+    } else {
+      if (origin.ui) { origin.ui.form.message = ""; origin.ui.form.tileId = newId(); origin.ui.related = []; }
+      notify("另一张图谱的 Tile 已生成");
+    }
   } catch (error) {
     tile.status = "error";
     tile.error = error.message;
-    connection.value = "error";
+    if (originKey === workspaceKey.value) connection.value = "error";
     notify(error.message, true);
   } finally {
-    generating.value = false;
+    origin.generating = false;
   }
 }
 async function loadFiles() {
@@ -738,7 +962,8 @@ async function loadNodeFile(tile) {
 // A new loader identity prevents image previews crossing backend/demo boundaries.
 const loadPreviewFile = computed(() => {
   const isDemo = demo.value;
-  const client = createApiClient(apiBase.value);
+  const mapId = currentMapId.value;
+  const client = createApiClient(apiBase.value, () => mapId);
   return async tile => {
     const blob = isDemo ? tile.demoFile : await client.downloadTileFile(tile.id);
     if (!blob) throw new Error("示例文件已失效，请重新添加。");
@@ -865,8 +1090,11 @@ async function confirmModal() {
   modalError.value = "";
   try {
     const { type, file } = modal.value;
+    let splitCount;
     if (type === "fusion") {
       await fuseTiles(file);
+    } else if (type === "split") {
+      splitCount = await splitSelectedTile(file);
     } else if (type === "note" || type === "editNote") {
       if (!noteDraft.title.trim() || !noteDraft.content.trim()) throw new Error("请填写便签标题和正文。");
       const payload = { ...noteDraft, title: noteDraft.title.trim(), relatedTileIds: [...artifactRelated.value] };
@@ -891,6 +1119,7 @@ async function confirmModal() {
       if (!demo.value)
         await api.resetWorkspace();
       delete layouts[layoutKey.value];
+      if (demo.value && demoMapId.value === "demo") delete layouts.demo;
       saveLayout();
       workspace.value.tiles = [];
       workspace.value.edges = [];
@@ -904,6 +1133,8 @@ async function confirmModal() {
         await api.deleteMarkdown(file.id);
       if (page.value > 1 && displayedFiles.value.length === 1) page.value--;
       await loadFiles();
+    } else if (type === "deleteMap") {
+      await deleteMap(file);
     } else if (type === "deleteTile") {
       const tile = modal.value.tile;
       if (!demo.value) await api.deleteTile(tile.id);
@@ -919,7 +1150,12 @@ async function confirmModal() {
     }
     modalBusy.value = false;
     closeModal();
-    notify(type === "fusion" ? demo.value ? "示例融合 Tile 已创建" : "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
+    if (type === "deleteMap") {
+      if (!demo.value) await loadWorkspace();
+      await nextTick();
+      document.querySelector('.map-item.selected, .map-add')?.focus();
+    }
+    notify(type === "deleteMap" ? "图谱已删除" : type === "split" ? `${demo.value ? '示例拆分' : '拆分完成'}，已创建 ${splitCount} 个子 Tile` : type === "fusion" ? demo.value ? "示例融合 Tile 已创建" : "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
   } catch (error) {
     modalError.value = error.message;
   } finally {
@@ -984,19 +1220,45 @@ function exportGraph() {
         ><ChevronDown :size="15" />
       </button>
       <span class="nav-caption">WORKSPACE / 工作空间</span>
-      <nav>
-        <a
-          v-for="item in nav"
-          :key="item.id"
-          :href="`#${item.id}`"
-          :class="{ active: section === item.id }"
-          :aria-current="section === item.id ? 'page' : undefined"
-          @click.prevent="navigate(item.id)"
-          ><component :is="item.icon" :size="19" /><span>{{ item.label }}</span
-          ><span v-if="item.id === 'graph'" class="nav-count">{{
-            workspace.tiles.length
-          }}</span></a
-        >
+      <nav aria-label="工作空间">
+        <template v-for="item in nav" :key="item.id">
+          <a :href="`#${item.id}`" :class="{ active: section === item.id }"
+            :aria-current="section === item.id ? 'page' : undefined" @click.prevent="navigate(item.id)">
+            <component :is="item.icon" :size="19" aria-hidden="true" /><span>{{ item.label }}</span>
+            <span v-if="item.id === 'graph'" class="nav-count">{{ workspace.tiles.length }}</span>
+          </a>
+          <div v-if="item.id === 'graph'" class="map-navigation" aria-label="图谱列表">
+            <div class="map-list">
+              <div v-for="map in visibleMaps" :key="map.mapId" class="map-row">
+                <button class="map-item" type="button"
+                  :class="{ selected: currentMapId === map.mapId }" :aria-pressed="currentMapId === map.mapId"
+                  :disabled="mapSwitchDisabled" :title="map.name" @click="switchMap(map.mapId)">
+                  <Network :size="15" aria-hidden="true" /><span>{{ map.name }}</span>
+                  <Check v-if="currentMapId === map.mapId" :size="14" aria-hidden="true" />
+                </button>
+                <button type="button" class="icon-button danger-icon map-delete-action"
+                  :disabled="mapDeleteDisabled(map)" :aria-label="`删除图谱 ${map.name}`" title="删除图谱"
+                  @click.stop="requestMapDelete(map)">
+                  <Trash2 :size="12" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+            <p v-if="mapListLoading" class="map-feedback" role="status">正在加载图谱…</p>
+            <form v-if="showMapForm" class="map-create-form" @submit.prevent="createMap">
+              <label for="map-name">图谱名称</label>
+              <input id="map-name" :ref="setMapNameInput" v-model="mapName" required maxlength="100" autocomplete="off"
+                :disabled="mapCreating" @keydown.esc.stop="!mapCreating && (showMapForm = false)" />
+              <div><button type="submit" :disabled="mapCreating || !mapName.trim()">{{ mapCreating ? '创建中…' : '创建' }}</button>
+                <button type="button" :disabled="mapCreating" @click="showMapForm = false">取消</button></div>
+            </form>
+            <button v-else type="button" class="map-add" :disabled="mapSwitchDisabled || mapListLoading" @click="openMapForm">
+              <Plus :size="16" aria-hidden="true" />新建图谱
+            </button>
+            <div v-if="mapListError" class="map-feedback map-error" role="alert">{{ mapListError }}
+              <button v-if="!showMapForm" type="button" @click="loadMaps">重新加载</button>
+            </div>
+          </div>
+        </template>
       </nav>
       <div class="sidebar-bottom">
         <div class="context-note">
@@ -1033,7 +1295,7 @@ function exportGraph() {
             <Menu :size="20" /></button
           ><span>工作空间</span><ChevronRight :size="14" /><strong>{{
             titles[section]
-          }}</strong>
+          }}</strong><span v-if="section === 'graph' && currentMap" class="current-map-name">{{ currentMap.name }}</span>
         </div>
         <div class="topbar-actions">
           <span class="service-state"
@@ -1090,7 +1352,7 @@ function exportGraph() {
             }}</span
           ><button
             @click="switchMode"
-            :disabled="generating || graphLoading || uploadBusy || modalBusy || fileLoading"
+            :disabled="generating || workspace.loading || mapListLoading || uploadBusy || modalBusy || fileLoading"
           >
             {{ demo ? "进入工作区" : "查看示例" }}<ArrowRight :size="14" />
           </button>
@@ -1098,7 +1360,13 @@ function exportGraph() {
 
         <template v-if="section === 'graph'">
           <div v-if="graphError" class="inline-error" role="alert">{{ graphError }} <button class="text-button" @click="loadWorkspace">重新同步</button></div>
-          <div
+          <div v-if="!currentMap && !mapListLoading && !mapListError" class="surface empty-state no-map-state">
+            <Network :size="32" aria-hidden="true" />
+            <h2>创建你的第一张图谱</h2>
+            <p>从左侧新建图谱，再添加问答、便签和文件。</p>
+            <button class="primary" :disabled="mapCreating" @click="mobileNav = isMobile; openMapForm()"><Plus :size="18" aria-hidden="true" />新建图谱</button>
+          </div>
+          <div v-else
             class="workspace-grid"
             :class="{ 'inspector-is-minimized': inspectorMinimized }"
           >
@@ -1135,6 +1403,11 @@ function exportGraph() {
                     :title="fusionTiles.length < 2 ? '通过“选择关联”选中至少两个已完成的 AI 问答 Tile' : `融合 ${fusionTiles.length} 个 AI 问答 Tile`"
                     :disabled="fusionBusy || fusionTiles.length < 2" @click="requestFusion">
                     <Merge :size="17" aria-hidden="true" />
+                  </button>
+                  <button type="button" class="icon-button graph-split-action" aria-label="拆分选中的 AI 问答 Tile" aria-haspopup="dialog"
+                    :title="splitTile ? `拆分 ${splitTile.id}` : related.length > 1 ? '拆分仅支持一个 Tile，请取消多选关联' : '点选或通过“选择关联”选中一个已完成的 AI 问答 Tile'"
+                    :disabled="fusionBusy || !splitTile" @click="requestSplit">
+                    <Split :size="17" aria-hidden="true" />
                   </button>
                   <div class="graph-create-actions" role="group" aria-label="新增节点">
                     <button type="button" class="graph-create-label" disabled>新增+</button>
@@ -1178,7 +1451,7 @@ function exportGraph() {
                   ><Search :size="18" /></button>
                 </div>
               </div>
-              <GraphCanvas
+              <GraphCanvas :key="workspaceKey"
                 v-if="tab === 'graph'"
                 v-model:zoom="canvasZoom"
                 :tiles="workspace.tiles"
@@ -1378,7 +1651,13 @@ function exportGraph() {
                       >示例</span
                     >
                   </h2>
-                  <p class="answer-text">
+                  <MarkdownAnswer
+                    v-if="nodeType(selectedTile) === 'QA'"
+                    class="answer-text"
+                    :content="selectedTile.answer"
+                    :loading="selectedTile.status === 'loading'"
+                  />
+                  <p v-else class="answer-text">
                     {{
                       selectedTile.answer ||
                       (selectedTile.status === "loading"
@@ -1469,7 +1748,7 @@ function exportGraph() {
                     <span class="mono">{{ edge.sourceTileId }}</span
                     ><span class="edge-type"
                       >{{ edge.direction === "UNDIRECTED" ? "↔" : "→" }}
-                      {{ edge.relationType }}</span
+                      {{ relationTypeForEdge(edge) }}</span
                     ><button
                       class="text-button mono"
                       @click="select(edge.targetTileId)"
@@ -1747,7 +2026,7 @@ function exportGraph() {
     <dialog
       ref="dialog"
       class="modal"
-      :class="{ 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file'].includes(modal?.type) }"
+      :class="{ 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file', 'split'].includes(modal?.type) }"
       aria-labelledby="workspace-modal-title"
       @cancel.self.prevent="closeModal"
     >
@@ -1757,12 +2036,15 @@ function exportGraph() {
             {{
               modal.type === "question" ? "添加Tile"
                 : modal.type === "fusion" ? "融合选中的 AI 问答 Tile？"
+                : modal.type === "split" ? "拆分 AI 问答 Tile"
                 : modal.type === "search" ? "搜索与筛选"
                 : modal.type === "note" ? "添加便签"
                 : modal.type === "editNote" ? "编辑便签"
                 : modal.type === "file" ? "添加文件"
                 : modal.type === "reset"
                 ? "重置整个画布？"
+                : modal.type === "deleteMap"
+                  ? "删除这个图谱？"
                 : modal.type === "deleteTile"
                   ? "删除这个 Tile？"
                 : modal.type === "delete"
@@ -1825,8 +2107,18 @@ function exportGraph() {
               @toggle="toggleArtifactRelated" @clear="artifactRelated = []" />
 
           </form>
+          <form v-else-if="modal.type === 'split'" id="split-form" class="node-artifact-form" @submit.prevent="confirmModal">
+            <p class="split-source"><strong class="mono">{{ modal.file.id }}</strong><span>{{ modal.file.message }}</span></p>
+            <p id="split-help" class="field-help">“拆分”操作会尝试生成 2～4 个可独立阅读的子问答，该操作不一定在所有情况下可用。</p>
+            <label for="split-requirements">拆分应该如何进行？（可选）</label>
+            <textarea id="split-requirements" v-model="splitRequirements" maxlength="2000" rows="4"
+              :disabled="modalBusy" aria-describedby="split-help split-requirements-help"
+              placeholder="例如：按实施步骤拆分、重点展开技术方案、面向初学者解释"></textarea>
+            <p v-if="demo" class="field-help">当前为示例模式，仅演示拆分效果；真实工作区会进行 AI 价值判断。</p>
+            <p v-if="modalBusy" role="status" class="field-help">请稍候…</p>
+          </form>
           <template v-else-if="modal.type === 'fusion'">
-            <p>将以下 {{ modal.file.sources.length }} 个 AI 问答 Tile 的用户问题和回答融合为一个新的 Tile。原 Tile 将保留，并关联到新 Tile。</p>
+            <p>“融合”操作将以下 {{ modal.file.sources.length }} 个 AI 问答 Tile 的用户问题和回答融合为一个新的 Tile。原 Tile 将保留，并关联到新 Tile。</p>
             <ul class="fusion-source-list">
               <li v-for="tile in modal.file.sources" :key="tile.id"><strong class="mono">{{ tile.id }}</strong><span>{{ tile.message }}</span></li>
             </ul>
@@ -1856,7 +2148,7 @@ function exportGraph() {
             <p class="field-help">
               示例数据仅用于演示。真实工作区不会携带示例节点；页面刷新后从数据库恢复真实图谱。
             </p>
-            <button class="secondary" @click="switchMode(); closeModal()" :disabled="generating || graphLoading || uploadBusy || modalBusy || fileLoading">
+            <button class="secondary" @click="switchMode(); closeModal()" :disabled="generating || workspace.loading || mapListLoading || uploadBusy || modalBusy || fileLoading">
               {{ demo ? "进入工作区" : "查看示例" }}<ArrowRight :size="16" />
             </button></template
           >
@@ -1872,6 +2164,9 @@ function exportGraph() {
             将删除「{{ modal.file.originalFileName }}」{{
               demo ? "的示例记录。" : "及其关联向量数据，此操作不可撤销。"
             }}
+          </p>
+          <p v-else-if="modal.type === 'deleteMap'">
+            将永久删除「{{ modal.file.name }}」及其全部 Tile、正文、附件、消息和关系，此操作不可撤销。
           </p>
           <p v-else-if="modal.type === 'deleteTile'">
             将永久删除「{{ modal.tile.id }}」以及它的正文、附件、全部消息和关系边。其他 Tile 将不再引用此节点，此操作不可撤销。
@@ -1901,15 +2196,16 @@ function exportGraph() {
             {{ generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}
           </button><button v-else-if="modal.type === 'search'" class="primary" type="submit" form="graph-search-form">应用筛选</button><button
             v-else-if="modal.type !== 'help'"
-            :class="['edit', 'note', 'editNote', 'file', 'fusion'].includes(modal.type) ? 'primary' : 'danger'"
-            :type="['note', 'editNote', 'file'].includes(modal.type) ? 'submit' : 'button'"
-            :form="['note', 'editNote', 'file'].includes(modal.type) ? 'node-form' : undefined"
-            @click="!['note', 'editNote', 'file'].includes(modal.type) && confirmModal()"
+            :class="['edit', 'note', 'editNote', 'file', 'fusion', 'split'].includes(modal.type) ? 'primary' : 'danger'"
+            :type="['note', 'editNote', 'file', 'split'].includes(modal.type) ? 'submit' : 'button'"
+            :form="modal.type === 'split' ? 'split-form' : ['note', 'editNote', 'file'].includes(modal.type) ? 'node-form' : undefined"
+            @click="!['note', 'editNote', 'file', 'split'].includes(modal.type) && confirmModal()"
             :disabled="modalBusy"
           >
             <LoaderCircle v-if="modalBusy" :size="16" class="spinning" />{{
               modalBusy
-                ? modal.type === "fusion" ? "正在融合…" : "处理中…"
+                ? modal.type === "split" ? "正在判断并拆分…" : modal.type === "fusion" ? "正在融合…" : "处理中…"
+                : modal.type === "split" ? "生成拆分"
                 : modal.type === "fusion" ? "确认融合"
                 : modal.type === "note" || modal.type === "editNote" ? "保存便签"
                 : modal.type === "file" ? "添加到画布"
@@ -1917,6 +2213,8 @@ function exportGraph() {
                   ? "保存备注"
                   : modal.type === "reset"
                     ? "确认重置"
+                    : modal.type === "deleteMap"
+                      ? "删除图谱"
                     : modal.type === "deleteTile"
                       ? "删除 Tile"
                       : "确认删除"

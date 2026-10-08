@@ -49,7 +49,7 @@ public interface CustomerService {
      *
      * @return
      */
-    Response<?> resetTileWorkspace();
+    Response<?> resetTileWorkspace(String mapId);
 
     /**
      * 删除单个 Tile、其消息以及所有以该 Tile 为端点的关系边。

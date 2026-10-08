@@ -69,6 +69,14 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    @ResponseBody
+    public Response<Object> handleMissingParameter(org.springframework.web.bind.MissingServletRequestParameterException e) {
+        String message = "mapId".equals(e.getParameterName())
+                ? "请先创建或选择图谱，并传入 mapId" : e.getMessage();
+        return Response.fail(ResponseCodeEnum.PARAM_NOT_VALID.getErrorCode(), message);
+    }
+
     /**
      * 其他类型异常
      * @param request

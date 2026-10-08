@@ -1,5 +1,7 @@
 package com.aureli.ai.robot.service.impl;
 
+import com.aureli.ai.robot.domain.maps.MapIds;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -259,10 +261,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<?> resetTileWorkspace() {
-        tileEdgeMapper.delete(null);
-        tileMessageMapper.delete(null);
-        tileMapper.delete(null);
+    public Response<?> resetTileWorkspace(String mapId) {
+        mapId = MapIds.normalize(mapId);
+        tileEdgeMapper.delete(Wrappers.<TileEdgeDO>lambdaQuery().eq(TileEdgeDO::getMapId, mapId));
+        tileMessageMapper.delete(Wrappers.<TileMessageDO>lambdaQuery().eq(TileMessageDO::getMapId, mapId));
+        tileMapper.delete(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId));
         return Response.success();
     }
 
@@ -270,21 +273,21 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(rollbackFor = Exception.class)
     public Response<?> deleteTile(DeleteTileReqVO deleteTileReqVO) {
         String tileId = StringUtils.trim(deleteTileReqVO.getTileId());
+        String mapId = MapIds.normalize(deleteTileReqVO.getMapId());
         Long tileCount = tileMapper.selectCount(Wrappers.<TileDO>lambdaQuery()
-                .eq(TileDO::getTileId, tileId));
+                .eq(TileDO::getMapId, mapId).eq(TileDO::getTileId, tileId));
         if (tileCount == null || tileCount == 0) {
             throw new BizException(ResponseCodeEnum.TILE_NOT_FOUND);
         }
 
         // Explicitly remove dependants so correctness does not rely on database cascades.
         tileEdgeMapper.delete(Wrappers.<TileEdgeDO>lambdaQuery()
-                .eq(TileEdgeDO::getSourceTileId, tileId)
-                .or()
-                .eq(TileEdgeDO::getTargetTileId, tileId));
+                .eq(TileEdgeDO::getMapId, mapId)
+                .and(q -> q.eq(TileEdgeDO::getSourceTileId, tileId).or().eq(TileEdgeDO::getTargetTileId, tileId)));
         tileMessageMapper.delete(Wrappers.<TileMessageDO>lambdaQuery()
-                .eq(TileMessageDO::getTileId, tileId));
+                .eq(TileMessageDO::getMapId, mapId).eq(TileMessageDO::getTileId, tileId));
         tileMapper.delete(Wrappers.<TileDO>lambdaQuery()
-                .eq(TileDO::getTileId, tileId));
+                .eq(TileDO::getMapId, mapId).eq(TileDO::getTileId, tileId));
         return Response.success();
     }
 

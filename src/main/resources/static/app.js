@@ -189,7 +189,7 @@ function renderEdges() {
     label.setAttribute("x", String((x1 + x2) / 2));
     label.setAttribute("y", String(midY - 8));
     label.setAttribute("text-anchor", "middle");
-    label.textContent = edge.relationType || "RELATED";
+    label.textContent = relationTypeForEdge(edge);
     svg.appendChild(label);
   });
 
@@ -285,7 +285,7 @@ function renderSelectedTile() {
   const relatedText = tile.relatedTileIds?.length ? tile.relatedTileIds.join(", ") : "未关联";
   const edgeText = state.edges
     .filter((edge) => edge.sourceTileId === tile.id || edge.targetTileId === tile.id)
-    .map((edge) => escapeHtml(`${edge.sourceTileId} ${edge.direction === "UNDIRECTED" ? "<->" : "->"} ${edge.targetTileId} · ${edge.relationType}`))
+    .map((edge) => escapeHtml(`${edge.sourceTileId} ${edge.direction === "UNDIRECTED" ? "<->" : "->"} ${edge.targetTileId} · ${relationTypeForEdge(edge)}`))
     .join("<br>") || "暂无";
 
   selectedTile.innerHTML = `
@@ -416,14 +416,23 @@ function bindTabs() {
   });
 }
 
+function relationTypeForEdge(edge) {
+  return edge.relationType === "FUSES" ? "FUSES" : edge.direction === "UNDIRECTED" ? "RELATES" : "EXTENDS";
+}
+
 function bindForms() {
+  const directionInput = document.querySelector("#edgeDirection");
+  const relationInput = document.querySelector("#relationType");
+  const updateRelation = () => { relationInput.value = relationTypeForEdge({ direction: directionInput.value }); };
+  directionInput.addEventListener("change", updateRelation);
+  updateRelation();
   document.querySelector("#tileForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const id = tileIdInput.value.trim() || nextTileId();
     const relatedTileIds = selectedRelatedTileIds();
     const memoryDepth = DEFAULT_MEMORY_DEPTH;
     const edgeDirection = document.querySelector("#edgeDirection").value;
-    const relationType = document.querySelector("#relationType").value.trim() || "EXTENDS";
+    const relationType = relationTypeForEdge({ direction: edgeDirection });
     const edgeWeight = DEFAULT_EDGE_WEIGHT;
     const edgeDescription = document.querySelector("#edgeDescription").value.trim();
     const message = document.querySelector("#tileMessage").value.trim();

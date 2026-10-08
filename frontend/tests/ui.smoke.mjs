@@ -24,6 +24,7 @@ let failure = false,
     },
   ];
 await page.route("**/customer-service/**", async (route) => {
+  if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
   const request = route.request(),
     path = new URL(request.url()).pathname;
   requests.push({ path, body: request.postData() });

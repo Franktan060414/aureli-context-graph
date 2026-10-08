@@ -25,7 +25,7 @@ class CustomerServiceTileDeletionTest {
         when(tiles.selectCount(any())).thenReturn(1L);
         CustomerServiceImpl service = service(tiles, messages, edges);
 
-        service.deleteTile(DeleteTileReqVO.builder().tileId(" tile-1 ").build());
+        service.deleteTile(DeleteTileReqVO.builder().mapId("map-test").tileId(" tile-1 ").build());
 
         var order = inOrder(edges, messages, tiles);
         order.verify(edges).delete(any());
@@ -42,7 +42,7 @@ class CustomerServiceTileDeletionTest {
         CustomerServiceImpl service = service(tiles, messages, edges);
 
         BizException error = assertThrows(BizException.class,
-                () -> service.deleteTile(DeleteTileReqVO.builder().tileId("missing").build()));
+                () -> service.deleteTile(DeleteTileReqVO.builder().mapId("map-test").tileId("missing").build()));
 
         assertEquals(ResponseCodeEnum.TILE_NOT_FOUND.getErrorCode(), error.getErrorCode());
         verifyNoInteractions(edges, messages);

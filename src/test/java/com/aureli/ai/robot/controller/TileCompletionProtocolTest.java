@@ -40,7 +40,7 @@ class TileCompletionProtocolTest {
         return controller;
     }
     private List<AiCustomerServiceChatRspVO> run() {
-        return controller().tileChat(AiCustomerServiceChatReqVO.builder()
+        return controller().tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test")
                 .tileId("protocol-test").message("问题").relatedTileIds(List.of()).build())
                 .collectList().block(Duration.ofSeconds(5));
     }
@@ -64,7 +64,7 @@ class TileCompletionProtocolTest {
     @ValueSource(ints = {2, 3})
     void regeneratingAnExistingTilePreservesItsWeight(int weight) {
         answer();
-        when(tiles.selectOne(any())).thenReturn(TileDO.builder().id(42L)
+        when(tiles.selectOne(any())).thenReturn(TileDO.builder().mapId("map-test").id(42L)
                 .tileId("protocol-test").weight(weight).build());
         when(transaction.execute(any())).thenAnswer(call -> ((TransactionCallback<?>) call.getArgument(0))
                 .doInTransaction(new SimpleTransactionStatus()));
@@ -97,4 +97,34 @@ class TileCompletionProtocolTest {
         verify(vectors).similaritySearch(any(org.springframework.ai.vectorstore.SearchRequest.class));
         verifyNoInteractions(messages);
     }
+    @Test void retryCannotOverwriteTileOwnedByAnotherMap() {
+        answer();
+        when(tiles.selectOne(any())).thenReturn(TileDO.builder().mapId("map-test").id(42L)
+                .mapId("map-b").tileId("protocol-test").userMessage("B private").build());
+        when(transaction.execute(any())).thenAnswer(call -> ((TransactionCallback<?>) call.getArgument(0))
+                .doInTransaction(new SimpleTransactionStatus()));
+        var events = run();
+        assertFalse(events.stream().anyMatch(event -> Boolean.TRUE.equals(event.getDone())));
+        assertNotNull(events.getLast().getError());
+        verify(tiles, never()).updateById(any(TileDO.class));
+        verify(tiles, never()).insert(any(TileDO.class));
+        verifyNoInteractions(messages);
+    }
+
+    @Test void streamPersistsQuestionAndAnswerInCapturedMap() {
+        answer();
+        when(transaction.execute(any())).thenAnswer(call -> ((TransactionCallback<?>) call.getArgument(0))
+                .doInTransaction(new SimpleTransactionStatus()));
+        var events = controller().tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test")
+                .tileId("map-a-tile").mapId("map-a").message("A question").build())
+                .collectList().block(Duration.ofSeconds(5));
+        assertTrue(events.getLast().getDone());
+        var tile = ArgumentCaptor.forClass(TileDO.class);
+        verify(tiles).insert(tile.capture());
+        assertEquals("map-a", tile.getValue().getMapId());
+        var savedMessages = ArgumentCaptor.forClass(com.aureli.ai.robot.domain.dos.TileMessageDO.class);
+        verify(messages, times(2)).insert(savedMessages.capture());
+        assertTrue(savedMessages.getAllValues().stream().allMatch(message -> "map-a".equals(message.getMapId())));
+    }
+
 }

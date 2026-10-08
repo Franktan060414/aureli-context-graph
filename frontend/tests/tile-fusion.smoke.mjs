@@ -11,7 +11,8 @@ const tiles = [
 ];
 const edges = [];
 let fail = false, held = false, release;
-await page.route('**/customer-service/tile/workspace', route => route.fulfill({ json: { success: true, data: { tiles, edges } } }));
+await page.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } }));
+await page.route('**/customer-service/tile/workspace?*', route => route.fulfill({ json: { success: true, data: { tiles, edges } } }));
 await page.route('**/customer-service/tile/fusion', async route => {
   const body = route.request().postDataJSON();
   writes.push(body);
@@ -73,14 +74,14 @@ try {
   assert.equal(await page.locator('.tile-list article').count(), 7);
   assert.equal(tiles.at(-1).weight, 2, 'ignored high-weight files do not influence QA weight');
   assert.equal(await page.locator('.question-text').textContent(), '模型融合后的用户问题');
-  assert.equal(await page.locator('.answer-text').first().textContent(), '模型融合后的完整回答');
+  assert.equal((await page.locator('.answer-text').first().textContent()).trim(), '模型融合后的完整回答');
   assert.equal(await fusion.isDisabled(), true, 'selection is cleared after success');
   await page.reload();
   await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
   await card(writes[0].tileId).waitFor();
   await card(writes[0].tileId).locator('button').first().click();
   assert.equal(await page.locator('.tile-weight-control').getAttribute('data-weight'), '2');
-  assert.equal(await page.locator('.answer-text').first().textContent(), '模型融合后的完整回答');
+  assert.equal((await page.locator('.answer-text').first().textContent()).trim(), '模型融合后的完整回答');
   await toggle('qa-1'); await toggle('qa-2'); await toggle('qa-3');
   await fusion.click();
   assert.equal(await dialog.locator('.fusion-source-list li').count(), 3);

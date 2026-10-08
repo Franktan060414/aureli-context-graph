@@ -28,6 +28,8 @@ public class AiCustomerServiceChatReqVO {
      */
     @NotBlank(message = "Tile ID 不能为空")
     private String tileId;
+    @NotBlank(message = "请先创建或选择图谱")
+    private String mapId;
 
     /**
      * 兼容旧版父 Tile ID。为空表示从画布空白处提问，不共享任何工作记忆。
@@ -50,7 +52,8 @@ public class AiCustomerServiceChatReqVO {
     private String edgeDirection;
 
     /**
-     * 关系类型，例如 EXTENDS、RELATED、CONTRADICTS、SUPPORTS。
+     * 兼容旧客户端的字段，值不参与保存；普通关系由方向固定为 EXTENDS 或 RELATES。
+     * FUSES / DEVIDES 只能通过专用融合 / 拆分接口创建。
      */
     private String relationType;
 

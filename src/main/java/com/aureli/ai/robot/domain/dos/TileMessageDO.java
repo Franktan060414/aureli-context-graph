@@ -24,6 +24,7 @@ public class TileMessageDO {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String mapId;
     private String tileId;
     private String role;
     private String content;

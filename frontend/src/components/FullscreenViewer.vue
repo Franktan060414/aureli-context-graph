@@ -15,7 +15,9 @@ import {
   FileText,
   Image as ImageIcon,
 } from "@lucide/vue";
+import { relationTypeForEdge } from "../lib/tile-relations.js";
 import GraphCanvas from "./GraphCanvas.vue";
+import MarkdownAnswer from "./MarkdownAnswer.vue";
 import PdfDocumentViewer from "./PdfDocumentViewer.vue";
 import DocxDocumentViewer from "./DocxDocumentViewer.vue";
 import ImageFileViewer from "./ImageFileViewer.vue";
@@ -217,7 +219,13 @@ function extend(id) {
         </section>
         <section>
           <h3>{{ nodeType(tile) === "QA" ? "AI 回答" : nodeType(tile) === "NOTE" ? "便签正文" : "文件名称" }}</h3>
-          <p class="reading-answer">
+          <MarkdownAnswer
+            v-if="nodeType(tile) === 'QA'"
+            class="reading-answer"
+            :content="tile.answer"
+            :loading="tile.status === 'loading'"
+          />
+          <p v-else class="reading-answer">
             {{
               tile.answer ||
               (tile.status === "loading" ? "正在思考并生成回答…" : "暂无回答")
@@ -263,7 +271,7 @@ function extend(id) {
             {{ edge.sourceTileId }}</button
           ><span
             >{{ edge.direction === "UNDIRECTED" ? "↔" : "→" }}
-            {{ edge.relationType }}</span
+            {{ relationTypeForEdge(edge) }}</span
           ><button
             class="text-button mono"
             @click="emit('expand', edge.targetTileId)"

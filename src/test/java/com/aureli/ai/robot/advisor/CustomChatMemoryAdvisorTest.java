@@ -43,13 +43,13 @@ class CustomChatMemoryAdvisorTest {
     private final List<TileMessageDO> history = new ArrayList<>();
 
     private void edge(String source, String target, String direction) {
-        graph.add(TileEdgeDO.builder().sourceTileId(source).targetTileId(target)
+        graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId(source).targetTileId(target)
                 .direction(direction).relationType("EXTENDS").build());
     }
 
     private void history(String tileId, String question, String answer) {
-        history.add(TileMessageDO.builder().tileId(tileId).role("user").content(question).build());
-        history.add(TileMessageDO.builder().tileId(tileId).role("assistant").content(answer).build());
+        history.add(TileMessageDO.builder().mapId("map-test").tileId(tileId).role("user").content(question).build());
+        history.add(TileMessageDO.builder().mapId("map-test").tileId(tileId).role("assistant").content(answer).build());
     }
 
     private void siblingGraph() {
@@ -62,24 +62,24 @@ class CustomChatMemoryAdvisorTest {
 
     private Prompt read(Collection<String> selected, int depth) {
         // 模拟 selectRelatedEdges 的真实语义：返回所有入边和出边，由 Advisor 判断可见方向。
-        when(edges.selectRelatedEdges(anyString())).thenAnswer(call -> {
-            String id = call.getArgument(0);
+        when(edges.selectRelatedEdges(eq("map-test"), anyString())).thenAnswer(call -> {
+            String id = call.getArgument(1);
             return graph.stream().filter(edge -> Objects.equals(id, edge.getSourceTileId())
                     || Objects.equals(id, edge.getTargetTileId())).toList();
         });
-        when(edges.selectWithinTileIds(anyCollection())).thenAnswer(call -> {
-            Collection<String> ids = call.getArgument(0);
+        when(edges.selectWithinTileIds(eq("map-test"), anyCollection())).thenAnswer(call -> {
+            Collection<String> ids = call.getArgument(1);
             return graph.stream().filter(edge -> ids.contains(edge.getSourceTileId())
                     && ids.contains(edge.getTargetTileId())).toList();
         });
-        when(messages.selectByTileIds(anyCollection())).thenAnswer(call -> {
-            Collection<String> ids = call.getArgument(0);
+        when(messages.selectByTileIds(eq("map-test"), anyCollection())).thenAnswer(call -> {
+            Collection<String> ids = call.getArgument(1);
             return history.stream().filter(message -> ids.contains(message.getTileId())).toList();
         });
         when(chain.nextStream(any())).thenReturn(Flux.empty());
 
         var request = new ChatClientRequest(new Prompt("当前问题"), Map.of());
-        new CustomChatMemoryAdvisor(messages, edges, tiles, selected, depth)
+        new CustomChatMemoryAdvisor(messages, edges, tiles, selected, depth, List.of(), "map-test")
                 .adviseStream(request, chain).collectList().block();
 
         var captured = ArgumentCaptor.forClass(ChatClientRequest.class);
@@ -92,7 +92,7 @@ class CustomChatMemoryAdvisorTest {
     private void assertScope(String... expected) {
         @SuppressWarnings("unchecked")
         ArgumentCaptor<Collection<String>> captured = ArgumentCaptor.forClass(Collection.class);
-        verify(messages).selectByTileIds(captured.capture());
+        verify(messages).selectByTileIds(eq("map-test"), captured.capture());
         assertEquals(Set.of(expected), Set.copyOf(captured.getValue()));
         assertEquals(expected.length, captured.getValue().size());
     }
@@ -187,8 +187,8 @@ class CustomChatMemoryAdvisorTest {
         assertEquals(6, prompt.getInstructions().size());
         assertEquals(1, prompt.getUserMessages().stream()
                 .filter(message -> message.getText().startsWith("【Tile 关系参考")).count());
-        verify(edges).selectRelatedEdges("a");
-        verify(edges).selectRelatedEdges("b");
+        verify(edges).selectRelatedEdges(eq("map-test"), eq("a"));
+        verify(edges).selectRelatedEdges(eq("map-test"), eq("b"));
     }
 
     @Test
@@ -220,10 +220,10 @@ class CustomChatMemoryAdvisorTest {
         history("normal", "普通问题", "普通回答");
         history("important", "重要问题", "重要回答");
         history("critical", "关键问题", "关键回答");
-        when(tiles.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileDO.builder().tileId("normal").weight(1).build(),
-                TileDO.builder().tileId("important").weight(2).build(),
-                TileDO.builder().tileId("critical").weight(3).build()));
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().mapId("map-test").tileId("normal").weight(1).build(),
+                TileDO.builder().mapId("map-test").tileId("important").weight(2).build(),
+                TileDO.builder().mapId("map-test").tileId("critical").weight(3).build()));
 
         Prompt prompt = read(List.of("normal", "important", "critical"), 0);
 
@@ -238,7 +238,7 @@ class CustomChatMemoryAdvisorTest {
             assertTrue(injected.get(i).getText().contains("权重=" + (i / 2 + 1) + "（" + labels[i / 2] + "）"));
             assertTrue(injected.get(i).getText().endsWith(history.get(i).getContent()));
         }
-        verify(tiles).selectByTileIds(Set.of("normal", "important", "critical"));
+        verify(tiles).selectByTileIds(eq("map-test"), eq(Set.of("normal", "important", "critical")));
         assertEquals("当前问题", injected.get(6).getText());
         assertEquals("普通问题", history.get(0).getContent());
     }
@@ -247,8 +247,8 @@ class CustomChatMemoryAdvisorTest {
     void missingOrNullWeightFallsBackToNormal() {
         history("missing", "旧问题", "旧回答");
         history("null-weight", "另一问题", "另一回答");
-        when(tiles.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileDO.builder().tileId("null-weight").weight(null).build()));
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().mapId("map-test").tileId("null-weight").weight(null).build()));
 
         Prompt prompt = read(List.of("missing", "null-weight"), 0);
 
@@ -257,57 +257,60 @@ class CustomChatMemoryAdvisorTest {
     }
     @Test
     void selectedNotesContributeTheirFullTextButUnparsedFilesAreNotReadAsText() {
-        when(tiles.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileDO.builder().tileId("note").tileType("NOTE").title("计划")
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().mapId("map-test").tileId("note").tileType("NOTE").title("计划")
                         .content("周五完成草稿\n周六复核").weight(2).build(),
-                TileDO.builder().tileId("file").tileType("FILE").fileName("draft.docx")
+                TileDO.builder().mapId("map-test").tileId("file").tileType("FILE").fileName("draft.docx")
                         .fileData(new byte[]{80, 75}).build()));
         Prompt prompt = read(List.of("note", "file"), 0);
         assertTrue(prompt.getContents().contains("周五完成草稿\n周六复核"));
         assertTrue(prompt.getContents().contains("计划"));
         assertFalse(prompt.getContents().contains("draft.docx"));
         assertEquals(2, prompt.getUserMessages().size());
-        verify(tiles, never()).selectFileData(anyString());
+        verify(tiles, never()).selectFileData(anyString(), anyString());
     }
 
     @Test
-    void selectedTilesRetainAllRelationTypesAtZeroDepthWithoutReadingOutsideEndpoints() {
+    void selectedTilesNormalizeLegacyRelationTypesWithoutReadingOutsideEndpoints() {
         history("a", "方案 A", "原始结论");
         history("b", "方案 B", "不同结论");
-        graph.add(TileEdgeDO.builder().sourceTileId("a").targetTileId("b").direction("DIRECTED")
+        graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("a").targetTileId("b").direction("DIRECTED")
                 .relationType("SUPPORTS").weight(new BigDecimal("0.8")).description("补充证据").build());
-        graph.add(TileEdgeDO.builder().sourceTileId("a").targetTileId("b").direction("UNDIRECTED")
+        graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("a").targetTileId("b").direction("UNDIRECTED")
                 .relationType("CONTRADICTS").weight(new BigDecimal("0.4")).description("存在分歧").build());
+        graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("a").targetTileId("b").direction("DIRECTED")
+                .relationType("DEVIDES").description("手动拆分").build());
         edge("outside", "b", "DIRECTED");
 
         Prompt prompt = read(List.of("a", "b"), 0);
 
         assertScope("a", "b");
-        verify(edges, never()).selectRelatedEdges(anyString());
+        verify(edges, never()).selectRelatedEdges(eq("map-test"), anyString());
         String relations = prompt.getUserMessages().get(2).getText();
         assertTrue(relations.contains("\"sourceTileId\":\"a\""));
         assertTrue(relations.contains("\"targetTileId\":\"b\""));
-        assertTrue(relations.contains("\"relationType\":\"SUPPORTS\""));
-        assertTrue(relations.contains("\"relationType\":\"CONTRADICTS\""));
+        assertTrue(relations.contains("\"relationType\":\"EXTENDS\""));
+        assertTrue(relations.contains("\"relationType\":\"RELATES\""));
         assertTrue(relations.contains("\"direction\":\"DIRECTED\""));
         assertTrue(relations.contains("\"direction\":\"UNDIRECTED\""));
         assertTrue(relations.contains("\"edgeWeight\":0.8"));
         assertTrue(relations.contains("补充证据"));
         assertTrue(relations.contains("存在分歧"));
+        assertTrue(relations.contains("\"relationType\":\"DEVIDES\""));
         assertFalse(prompt.getContents().contains("outside"));
         assertEquals("方案 A", history.get(0).getContent());
     }
 
     @Test
-    void boundaryEdgesAndCustomRelationNamesAreKeptWithoutExpandingTheMemoryScope() {
+    void boundaryEdgesKeepDescriptionsAndNormalizeCustomTypesWithoutExpandingMemoryScope() {
         edge("hidden", "parent", "DIRECTED");
-        graph.add(TileEdgeDO.builder().sourceTileId("parent").targetTileId("selected").direction("DIRECTED")
+        graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("parent").targetTileId("selected").direction("DIRECTED")
                 .relationType("用于比较").description("第二行\n包含 \"引用\"").build());
 
         Prompt prompt = read(List.of("selected"), 1);
 
         assertScope("selected", "parent");
-        assertTrue(prompt.getContents().contains("\"relationType\":\"用于比较\""));
+        assertTrue(prompt.getContents().contains("\"relationType\":\"EXTENDS\""));
         assertTrue(prompt.getContents().contains("第二行\\n包含 \\\"引用\\\""));
         assertFalse(prompt.getContents().contains("hidden"));
     }
@@ -317,8 +320,8 @@ class CustomChatMemoryAdvisorTest {
     @org.junit.jupiter.params.provider.ValueSource(strings = {"研究.docx", "研究.pdf"})
     void selectedParsedDocumentContributesStoredBodyWithSourceAndWeightWithoutReadingBinary(String fileName) {
         String text = "第一段正文\n名称\t说明\n算法\t调度方法";
-        when(tiles.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileDO.builder().tileId("file").tileType("FILE").fileName(fileName)
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().mapId("map-test").tileId("file").tileType("FILE").fileName(fileName)
                         .content(text).weight(3).fileData(new byte[]{80, 75}).build()));
         Prompt prompt = read(List.of("file"), 0);
         assertScope("file");
@@ -329,19 +332,19 @@ class CustomChatMemoryAdvisorTest {
         assertTrue(document.getText().contains("权重=3"));
         assertTrue(document.getText().endsWith("文件正文：" + fileName + "\n" + text));
         assertEquals("当前问题", prompt.getInstructions().getLast().getText());
-        verify(tiles, never()).selectFileData(anyString());
+        verify(tiles, never()).selectFileData(anyString(), anyString());
     }
 
     @Test
     void parsedFileAncestorIsReadThroughTheSelectedNoteWithoutReadingOtherFiles() {
         edge("document", "note", "DIRECTED");
         edge("document", "other-file", "DIRECTED");
-        when(tiles.selectByTileIds(anyCollection())).thenAnswer(call -> {
-            Collection<String> ids = call.getArgument(0);
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenAnswer(call -> {
+            Collection<String> ids = call.getArgument(1);
             return List.of(
-                    TileDO.builder().tileId("document").tileType("FILE").fileName("来源.docx").content("来源文档正文").build(),
-                    TileDO.builder().tileId("note").tileType("NOTE").title("摘记").content("关联便签正文").build(),
-                    TileDO.builder().tileId("other-file").tileType("FILE").fileName("其他.docx").content("其他文件不应读入").build())
+                    TileDO.builder().mapId("map-test").tileId("document").tileType("FILE").fileName("来源.docx").content("来源文档正文").build(),
+                    TileDO.builder().mapId("map-test").tileId("note").tileType("NOTE").title("摘记").content("关联便签正文").build(),
+                    TileDO.builder().mapId("map-test").tileId("other-file").tileType("FILE").fileName("其他.docx").content("其他文件不应读入").build())
                     .stream().filter(tile -> ids.contains(tile.getTileId())).toList();
         });
         Prompt prompt = read(List.of("note"), 1);
@@ -349,6 +352,6 @@ class CustomChatMemoryAdvisorTest {
         assertTrue(prompt.getContents().contains("来源文档正文"));
         assertTrue(prompt.getContents().contains("关联便签正文"));
         assertFalse(prompt.getContents().contains("其他文件不应读入"));
-        verify(tiles, never()).selectFileData(anyString());
+        verify(tiles, never()).selectFileData(anyString(), anyString());
     }
 }

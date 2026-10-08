@@ -52,6 +52,7 @@ class TileKnowledgeRoutingTest {
     @BeforeEach
     void setUp() {
         when(model.getOptions()).thenReturn(options);
+        when(tiles.selectCount(any())).thenReturn(1L);
         when(model.stream(any(Prompt.class))).thenReturn(Flux.just(response("最终回答")));
         var settings = mock(ModelApiSettingsService.class);
         when(settings.chatModel()).thenReturn(model);
@@ -72,7 +73,7 @@ class TileKnowledgeRoutingTest {
     }
 
     private List<AiCustomerServiceChatRspVO> run(String question, List<String> relatedIds) {
-        return controller.tileChat(AiCustomerServiceChatReqVO.builder()
+        return controller.tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test")
                         .tileId("routing-test").message(question).relatedTileIds(relatedIds).memoryDepth(0).build())
                 .collectList().block(Duration.ofSeconds(5));
     }
@@ -84,9 +85,9 @@ class TileKnowledgeRoutingTest {
     }
 
     private void memory(String question, String answer) {
-        when(messages.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileMessageDO.builder().tileId("previous").role("user").content(question).build(),
-                TileMessageDO.builder().tileId("previous").role("assistant").content(answer).build()));
+        when(messages.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileMessageDO.builder().mapId("map-test").tileId("previous").role("user").content(question).build(),
+                TileMessageDO.builder().mapId("map-test").tileId("previous").role("assistant").content(answer).build()));
     }
 
     @Test
@@ -195,8 +196,8 @@ class TileKnowledgeRoutingTest {
     @ValueSource(strings = {"DIRECT", "RAG_REQUIRED"})
     void databaseTileWeightReachesBothDecisionAndAnswerWithoutBeingSavedAsConversation(String route) {
         memory("项目必须支持离线使用", "离线可用是关键需求。");
-        when(tiles.selectByTileIds(anyCollection())).thenReturn(List.of(
-                TileDO.builder().tileId("previous").weight(3).build()));
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().mapId("map-test").tileId("previous").weight(3).build()));
         when(model.call(any(Prompt.class))).thenReturn(response(route));
         when(vectors.similaritySearch(any(SearchRequest.class))).thenReturn(List.of(new Document("参考资料")));
 
@@ -220,7 +221,7 @@ class TileKnowledgeRoutingTest {
     @ValueSource(strings = {"DIRECT", "RAG_REQUIRED"})
     void storedAndPendingRelationsReachDecisionAndAnswerButNotPersistedConversation(String route) {
         memory("采用方案 A", "方案 A 是此前建议。");
-        when(edges.selectWithinTileIds(anyCollection())).thenReturn(List.of(TileEdgeDO.builder()
+        when(edges.selectWithinTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(TileEdgeDO.builder().mapId("map-test")
                 .sourceTileId("previous").targetTileId("alternative").direction("UNDIRECTED")
                 .relationType("CONTRADICTS").weight(new BigDecimal("0.7"))
                 .description("两个方案的前提存在冲突").build()));
@@ -229,7 +230,7 @@ class TileKnowledgeRoutingTest {
         when(tiles.selectCount(any())).thenReturn(1L);
 
         String question = "结合此前方案和分歧继续分析";
-        var events = controller.tileChat(AiCustomerServiceChatReqVO.builder()
+        var events = controller.tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test")
                         .tileId("routing-test").message(question).relatedTileIds(List.of("previous", "alternative"))
                         .memoryDepth(0).edgeDirection("undirected").relationType("SUPPORTS")
                         .edgeWeight(new BigDecimal("0.8")).edgeDescription("为当前讨论补充支持依据").build())
@@ -239,11 +240,11 @@ class TileKnowledgeRoutingTest {
         var decision = ArgumentCaptor.forClass(Prompt.class);
         verify(model).call(decision.capture());
         for (Prompt prompt : List.of(decision.getValue(), streamedPrompt())) {
-            assertTrue(prompt.getContents().contains("\"relationType\":\"CONTRADICTS\""));
+            assertTrue(prompt.getContents().contains("\"relationType\":\"RELATES\""));
             assertTrue(prompt.getContents().contains("两个方案的前提存在冲突"));
             assertTrue(prompt.getContents().contains("\"status\":\"已保存\""));
             assertTrue(prompt.getContents().contains("\"targetTileId\":\"routing-test\""));
-            assertTrue(prompt.getContents().contains("\"relationType\":\"SUPPORTS\""));
+            assertTrue(prompt.getContents().contains("\"relationType\":\"RELATES\""));
             assertTrue(prompt.getContents().contains("\"status\":\"本次待保存\""));
             assertTrue(prompt.getContents().contains("为当前讨论补充支持依据"));
             assertTrue(prompt.getSystemMessage().getText().contains("矛盾内容应保留分歧"));
@@ -256,11 +257,36 @@ class TileKnowledgeRoutingTest {
         var savedEdges = ArgumentCaptor.forClass(TileEdgeDO.class);
         verify(edges, times(2)).insert(savedEdges.capture());
         for (TileEdgeDO edge : savedEdges.getAllValues()) {
-            assertEquals("SUPPORTS", edge.getRelationType());
+            assertEquals("RELATES", edge.getRelationType());
             assertEquals("UNDIRECTED", edge.getDirection());
             assertEquals(new BigDecimal("0.8"), edge.getWeight());
             assertEquals("为当前讨论补充支持依据", edge.getDescription());
         }
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({
+            "DIRECTED,SUPPORTS,EXTENDS",
+            "DIRECTED,FUSES,EXTENDS",
+            "undirected,EXTENDS,RELATES",
+            "UNDIRECTED,FUSES,RELATES",
+            "UNDIRECTED,自定义关系,RELATES"
+    })
+    void clientCannotCustomizeOrForgeRelationshipType(String direction, String requestedType, String expectedType) {
+        memory("上一问题", "上一回答");
+        when(model.call(any(Prompt.class))).thenReturn(response("DIRECT"));
+        when(tiles.selectCount(any())).thenReturn(1L);
+
+        var events = controller.tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test")
+                        .tileId("routing-test").message("继续").relatedTileIds(List.of("previous"))
+                        .edgeDirection(direction).relationType(requestedType).build())
+                .collectList().block(Duration.ofSeconds(5));
+
+        assertTrue(events.get(events.size() - 1).getDone());
+        assertTrue(streamedPrompt().getContents().contains("\"relationType\":\"" + expectedType + "\""));
+        var saved = ArgumentCaptor.forClass(TileEdgeDO.class);
+        verify(edges).insert(saved.capture());
+        assertEquals(expectedType, saved.getValue().getRelationType());
     }
 
     @Test

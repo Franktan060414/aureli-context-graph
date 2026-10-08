@@ -16,6 +16,7 @@
 | 生成 Tile | POST `/customer-service/chat/tile/completion` | JSON，见下方 | SSE 流，确认保存后才显示完成 |
 | 删除 Tile | POST `/customer-service/tile/delete` | `{ tileId }` | 在同一事务中删除节点、消息及以该节点为端点的全部关系边；页面需要用户确认 |
 | 调整 Tile 权重 | POST `/customer-service/tile/weight` | `{ tileId, weight }` | `weight` 仅接受 1、2、3；更新指定节点的权重及修改时间，成功后同步详情和图谱尺寸 |
+| 拆分 AI 问答 Tile | POST `/customer-service/tile/split` | `{ mapId, sourceTileId, requirements?, splitId? }` | 先判断价值，通过后原子保存 2～4 个子问答，返回 `data: { tiles, edges }`；无价值返回 422 和具体理由 |
 | 知识文件分页 | POST `/customer-service/md/list` | `{ current: 1, size: 10 }` | `data` 为文件数组；`total/current/size/pages` 与 `data` 同级 |
 | 上传 Markdown | POST `/customer-service/md/upload` | FormData，字段 `file` | 上传成功后刷新列表；向量化异步执行 |
 | 修改备注 | POST `/customer-service/md/update` | `{ id, remark }` | 成功后刷新当前页 |
@@ -54,6 +55,8 @@
 }
 ```
 
+Tile 关系类型固定：单向 `DIRECTED` 显示并保存为 `EXTENDS`，双向 `UNDIRECTED` 显示并保存为 `RELATES`，融合接口创建 `FUSES`，拆分接口创建 `DEVIDES`。普通提问的 `relationType` 字段仅兼容旧客户端，后端忽略其值，不能自定义类型或伪造融合、拆分关系。历史普通关系在工作区和模型上下文中按方向归一化，融合和拆分来源保留 `FUSES` / `DEVIDES`；关系备注仍可自由填写。
+
 `relatedTileIds` 为空时不读取其他 Tile 的工作记忆，但仍使用共享 RAG 知识库。方向可为 `DIRECTED` 或 `UNDIRECTED`。旧字段 `parentTileId` 仍兼容。
 
 有向边保存为「上下文来源 → 新 Tile」，读取工作记忆时从 `relatedTileIds` 反向追溯来源，只继承所选节点及其祖先，不读取子节点或兄弟分支。例如 `A → B`、`A → C` 时，从 A 延伸 C 不会读取 B；从 B 继续延伸则能读取 B 与 A。只有显式选择其他分支或通过 `UNDIRECTED` 双向关系连接时，才会共享对应上下文。`memoryDepth` 为从所选节点继续追溯的最大边数，0 只读取所选节点，省略时默认 1。
@@ -76,6 +79,16 @@ data: {"done":true}
 `POST /customer-service/tile/fusion` 接收 `{ "tileId": "新节点 ID", "sourceTileIds": ["来源 ID 1", "来源 ID 2"] }`，返回普通 JSON `{ "success": true, "data": { "tiles": [新节点], "edges": [融合来源关系] } }`。前端超时为 180 秒；发起请求前必须二次确认，失败不创建前端占位节点，保留弹窗和同一目标 ID 供重试。请求超时或保存结果不确定时先同步图谱，已存在的目标 ID 不会被覆盖。
 
 来源 ID 去重后，后端仅接受两个及以上 `QA`（含历史默认类型）问答，自动排除 `NOTE` 和 `FILE`，缺失节点或没有问题/回答的问答返回错误。读取 `t_tile.user_message` 和最新 `assistant` 消息全文（历史缺失消息时回退摘要）；通过 `prompt/TileFusionPrompts` 和当前已保存对话模型，同时生成新的 `userMessage` 与 `answer`，不读取祖先节点、便签、附件或 RAG。模型异常或字段无效时不写入数据；生成期间来源变化会拒绝保存。新节点权重取参与问答的最高值，原来源不修改；节点、完整 user/assistant 消息和 `DIRECTED` / `FUSES` 来源边在同一事务中保存。成功返回的完整回答和关系可通过工作区快照恢复，无须数据库结构升级。后端需要重新启动以加载新接口。
+
+## AI 问答 Tile 拆分
+
+`POST /customer-service/tile/split` 接收 `{ "mapId": "当前图谱 ID", "sourceTileId": "原问答 ID", "requirements": "可选细分要求", "splitId": "本次操作唯一标识" }`。要求最多 2000 字；`splitId` 可选，最多 64 个英文字母、数字或连字符，前端在打开弹窗时创建并在重试时保留。拆分请求超时为 180 秒。
+
+仅接受当前图谱内、已有问题和回答的 `QA`（含历史默认类型）。读取最新完整助手消息，历史缺失消息时回退摘要；两次模型调用分别判断拆分价值与生成 2～4 个子问答，只使用原问答和本次要求，不读取其他 Tile 或 RAG。AI 拒绝时返回 HTTP 422、`success: false`、`errorCode: "TILE_NOT_SPLITTABLE"` 和 `message: "拆分失败：具体理由"`，不进行生成调用或写入任何节点。判断格式异常不会自动视为同意。
+
+通过后校验所有子问题与回答，拒绝空字段、数量越界、重复问题及原问题的完整复制；重新读取来源，发生变化则拒绝保存。子 Tile 继承原权重，保存完整问答，以 `DIRECTED` / `DEVIDES` 从原 Tile 连到子 Tile，备注为「手动拆分」及本次要求；全部节点、消息和连边在同一事务中保存。成功返回普通 JSON `{ "success": true, "data": { "tiles": [子节点], "edges": [来源关系] } }`，可通过工作区恢复。
+
+相同 `splitId` 已保存时返回 HTTP 409 与 `TILE_SPLIT_ALREADY_SAVED`，提示先同步图谱，不重新调用模型或生成第二组节点。来源无效返回 400，模型或保存失败返回 500。前端在失败时保留弹窗、要求和操作标识以便重试；超时后先同步确认保存结果。无须数据库结构升级，后端需要重新启动以加载新接口。启动初始化会将带有系统拆分 ID（`tile-split-…-0` 至 `-3`）和「手动拆分」备注的旧 `EXTENDS` 连线升级为 `DEVIDES`，普通延伸关系保留。
 
 ## 独立的对话与向量模型配置
 
@@ -106,7 +119,7 @@ data: {"done":true}
 联调只清理本次临时记录，保留原有 5 个 Tile、3 条边和 5 份文档。全局重置通过模拟浏览器验证，未在原有数据库上执行。外部 OpenAI 调用未执行，需有效 Key。详细记录见 [LIVE-INTEGRATION.md](LIVE-INTEGRATION.md)。
 
 
-图谱工具栏的「添加Tile」打开独立弹窗，复用节点配置侧栏的 `QuestionForm` 和同一份草稿、关联状态及 `sendTile` 生成逻辑。弹窗包含提问内容、Tile ID、关联上下文、边方向、关系类型与关系备注，并可在弹窗内选择已完成的问答、便签或文件。取消保留草稿；字段或 ID 校验失败时保留弹窗；通过校验提交后关闭弹窗，在节点详情中显示生成进度和回答。
+图谱工具栏的「添加Tile」打开独立弹窗，复用节点配置侧栏的 `QuestionForm` 和同一份草稿、关联状态及 `sendTile` 生成逻辑。弹窗包含提问内容、Tile ID、关联上下文、边方向、只读关系类型与关系备注，并可在弹窗内选择已完成的问答、便签或文件。取消保留草稿；字段或 ID 校验失败时保留弹窗；通过校验提交后关闭弹窗，在节点详情中显示生成进度和回答。
 
 添加便签、编辑便签、添加文件弹窗与添加Tile共用 `ContextPicker`，提供已选关联标签、逐项移除、清空与折叠的已有节点复选列表。便签/文件的关联草稿独立于提问草稿，可选择已完成的问答、便签及文件；编辑便签排除自身。保存关联到 `t_tile_edge`，默认从所选节点指向新节点，方向 `DIRECTED`、关系 `EXTENDS`、权重 1。更新便签仅调整来源关系，保留仍被选中的边设置及所有出边。关联 ID 去重，缺失节点和自身关联会拒绝保存。文件节点可建立图谱连线；已提取的正文按关联范围加入问答记忆，没有正文的附件仅建立关系。
 
@@ -115,3 +128,7 @@ data: {"done":true}
 PDF 使用同一个读取入口，通过 Apache PDFBox 3.0.8 提取新上传 `.pdf`（扩展名不区分大小写）的文字层：按页码及页内文字位置排序，行与页之间以换行分隔。图片、图形等非文字内容忽略，不渲染页面、不执行 OCR。有效但没有文字层的 PDF 保存空字符串，原始附件仍可下载；损坏或加密的 PDF 返回明确的解析失败提示，不创建节点或关联关系。提取文字同样保存在 `content`，可查看、刷新恢复并用于关联问答；原始 PDF 二进制保持完整。已有 PDF 附件需重新上传才能提取文字。提取方式参考 [PDFBox 官方文档](https://pdfbox.apache.org/3.0/migration.html)。
 
 图谱卡片、Tile 列表、添加Tile节点选择器和节点配置的「从此节点延伸」均支持文件节点，不再按 `FILE` 类型禁用。文件详情可展开查看已提取正文，未提取正文的附件显示说明；旧 DOCX / PDF 文件需重新上传提取文字。问答中的文件正文与便签一样作为来源标记的用户上下文注入，原始当前提问、历史角色及图谱记忆范围保持不变。
+
+### 删除图谱
+
+`DELETE /customer-service/maps/{mapId}`：成功返回 `{ "success": true }`；图谱不存在返回业务错误。数据库级联删除该图谱的全部 Tile、附件、消息和关系，其他图谱保留。前端确认后调用，失败保留原列表并允许重试。

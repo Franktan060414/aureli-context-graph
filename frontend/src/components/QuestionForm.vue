@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { Database, LoaderCircle, Send } from "@lucide/vue";
 
 import ContextPicker from "./ContextPicker.vue";
+import { relationTypeForDirection } from "../lib/tile-relations.js";
 
 const props = defineProps({
   form: { type: Object, required: true },
@@ -55,8 +56,8 @@ defineExpose({ focus: () => questionInput.value?.focus() });
         </select>
       </label>
       <label :for="`${formId}-relation`">关系类型
-        <input :id="`${formId}-relation`" :value="form.relationType" maxlength="64"
-          @input="change('relationType', $event.target.value.trim())" :disabled="disabled" placeholder="EXTENDS" />
+        <input :id="`${formId}-relation`" :value="relationTypeForDirection(form.edgeDirection)" readonly
+          aria-readonly="true" />
       </label>
     </div>
     <label :for="`${formId}-description`">关系备注 <span class="optional">选填</span>

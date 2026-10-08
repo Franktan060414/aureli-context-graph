@@ -1,5 +1,9 @@
 package com.aureli.ai.robot.advisor;
 
+import com.aureli.ai.robot.domain.TileRelationTypes;
+
+import com.aureli.ai.robot.domain.maps.MapIds;
+
 import com.aureli.ai.robot.domain.dos.TileDO;
 import com.aureli.ai.robot.domain.dos.TileEdgeDO;
 import com.aureli.ai.robot.domain.dos.TileMessageDO;
@@ -34,12 +38,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
     private static final String DEFAULT_DIRECTION = "DIRECTED";
-    private static final String DEFAULT_RELATION_TYPE = "EXTENDS";
 
     private final TileMapper tileMapper;
     private final TileMessageMapper tileMessageMapper;
     private final TileEdgeMapper tileEdgeMapper;
     private final String tileId;
+    private final String mapId;
     private final String userMessage;
     private final List<String> relatedTileIds;
     private final String edgeDirection;
@@ -48,17 +52,11 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
     private final String edgeDescription;
     private final TransactionTemplate transactionTemplate;
 
-    public CustomStreamLoggerAndMessage2DBAdvisor(TileMapper tileMapper,
-                                                  TileMessageMapper tileMessageMapper,
-                                                  TileEdgeMapper tileEdgeMapper,
-                                                  String tileId,
-                                                  String userMessage,
-                                                  Collection<String> relatedTileIds,
-                                                  String edgeDirection,
-                                                  String relationType,
-                                                  BigDecimal edgeWeight,
-                                                  String edgeDescription,
-                                                  TransactionTemplate transactionTemplate) {
+    public CustomStreamLoggerAndMessage2DBAdvisor(TileMapper tileMapper, TileMessageMapper tileMessageMapper,
+            TileEdgeMapper tileEdgeMapper, String tileId, String userMessage, Collection<String> relatedTileIds,
+            String edgeDirection, String relationType, BigDecimal edgeWeight, String edgeDescription,
+            TransactionTemplate transactionTemplate, String mapId) {
+        this.mapId = MapIds.normalize(mapId);
         this.tileMapper = tileMapper;
         this.tileMessageMapper = tileMessageMapper;
         this.tileEdgeMapper = tileEdgeMapper;
@@ -70,9 +68,9 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                 .filter(item -> !Objects.equals(item, tileId))
                 .distinct()
                 .toList();
-        String normalizedDirection = StringUtils.defaultIfBlank(edgeDirection, DEFAULT_DIRECTION).toUpperCase();
+        String normalizedDirection = StringUtils.defaultIfBlank(edgeDirection, DEFAULT_DIRECTION).trim().toUpperCase(java.util.Locale.ROOT);
         this.edgeDirection = "UNDIRECTED".equals(normalizedDirection) ? "UNDIRECTED" : DEFAULT_DIRECTION;
-        this.relationType = StringUtils.defaultIfBlank(relationType, DEFAULT_RELATION_TYPE);
+        this.relationType = TileRelationTypes.forDirection(this.edgeDirection);
         this.edgeWeight = normalizeWeight(edgeWeight);
         this.edgeDescription = edgeDescription;
         this.transactionTemplate = transactionTemplate;
@@ -126,7 +124,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                             saveEdges(now);
 
                             // 1. 存储用户消息
-                            tileMessageMapper.insert(TileMessageDO.builder()
+                            tileMessageMapper.insert(TileMessageDO.builder().mapId(mapId)
                                     .tileId(tileId)
                                     .content(userMessage)
                                     .role(MessageType.USER.getValue()) // 用户消息
@@ -135,7 +133,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
 
                             // 2. 存储 AI 回答
-                            tileMessageMapper.insert(TileMessageDO.builder()
+                            tileMessageMapper.insert(TileMessageDO.builder().mapId(mapId)
                                     .tileId(tileId)
                                     .content(completeResponse)
                                     .role(MessageType.ASSISTANT.getValue()) // AI 回答
@@ -164,11 +162,15 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
         TileDO existTile = tileMapper.selectOne(Wrappers.<TileDO>lambdaQuery()
                 .eq(TileDO::getTileId, tileId));
 
+        if (existTile != null && !mapId.equals(existTile.getMapId())) {
+            throw new IllegalStateException("节点不属于当前 Map");
+        }
+
         if (existTile != null && existTile.getTileType() != null && !"QA".equals(existTile.getTileType())) {
             throw new IllegalStateException("节点 ID 已被便签或附件使用，不能覆盖为问答");
         }
 
-        TileDO tileDO = TileDO.builder()
+        TileDO tileDO = TileDO.builder().mapId(mapId)
                 .id(existTile == null ? null : existTile.getId())
                 .tileId(tileId)
                 .title(abbreviate(userMessage, 80))
@@ -188,7 +190,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
 
     /** 为本次回答提供尚未落库的关系，沿用与持久化相同的默认值与归一化规则。 */
     public List<TileEdgeDO> pendingEdges() {
-        return relatedTileIds.stream().map(relatedTileId -> TileEdgeDO.builder()
+        return relatedTileIds.stream().map(relatedTileId -> TileEdgeDO.builder().mapId(mapId)
                 .sourceTileId(relatedTileId)
                 .targetTileId(tileId)
                 .direction(edgeDirection)
@@ -202,13 +204,13 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
         for (TileEdgeDO edge : pendingEdges()) {
             String relatedTileId = edge.getSourceTileId();
             Long relatedTileCount = tileMapper.selectCount(Wrappers.<TileDO>lambdaQuery()
-                    .eq(TileDO::getTileId, relatedTileId));
+                    .eq(TileDO::getMapId, mapId).eq(TileDO::getTileId, relatedTileId));
             if (relatedTileCount == null || relatedTileCount == 0) {
-                continue;
+                throw new IllegalStateException("关联节点不存在或不属于当前 Map");
             }
 
             Long count = tileEdgeMapper.selectCount(Wrappers.<TileEdgeDO>lambdaQuery()
-                    .eq(TileEdgeDO::getSourceTileId, relatedTileId)
+                    .eq(TileEdgeDO::getMapId, mapId).eq(TileEdgeDO::getSourceTileId, relatedTileId)
                     .eq(TileEdgeDO::getTargetTileId, tileId)
                     .eq(TileEdgeDO::getRelationType, relationType));
             if (count != null && count > 0) {

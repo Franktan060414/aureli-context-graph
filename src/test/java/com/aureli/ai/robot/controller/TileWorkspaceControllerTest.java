@@ -21,17 +21,21 @@ class TileWorkspaceControllerTest {
         TileMessageMapper messages = mock(TileMessageMapper.class);
         String fullAnswer = "完整回答，".repeat(100);
         when(tiles.selectList(any())).thenReturn(List.of(
-                TileDO.builder().tileId("root").userMessage("独立问题").answerSummary("截断摘要").build(),
-                TileDO.builder().tileId("child").userMessage("关联问题").answerSummary("摘要").weight(weight).build()));
+                TileDO.builder().mapId("map-test").tileId("root").userMessage("独立问题").answerSummary("截断摘要").build(),
+                TileDO.builder().mapId("map-test").tileId("child").userMessage("关联问题").answerSummary("摘要").weight(weight).build()));
         when(edges.selectList(any())).thenReturn(List.of(
-                TileEdgeDO.builder().edgeId("one").sourceTileId("root").targetTileId("child")
+                TileEdgeDO.builder().mapId("map-test").edgeId("one").sourceTileId("root").targetTileId("child")
                         .direction("UNDIRECTED").relationType("EXTENDS").build(),
-                TileEdgeDO.builder().edgeId("two").sourceTileId("root").targetTileId("child")
-                        .direction("DIRECTED").relationType("SUPPORTS").build()));
+                TileEdgeDO.builder().mapId("map-test").edgeId("two").sourceTileId("root").targetTileId("child")
+                        .direction("DIRECTED").relationType("SUPPORTS").build(),
+                TileEdgeDO.builder().mapId("map-test").edgeId("fusion").sourceTileId("root").targetTileId("child")
+                        .direction("DIRECTED").relationType("FUSES").build(),
+                TileEdgeDO.builder().mapId("map-test").edgeId("split").sourceTileId("root").targetTileId("child")
+                        .direction("DIRECTED").relationType("DEVIDES").build()));
         when(messages.selectList(any())).thenReturn(List.of(
-                TileMessageDO.builder().tileId("root").content("旧回答").build(),
-                TileMessageDO.builder().tileId("root").content(fullAnswer).build()));
-        var response = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader()).workspace();
+                TileMessageDO.builder().mapId("map-test").tileId("root").content("旧回答").build(),
+                TileMessageDO.builder().mapId("map-test").tileId("root").content(fullAnswer).build()));
+        var response = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader()).workspace("map-test");
         assertEquals("no-store", response.getHeaders().getCacheControl());
         var data = response.getBody().getData();
         assertEquals(fullAnswer, data.tiles().get(0).answer());
@@ -42,5 +46,7 @@ class TileWorkspaceControllerTest {
         assertEquals(1, data.tiles().get(0).weight());
         assertEquals(weight, data.tiles().get(1).weight());
         assertEquals("UNDIRECTED", data.edges().get(0).direction());
+        assertEquals(List.of("RELATES", "EXTENDS", "FUSES", "DEVIDES"),
+                data.edges().stream().map(TileWorkspaceController.Edge::relationType).toList());
     }
 }

@@ -26,6 +26,7 @@ public class TileDO {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String mapId;
     private String tileId;
     private String title;
     /** QA 问答、NOTE 便签、FILE 临时附件；旧节点默认 QA。 */

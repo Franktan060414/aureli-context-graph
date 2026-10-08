@@ -156,7 +156,9 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 .graph-create-action + .graph-create-action { margin-left: -2px; }
 .graph-create-action.icon-button:hover:not(:disabled) { border-color: var(--primary); }
 .graph-create-action.icon-button:focus-visible { outline-offset: -4px; box-shadow: inset 0 0 0 2px var(--yellow); }
-.graph-fusion-action.icon-button { border-color: var(--primary); color: var(--blue-ink); }
+.graph-fusion-action.icon-button, .graph-split-action.icon-button { border-color: var(--primary); color: var(--blue-ink); }
+.split-source { overflow-wrap: anywhere; }
+.split-source strong, .split-source span { display: block; }
 .fusion-source-list { display: grid; gap: 12px; max-height: 240px; overflow: auto; padding-left: 24px; }
 .fusion-source-list li { overflow-wrap: anywhere; }
 .fusion-source-list strong, .fusion-source-list span { display: block; }
@@ -816,3 +818,40 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 .file-content-preview summary { cursor: pointer; font-size: 14px; font-weight: 700; padding-block: 8px; }
 .file-content-preview summary:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
 .file-content-preview .answer-text { max-height: 280px; overflow-y: auto; overflow-wrap: anywhere; }
+
+/* Maps stay beneath the graph workspace in the dock. */
+.app-shell .sidebar { overflow-y: auto; }
+.map-navigation { margin: -2px 4px 8px 16px; min-width: 0; border-left: 2px solid var(--line); padding-left: 8px; }
+.map-list { display: flex; flex-direction: column; gap: 4px; max-height: 30vh; overflow-y: auto; padding: 6px; margin: -6px; }
+.map-item, .map-add { width: 100%; display: flex; align-items: center; gap: 7px; text-align: left; padding: 8px; border: 1px solid transparent; border-radius: 7px; font-size: 13px; color: var(--blue-ink); background: var(--surface); min-height: 44px; }
+.map-item > span { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.map-item > svg, .map-add > svg { flex-shrink: 0; width: 16px; height: 16px; }
+.map-item.selected { background: var(--primary-soft); border-color: var(--primary); font-weight: 800; }
+.map-item:hover:not(:disabled), .map-add:hover:not(:disabled) { background: var(--yellow-soft); border-color: var(--primary); }
+.map-add { margin-top: 4px; }
+.map-create-form { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.map-create-form label { color: var(--text); font-size: 13px; font-weight: 700; }
+.map-create-form input { width: 100%; min-width: 0; padding-inline: 8px; }
+.map-create-form > div { display: flex; gap: 6px; }
+.map-create-form button { flex: 1; border: 1px solid var(--primary); border-radius: 6px; color: var(--blue-ink); background: var(--surface); font-size: 13px; }
+.map-create-form button[type=submit] { background: var(--primary); color: white; }
+.map-feedback { font-size: 12px; line-height: 1.6; margin: 8px; overflow-wrap: anywhere; }
+.map-feedback button { color: var(--blue-ink); text-decoration: underline; }
+.map-error { color: var(--danger); }
+.current-map-name { min-width: 0; max-width: 220px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--blue-ink); font-size: 13px; padding: 4px 8px; border-left: 1px solid var(--line); }
+@media (max-width: 767px) { .current-map-name { max-width: 100px; } }
+
+/* Map deletion shares Tile's danger button and fill animation at a smaller size. */
+.map-row { position: relative; min-width: 0; }
+.map-row .map-item { padding-right: 46px; }
+.map-row .map-delete-action {
+  --button-position: absolute;
+  right: 6px; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; min-width: 32px; min-height: 32px;
+  padding: 7px; border-radius: 6px;
+}
+.map-row .map-delete-action > svg { width: 12.4px; height: 12.4px; }
+@media (pointer: coarse) {
+  .map-row .map-item { padding-right: 48px; }
+  .map-row .map-delete-action { width: 40px; height: 40px; min-width: 40px; min-height: 40px; right: 2px; }
+}

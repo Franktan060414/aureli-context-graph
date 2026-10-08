@@ -16,7 +16,7 @@ const edges = [2, 3].map(weight => ({
   id: `edge-${weight}`, sourceTileId: `weight-${weight - 1}`, targetTileId: `weight-${weight}`,
   direction: 'DIRECTED', relationType: 'EXTENDS', weight: 1,
 }));
-await page.route('**/customer-service/**', route => route.fulfill({ json: { success: true, data: { tiles, edges } } }));
+await page.route('**/customer-service/**', route => route.fulfill({ json: { success: true, data: new URL(route.request().url()).pathname.endsWith('/maps') ? [{ mapId: 'default', name: '默认图谱' }] : { tiles, edges } } }));
 const node = (graph, weight) => graph.locator('.graph-node').filter({ has: page.locator(`.node-main[aria-label^="查看 weight-${weight}："]`) });
 async function measurements(graph) {
   return graph.locator('.graph-node').evaluateAll(elements => elements.map(element => {

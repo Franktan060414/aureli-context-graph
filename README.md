@@ -24,7 +24,9 @@ Aureli（界面名称：Aureli Context Graph）是一个基于 Spring Boot、Spr
 
 | 能力 | 当前实现 |
 | --- | --- |
+| 多图谱工作空间 | 在左侧 Dock 新建、点选切换图谱，各自管理 Tile、消息、关系和画布布局 |
 | 图式问答 | 独立提问、从已有节点延伸、多节点关联、SSE 流式回答 |
+| 手动拆分问答 | 选择单个已完成的 QA Tile，可附细分要求；AI 先判断拆分价值，拒绝时说明理由，通过后生成 2～4 个关联子问答 |
 | 便签节点 | 创建与编辑标题、正文和上下文来源，可作为后续问答的输入 |
 | 文件节点 | 上传与下载附件，单文件最大 10 MB；PDF / DOCX 支持全页面文档预览，新上传时提取文字供 AI 读取 |
 | 可控记忆 | 根据显式选择的节点、关系方向和遍历深度读取上下文 |
@@ -229,6 +231,7 @@ npm start
 
 | 表名 | 用途 |
 | --- | --- |
+| `t_map` | 图谱 ID、名称、缩放比例（zoom）和创建／更新时间，支持空图谱 |
 | `t_tile` | 三类节点、标题、正文、问答摘要、重要程度与附件二进制 |
 | `t_tile_message` | QA 节点的完整用户／助手消息 |
 | `t_tile_edge` | 节点关系、方向、类型、强度与说明 |
@@ -236,7 +239,7 @@ npm start
 | `t_model_api_settings` | 唯一一条对话／向量模型配置，固定 `id = 1` |
 | `t_vector_store` | 知识文档片段、来源元数据与 1536 维向量 |
 
-消息表和关系表通过 `tile_id` 关联节点；节点删除后，相应消息和关系通过外键级联删除。向量与知识文件通过 `metadata.mdStorageId` 在业务层关联，不使用数据库外键。
+三张 Tile 表均通过 `map_id` 归属图谱；消息和关系使用 `(map_id, tile_id)` 复合外键关联节点，禁止跨图谱连边和保存消息。Tile ID 保持全局唯一。后端启动不创建图谱，三张 Tile 表的 `map_id` 必须显式赋值；旧版未分配归属的数据需先指定图谱再升级。节点删除后，相应消息和关系通过外键级联删除。向量与知识文件通过 `metadata.mdStorageId` 在业务层关联，不使用数据库外键。
 
 ### 完整初始化 SQL
 
@@ -249,6 +252,18 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 2. 初始化业务表，并兼容旧版 Tile 字段。
+CREATE TABLE IF NOT EXISTS t_map (
+    id BIGSERIAL PRIMARY KEY,
+    map_id VARCHAR(128) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    zoom NUMERIC(7, 6) NOT NULL DEFAULT 1.0 CONSTRAINT chk_map_zoom CHECK (zoom BETWEEN 0.35 AND 1.5),
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+-- 旧图谱默认使用 100% 缩放；与画布支持的 35%–150% 范围一致。
+ALTER TABLE t_map ADD COLUMN IF NOT EXISTS zoom NUMERIC(7, 6) NOT NULL DEFAULT 1.0
+    CONSTRAINT chk_map_zoom CHECK (zoom BETWEEN 0.35 AND 1.5);
+
 CREATE TABLE IF NOT EXISTS t_tile (
     id BIGSERIAL PRIMARY KEY,
     tile_id VARCHAR(128) NOT NULL UNIQUE,
@@ -330,6 +345,37 @@ CREATE INDEX IF NOT EXISTS idx_t_tile_edge_target
 CREATE INDEX IF NOT EXISTS idx_t_tile_edge_relation_type
     ON t_tile_edge (relation_type);
 
+-- 多图谱字段必须显式赋值；不创建图谱，也不为旧数据推断归属。
+-- 若尚有未分配图谱的旧数据，应先明确归属再升级，避免无意删除。
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile_message ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile_edge ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
+ALTER TABLE t_tile ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile_message ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile_edge ALTER COLUMN map_id DROP DEFAULT;
+ALTER TABLE t_tile ALTER COLUMN map_id SET NOT NULL;
+ALTER TABLE t_tile_message ALTER COLUMN map_id SET NOT NULL;
+ALTER TABLE t_tile_edge ALTER COLUMN map_id SET NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_t_tile_map_tile ON t_tile (map_id, tile_id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_map_order ON t_tile (map_id, id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_message_map_tile_time ON t_tile_message (map_id, tile_id, create_time);
+CREATE INDEX IF NOT EXISTS idx_t_tile_edge_map_source ON t_tile_edge (map_id, source_tile_id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_edge_map_target ON t_tile_edge (map_id, target_tile_id);
+
+-- 重复启动可重入；复合外键确保消息、边的两个端点与 Tile 属于同一个 Map。
+ALTER TABLE t_tile DROP CONSTRAINT IF EXISTS fk_tile_map;
+ALTER TABLE t_tile ADD CONSTRAINT fk_tile_map FOREIGN KEY (map_id) REFERENCES t_map (map_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_message DROP CONSTRAINT IF EXISTS fk_tile_message_tile;
+ALTER TABLE t_tile_message ADD CONSTRAINT fk_tile_message_tile FOREIGN KEY (map_id, tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_edge DROP CONSTRAINT IF EXISTS fk_tile_edge_source;
+ALTER TABLE t_tile_edge ADD CONSTRAINT fk_tile_edge_source FOREIGN KEY (map_id, source_tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+ALTER TABLE t_tile_edge DROP CONSTRAINT IF EXISTS fk_tile_edge_target;
+ALTER TABLE t_tile_edge ADD CONSTRAINT fk_tile_edge_target FOREIGN KEY (map_id, target_tile_id)
+    REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
+
 CREATE TABLE IF NOT EXISTS t_ai_customer_service_md_storage (
     id BIGSERIAL PRIMARY KEY,
     original_file_name VARCHAR(512) NOT NULL,
@@ -372,6 +418,8 @@ CREATE INDEX IF NOT EXISTS t_vector_store_index
 ```
 
 `IF NOT EXISTS` 适合重复初始化，但不会自动调整已有字段类型、向量维度或索引定义。业务表升级以 [`schema.sql`](src/main/resources/schema.sql) 中的兼容语句为准；只有模型配置表需要补建时，也可使用 [`db/model-api-settings.sql`](src/main/resources/db/model-api-settings.sql)。
+
+移除旧的空 `default` 图谱可执行 `src/main/resources/db/remove-default-map.sql`；已有 Tile 的图谱会保留。移除后重复启动不会重新创建。
 
 时间字段没有自动更新时间触发器，修改时间由业务代码维护。模型配置表初始化为空即可，首次启动会写入配置，不需要手工插入 API Key。
 
@@ -428,7 +476,7 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 
 ## 使用流程
 
-1. 打开工作台并进入真实工作区，确认已恢复数据库中的图谱。
+1. 打开工作台，在左侧「图谱工作台」下点选图谱；点击「新建图谱」创建独立工作空间。原有数据位于「默认图谱」。
 2. 在服务设置中保存对话与向量模型配置，测试对话服务连接。
 3. 新建独立问答，或先添加便签、文件节点。需要使用 PDF / DOCX 文字时，通过画布文件入口上传。
 4. 选择一个或多个上下文来源，设置关系方向、类型和说明，再发起问题。
@@ -436,7 +484,7 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 6. 需要共享知识时，在知识库页面上传 `.md` 文件，等待状态变成「已完成」。
 7. 刷新或同步恢复持久化内容，导出 JSON 留存图谱和当前布局。
 
-节点手动位置保存在当前浏览器，按示例／真实模式及服务地址区分。内容和关系由后端保存，位置不在不同浏览器或设备之间同步。示例模式下的节点与知识库操作不提交后端，但服务设置仍操作真实后端配置。
+节点手动位置保存在当前浏览器，按示例／真实模式、服务地址和图谱 ID 区分。生成回答时可以切换图谱，回答继续保存到原图谱；最近使用的图谱通过浏览器和 URL 的 `map` 参数恢复。各图谱的缩放比例自动保存到 `t_map.zoom`，切换和刷新时恢复，默认 100%；普通画布和全页面图谱共用该比例。真实图谱以数据库中保存的比例为准，覆盖 URL 中过期的 `zoom` 值。内容和关系由后端保存，位置不在不同浏览器或设备之间同步。示例模式下的节点与知识库操作不提交后端，但服务设置仍操作真实后端配置。
 
 ## 接口与流式协议
 
@@ -445,14 +493,18 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 | 方法 | 路径 | 用途 |
 | --- | --- | --- |
 | `POST` | `/chat/tile/completion` | 发起 Tile 问答，返回 SSE |
-| `GET` | `/tile/workspace` | 返回所有节点、关系及最新完整回答 |
+| `GET` | `/maps` | 列出已有图谱 |
+| `POST` | `/maps` | 新建图谱，请求体为 `{"name":"图谱名称"}` |
+| `DELETE` | `/maps/{mapId}` | 删除图谱及其全部 Tile、消息、附件和关系，前端需要确认 |
+| `POST` | `/maps/{mapId}/zoom` | 保存图谱缩放比例，请求体为 `{"zoom":0.75}`，范围 0.35–1.5 |
+| `GET` | `/tile/workspace?mapId=…` | 返回指定图谱的节点、关系及最新完整回答 |
 | `POST` | `/tile/note` | 创建便签，支持关联来源 |
 | `POST` | `/tile/note/update` | 修改便签与来源关系 |
 | `POST` | `/tile/file` | 上传画布附件，返回文件节点 |
 | `GET` | `/tile/{tileId}/file` | 下载原始附件 |
 | `POST` | `/tile/weight` | 设置节点重要程度 1／2／3 |
 | `POST` | `/tile/delete` | 删除单个节点及其消息、附件与关系 |
-| `POST` | `/tile/reset` | 清空整个图谱的节点、消息和关系 |
+| `POST` | `/tile/reset` | 清空指定图谱的节点、消息和关系，请求体为 `{"mapId":"…"}` |
 | `POST` | `/md/upload` | 上传 Markdown 并触发异步向量化 |
 | `POST` | `/md/list` | 分页查询知识文件 |
 | `POST` | `/md/update` | 修改知识文件备注 |
@@ -460,6 +512,8 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 | `GET` | `/model-settings` | 读取脱敏后的模型配置 |
 | `POST` | `/model-settings` | 保存并应用对话／向量模型配置 |
 | `POST` | `/model-settings/test` | 测试已保存的对话模型连接 |
+
+所有 Tile 读写请求均必须提供 `mapId`：JSON 请求放在请求体，附件上传放在表单，画布读取与附件下载放在查询参数。省略时返回参数错误。知识库和模型配置仍为共享设置。
 
 ### 问答请求示例
 
@@ -471,6 +525,7 @@ curl -N 'http://127.0.0.1:8080/customer-service/chat/tile/completion' \
   -H 'Accept: text/event-stream' \
   --data '{
     "tileId": "tile-example-new",
+    "mapId": "map-example",
     "message": "根据这两个节点，整理一份实施建议。",
     "relatedTileIds": ["tile-source-a", "tile-source-b"],
     "memoryDepth": 0,
@@ -481,7 +536,7 @@ curl -N 'http://127.0.0.1:8080/customer-service/chat/tile/completion' \
   }'
 ```
 
-独立提问使用 `relatedTileIds: []` 并省略 `parentTileId`。关系类型支持 `EXTENDS`、`RELATED`、`SUPPORTS`、`CONTRADICTS` 等，也可使用自定义名称；便签与附件关联默认采用 `DIRECTED`、`EXTENDS` 和强度 1。
+独立提问使用 `relatedTileIds: []` 并省略 `parentTileId`。普通提问的关系类型由方向固定为 `EXTENDS` / `RELATES`，融合和拆分接口分别创建 `FUSES` / `DEVIDES`；便签与附件关联默认采用 `DIRECTED`、`EXTENDS` 和强度 1。
 
 ### SSE 完成语义
 

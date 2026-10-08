@@ -96,7 +96,8 @@ try {
   let releaseWorkspace;
   const workspaceReady = new Promise(resolve => { releaseWorkspace = resolve; });
   let workspace = demoGraph();
-  await live.route('**/customer-service/tile/workspace', async route => {
+  await live.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } }));
+await live.route('**/customer-service/tile/workspace?*', async route => {
     await workspaceReady;
     await route.fulfill({ json: { success: true, data: workspace } });
   });

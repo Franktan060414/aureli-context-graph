@@ -1,5 +1,7 @@
 package com.aureli.ai.robot.advisor;
 
+import com.aureli.ai.robot.domain.maps.MapIds;
+
 import com.aureli.ai.robot.domain.dos.TileEdgeDO;
 import com.aureli.ai.robot.domain.dos.TileMessageDO;
 import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
@@ -43,23 +45,14 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
     private final TileMapper tileMapper;
     private final TileEdgeMapper tileEdgeMapper;
     private final List<String> startTileIds;
+    private final String mapId;
     private final int maxDepth;
     private final List<TileEdgeDO> pendingEdges;
 
-    public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper,
-                                   TileEdgeMapper tileEdgeMapper,
-                                   TileMapper tileMapper,
-                                   Collection<String> startTileIds,
-                                   int maxDepth) {
-        this(tileMessageMapper, tileEdgeMapper, tileMapper, startTileIds, maxDepth, List.of());
-    }
-
-    public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper,
-                                   TileEdgeMapper tileEdgeMapper,
-                                   TileMapper tileMapper,
-                                   Collection<String> startTileIds,
-                                   int maxDepth,
-                                   Collection<TileEdgeDO> pendingEdges) {
+    public CustomChatMemoryAdvisor(TileMessageMapper tileMessageMapper, TileEdgeMapper tileEdgeMapper,
+            TileMapper tileMapper, Collection<String> startTileIds, int maxDepth,
+            Collection<TileEdgeDO> pendingEdges, String mapId) {
+        this.mapId = MapIds.normalize(mapId);
         this.tileMessageMapper = tileMessageMapper;
         this.tileMapper = tileMapper;
         this.tileEdgeMapper = tileEdgeMapper;
@@ -89,11 +82,11 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
         Set<String> relatedTileIds = collectRelatedTileIds();
         log.info("## Tile 工作记忆范围: startTileIds={}, maxDepth={}, resolvedTileIds={}",
                 startTileIds, maxDepth, relatedTileIds);
-        List<TileMessageDO> messages = tileMessageMapper.selectByTileIds(relatedTileIds);
+        List<TileMessageDO> messages = tileMessageMapper.selectByTileIds(mapId, relatedTileIds);
         Map<String, Integer> weights = new HashMap<>();
         List<Message> artifactMessages = Lists.newArrayList();
         if (!relatedTileIds.isEmpty()) {
-            tileMapper.selectByTileIds(relatedTileIds)
+            tileMapper.selectByTileIds(mapId, relatedTileIds)
                     .forEach(tile -> {
                         weights.put(tile.getTileId(), tile.getWeight());
                         if ("NOTE".equals(tile.getTileType())) {
@@ -130,7 +123,7 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
 
         // 关系只作为参考数据注入；保持历史角色、顺序和原始用户问题。
         List<TileEdgeDO> storedEdges = relatedTileIds.size() < 2 ? List.of()
-                : tileEdgeMapper.selectWithinTileIds(relatedTileIds);
+                : tileEdgeMapper.selectWithinTileIds(mapId, relatedTileIds);
         List<TileEdgeDO> visiblePendingEdges = pendingEdges.stream()
                 .filter(edge -> startTileIds.contains(edge.getSourceTileId()))
                 .toList();
@@ -165,7 +158,7 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
                 continue;
             }
 
-            for (TileEdgeDO edge : tileEdgeMapper.selectRelatedEdges(current.tileId())) {
+            for (TileEdgeDO edge : tileEdgeMapper.selectRelatedEdges(mapId, current.tileId())) {
                 String nextTileId = nextTileId(current.tileId(), edge);
                 if (nextTileId == null || visited.contains(nextTileId)) {
                     continue;

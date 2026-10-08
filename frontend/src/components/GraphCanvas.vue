@@ -18,6 +18,7 @@ import {
 } from "@lucide/vue";
 import { arrangeTiles, connectionGeometry, positionTiles, TILE_HEIGHT } from "../lib/graph-layout.js";
 import { useMotion } from "../composables/useMotion.js";
+import { relationTypeForEdge } from "../lib/tile-relations.js";
 import ImageThumbnail from "./ImageThumbnail.vue";
 import { isImageTile } from "../lib/image-preview.js";
 const { animateSurface } = useMotion();
@@ -370,7 +371,7 @@ watch(
                 "
               />
               <text :x="e.x" :y="e.y" text-anchor="middle">
-                {{ e.relationType }}
+                {{ relationTypeForEdge(e) }}
               </text>
             </g>
           </svg>

@@ -82,7 +82,7 @@ try {
   assert.deepEqual(await coordinates(graph), arranged);
   assert.equal(await graph.locator('.graph-node.selected .node-top .mono').textContent(), selected);
   let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('aureli-tile-layouts')));
-  assert.deepEqual(saved.demo, arranged);
+  assert.deepEqual(saved['demo:demo'], arranged);
   assert.equal(saved[`live:${new URL(baseUrl).origin}`]['tile-001'].x, 1300, 'demo layout does not alter live layout');
   await graph.getByRole('button', { name: '一键整理画布', exact: true }).focus();
   await page.keyboard.press('Enter');
@@ -136,9 +136,10 @@ try {
   workspace.tiles[1].weight = 2;
   workspace.tiles.reverse();
   await live.route('**/customer-service/**', route => {
+  if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
     if (route.request().method() !== 'GET') writes.push(route.request().url());
     return route.fulfill({ json: { success: true,
-      data: route.request().url().endsWith('/tile/workspace') ? workspace : {} } });
+      data: new URL(route.request().url()).pathname.endsWith('/tile/workspace') ? workspace : {} } });
   });
   await live.goto(baseUrl);
   const liveGraph = live.locator('.graph-wrap');
@@ -154,7 +155,7 @@ try {
   const empty = await browser.newPage();
   await setup(empty, 'live');
   await empty.route('**/customer-service/**', route => route.fulfill({ json: { success: true,
-    data: route.request().url().endsWith('/tile/workspace') ? { tiles: [], edges: [] } : {} } }));
+    data: new URL(route.request().url()).pathname.endsWith('/maps') ? [{ mapId: 'default', name: '默认图谱' }] : new URL(route.request().url()).pathname.endsWith('/tile/workspace') ? { tiles: [], edges: [] } : {} } }));
   await empty.goto(baseUrl);
   await empty.locator('.empty-graph').waitFor();
   assert.ok(await empty.getByRole('button', { name: '一键整理画布', exact: true }).isDisabled());

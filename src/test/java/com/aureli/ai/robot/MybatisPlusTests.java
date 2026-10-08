@@ -17,12 +17,17 @@ class MybatisPlusTests {
     @Resource
     private TileMapper tileMapper;
 
+    @Resource
+    private com.aureli.ai.robot.domain.mapper.MapMapper mapMapper;
+
     /**
      * 添加数据
      */
     @Test
     void testInsert() {
-        tileMapper.insert(TileDO.builder()
+        String mapId = "map-test-" + UUID.randomUUID();
+        mapMapper.insert(com.aureli.ai.robot.domain.dos.MapDO.builder().mapId(mapId).name("测试图谱").build());
+        tileMapper.insert(TileDO.builder().mapId(mapId)
                 .tileId(UUID.randomUUID().toString())
                 .title("新 Tile")
                 .userMessage("测试问题")
