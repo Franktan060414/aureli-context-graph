@@ -436,9 +436,8 @@ const fusionTiles = computed(() => workspace.value.tiles.filter(tile =>
 const fusionBusy = computed(() => generating.value || graphLoading.value || nodeBusy.value || modalBusy.value || weightBusy.value);
 const splitRequirements = ref("");
 const splitTile = computed(() => {
-  if (related.value.length > 1) return null;
-  const tile = related.value.length === 1
-    ? workspace.value.tiles.find(tile => tile.id === related.value[0]) : selectedTile.value;
+  if (related.value.length !== 1) return null;
+  const tile = workspace.value.tiles.find(tile => tile.id === related.value[0]);
   return tile && nodeType(tile) === "QA" && tile.status === "ready"
     && tile.message?.trim() && tile.answer?.trim() ? tile : null;
 });
@@ -462,7 +461,7 @@ async function splitSelectedTile(source) {
     }));
     result = { tiles, edges: tiles.map(tile => ({
       id: `edge-${uniqueId()}`, sourceTileId: source.id, targetTileId: tile.id,
-      direction: "DIRECTED", relationType: "DEVIDES", weight: 1,
+      direction: "DIRECTED", relationType: "DIVIDES", weight: 1,
       description: requirements ? `手动拆分：${requirements}` : "手动拆分",
     })) };
   } else {
@@ -1405,7 +1404,7 @@ function exportGraph() {
                     <Merge :size="17" aria-hidden="true" />
                   </button>
                   <button type="button" class="icon-button graph-split-action" aria-label="拆分选中的 AI 问答 Tile" aria-haspopup="dialog"
-                    :title="splitTile ? `拆分 ${splitTile.id}` : related.length > 1 ? '拆分仅支持一个 Tile，请取消多选关联' : '点选或通过“选择关联”选中一个已完成的 AI 问答 Tile'"
+                    :title="splitTile ? `拆分 ${splitTile.id}` : related.length > 1 ? '拆分仅支持一个 Tile，请取消多选关联' : '通过“选择关联”选中一个已完成的 AI 问答 Tile'"
                     :disabled="fusionBusy || !splitTile" @click="requestSplit">
                     <Split :size="17" aria-hidden="true" />
                   </button>

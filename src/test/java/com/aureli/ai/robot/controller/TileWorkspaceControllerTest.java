@@ -31,7 +31,7 @@ class TileWorkspaceControllerTest {
                 TileEdgeDO.builder().mapId("map-test").edgeId("fusion").sourceTileId("root").targetTileId("child")
                         .direction("DIRECTED").relationType("FUSES").build(),
                 TileEdgeDO.builder().mapId("map-test").edgeId("split").sourceTileId("root").targetTileId("child")
-                        .direction("DIRECTED").relationType("DEVIDES").build()));
+                        .direction("DIRECTED").relationType("DIVIDES").build()));
         when(messages.selectList(any())).thenReturn(List.of(
                 TileMessageDO.builder().mapId("map-test").tileId("root").content("旧回答").build(),
                 TileMessageDO.builder().mapId("map-test").tileId("root").content(fullAnswer).build()));
@@ -46,7 +46,7 @@ class TileWorkspaceControllerTest {
         assertEquals(1, data.tiles().get(0).weight());
         assertEquals(weight, data.tiles().get(1).weight());
         assertEquals("UNDIRECTED", data.edges().get(0).direction());
-        assertEquals(List.of("RELATES", "EXTENDS", "FUSES", "DEVIDES"),
+        assertEquals(List.of("RELATES", "EXTENDS", "FUSES", "DIVIDES"),
                 data.edges().stream().map(TileWorkspaceController.Edge::relationType).toList());
     }
 }

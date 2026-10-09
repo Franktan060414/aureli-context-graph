@@ -279,7 +279,7 @@ class CustomChatMemoryAdvisorTest {
         graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("a").targetTileId("b").direction("UNDIRECTED")
                 .relationType("CONTRADICTS").weight(new BigDecimal("0.4")).description("存在分歧").build());
         graph.add(TileEdgeDO.builder().mapId("map-test").sourceTileId("a").targetTileId("b").direction("DIRECTED")
-                .relationType("DEVIDES").description("手动拆分").build());
+                .relationType("DIVIDES").description("手动拆分").build());
         edge("outside", "b", "DIRECTED");
 
         Prompt prompt = read(List.of("a", "b"), 0);
@@ -296,7 +296,7 @@ class CustomChatMemoryAdvisorTest {
         assertTrue(relations.contains("\"edgeWeight\":0.8"));
         assertTrue(relations.contains("补充证据"));
         assertTrue(relations.contains("存在分歧"));
-        assertTrue(relations.contains("\"relationType\":\"DEVIDES\""));
+        assertTrue(relations.contains("\"relationType\":\"DIVIDES\""));
         assertFalse(prompt.getContents().contains("outside"));
         assertEquals("方案 A", history.get(0).getContent());
     }

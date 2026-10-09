@@ -827,7 +827,10 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 .map-item > span { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .map-item > svg, .map-add > svg { flex-shrink: 0; width: 16px; height: 16px; }
 .map-item.selected { background: var(--primary-soft); border-color: var(--primary); font-weight: 800; }
-.map-item:hover:not(:disabled), .map-add:hover:not(:disabled) { background: var(--yellow-soft); border-color: var(--primary); }
+.map-add:hover:not(:disabled) { background: var(--yellow-soft); border-color: var(--primary); }
+@media (hover: hover) and (pointer: fine) {
+  .map-row:hover .map-item:not(:disabled) { border-color: var(--primary); }
+}
 .map-add { margin-top: 4px; }
 .map-create-form { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .map-create-form label { color: var(--text); font-size: 13px; font-weight: 700; }
@@ -843,15 +846,23 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 
 /* Map deletion shares Tile's danger button and fill animation at a smaller size. */
 .map-row { position: relative; min-width: 0; }
-.map-row .map-item { padding-right: 46px; }
+.map-row .map-item { padding-right: 38px; }
 .map-row .map-delete-action {
   --button-position: absolute;
   right: 6px; top: 50%; transform: translateY(-50%);
-  width: 32px; height: 32px; min-width: 32px; min-height: 32px;
-  padding: 7px; border-radius: 6px;
+  width: 26px; height: 26px; min-width: 26px; min-height: 26px;
+  padding: 5px; border-radius: 5px;
+  opacity: 0; pointer-events: none;
 }
-.map-row .map-delete-action > svg { width: 12.4px; height: 12.4px; }
-@media (pointer: coarse) {
-  .map-row .map-item { padding-right: 48px; }
-  .map-row .map-delete-action { width: 40px; height: 40px; min-width: 40px; min-height: 40px; right: 2px; }
+.map-row .map-delete-action > svg { width: 10px; height: 10px; }
+.map-row:has(:focus-visible) .map-delete-action { opacity: 1; pointer-events: auto; }
+@media (hover: hover) and (pointer: fine) {
+  .map-row:hover .map-delete-action { opacity: 1; pointer-events: auto; }
+}
+@media (hover: none), (pointer: coarse) {
+  .map-row .map-item { padding-right: 42px; }
+  .map-row .map-delete-action {
+    width: 36px; height: 36px; min-width: 36px; min-height: 36px; right: 2px;
+    opacity: 1; pointer-events: auto;
+  }
 }

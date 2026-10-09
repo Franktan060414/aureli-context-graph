@@ -151,8 +151,13 @@ CREATE TABLE IF NOT EXISTS t_model_api_settings (
 );
 
 -- 拆分关系升级：仅转换带有系统拆分 ID 和拆分备注的旧连线，不修改普通延伸关系。
+-- 修正早期拆分关系的拼写；与旧 EXTENDS 升级一起执行，重复启动不会重复更新。
+UPDATE t_tile_edge
+SET relation_type = 'DIVIDES', update_time = CURRENT_TIMESTAMP
+WHERE relation_type = 'DEVIDES';
+
 UPDATE t_tile_edge e
-SET relation_type = 'DEVIDES', update_time = CURRENT_TIMESTAMP
+SET relation_type = 'DIVIDES', update_time = CURRENT_TIMESTAMP
 FROM t_tile child
 WHERE e.map_id = child.map_id AND e.target_tile_id = child.tile_id
   AND child.tile_type = 'QA'

@@ -53,7 +53,7 @@ public class AiCustomerServiceChatReqVO {
 
     /**
      * 兼容旧客户端的字段，值不参与保存；普通关系由方向固定为 EXTENDS 或 RELATES。
-     * FUSES / DEVIDES 只能通过专用融合 / 拆分接口创建。
+     * FUSES / DIVIDES 只能通过专用融合 / 拆分接口创建。
      */
     private String relationType;
 

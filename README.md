@@ -536,7 +536,7 @@ curl -N 'http://127.0.0.1:8080/customer-service/chat/tile/completion' \
   }'
 ```
 
-独立提问使用 `relatedTileIds: []` 并省略 `parentTileId`。普通提问的关系类型由方向固定为 `EXTENDS` / `RELATES`，融合和拆分接口分别创建 `FUSES` / `DEVIDES`；便签与附件关联默认采用 `DIRECTED`、`EXTENDS` 和强度 1。
+独立提问使用 `relatedTileIds: []` 并省略 `parentTileId`。普通提问的关系类型由方向固定为 `EXTENDS` / `RELATES`，融合和拆分接口分别创建 `FUSES` / `DIVIDES`；便签与附件关联默认采用 `DIRECTED`、`EXTENDS` 和强度 1。
 
 ### SSE 完成语义
 
