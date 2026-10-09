@@ -3,6 +3,8 @@ package com.aureli.ai.robot.controller;
 import com.aureli.ai.robot.domain.TileRelationTypes;
 
 import com.aureli.ai.robot.domain.maps.MapIds;
+import com.aureli.ai.robot.domain.dos.LabelDO;
+import com.aureli.ai.robot.domain.mapper.LabelMapper;
 import com.aureli.ai.robot.domain.dos.TileDO;
 import com.aureli.ai.robot.domain.dos.TileEdgeDO;
 import com.aureli.ai.robot.domain.dos.TileMessageDO;
@@ -47,11 +49,13 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/customer-service")
 public class TileWorkspaceController {
+    private final LabelMapper labels;
     private final TileMapper tiles;
     private final TileEdgeMapper edges;
     private final TileMessageMapper messages;
     private final TileFileContentReader fileContentReader;
-    public TileWorkspaceController(TileMapper tiles, TileEdgeMapper edges, TileMessageMapper messages, TileFileContentReader fileContentReader) {
+    public TileWorkspaceController(TileMapper tiles, TileEdgeMapper edges, TileMessageMapper messages, TileFileContentReader fileContentReader, LabelMapper labels) {
+        this.labels = labels;
         this.tiles = tiles;
         this.edges = edges;
         this.messages = messages;
@@ -77,7 +81,8 @@ public class TileWorkspaceController {
                 edge.getSourceTileId(), edge.getTargetTileId(), edge.getDirection(),
                 TileRelationTypes.forEdge(edge), edge.getWeight(), edge.getDescription())).toList();
         return ResponseEntity.ok().cacheControl(CacheControl.noStore())
-                .body(Response.success(new Workspace(result, connections)));
+                .body(Response.success(new Workspace(result, connections, labels.selectList(Wrappers.<LabelDO>lambdaQuery()
+                        .eq(LabelDO::getMapId, mapId).orderByAsc(LabelDO::getId)))));
     }
 
     @PostMapping("/tile/note")
@@ -209,7 +214,7 @@ public class TileWorkspaceController {
                 qa ? answer : "NOTE".equals(type) ? tile.getContent() : tile.getFileName(), parents,
                 "ready", qa ? parents.isEmpty() ? "root" : "memory" : type.toLowerCase(java.util.Locale.ROOT),
                 tile.getWeight(), type, tile.getTitle(), tile.getContent(),
-                tile.getFileName(), tile.getFileContentType(), tile.getFileSize());
+                tile.getFileName(), tile.getFileContentType(), tile.getFileSize(), tile.getLabelId());
     }
 
     @PostMapping("/tile/weight")
@@ -224,8 +229,10 @@ public class TileWorkspaceController {
 
     public record Node(String id, String message, String answer, List<String> relatedTileIds, String status, String kind,
                        Integer weight, String tileType, String title, String content,
-                       String fileName, String fileContentType, Long fileSize) {}
+                       String fileName, String fileContentType, Long fileSize, Long labelId) {}
     public record Edge(String id, String sourceTileId, String targetTileId, String direction,
                        String relationType, java.math.BigDecimal weight, String description) {}
-    public record Workspace(List<Node> tiles, List<Edge> edges) {}
+    public record Workspace(List<Node> tiles, List<Edge> edges, List<LabelDO> labels) {
+        public Workspace(List<Node> tiles, List<Edge> edges) { this(tiles, edges, List.of()); }
+    }
 }

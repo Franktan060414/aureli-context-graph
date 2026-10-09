@@ -30,7 +30,7 @@ class TileWeightControllerTest {
         TableInfoHelper.initTableInfo(new MapperBuilderAssistant(new MybatisConfiguration(), ""), TileDO.class);
         tiles = mock(TileMapper.class);
         mvc = MockMvcBuilders.standaloneSetup(new TileWorkspaceController(
-                tiles, mock(TileEdgeMapper.class), mock(TileMessageMapper.class), new com.aureli.ai.robot.reader.TileFileContentReader())).build();
+                tiles, mock(TileEdgeMapper.class), mock(TileMessageMapper.class), new com.aureli.ai.robot.reader.TileFileContentReader(), mock(com.aureli.ai.robot.domain.mapper.LabelMapper.class))).build();
     }
 
     @ParameterizedTest @ValueSource(ints = {1, 2, 3})

@@ -9,6 +9,7 @@ import {
   onUnmounted,
 } from "vue";
 import {
+  Tag,
   Network,
   BookOpen,
   Settings2,
@@ -48,7 +49,10 @@ import {
   PanelRightClose,
   PanelRightOpen,
 } from "@lucide/vue";
+import LabelPanel from "./components/LabelPanel.vue";
+import { labelForTile, labelStyle } from "./lib/labels.js";
 import GraphCanvas from "./components/GraphCanvas.vue";
+import GraphExportDialog from "./components/GraphExportDialog.vue";
 import QuestionForm from "./components/QuestionForm.vue";
 import ContextPicker from "./components/ContextPicker.vue";
 import FullscreenViewer from "./components/FullscreenViewer.vue";
@@ -62,6 +66,7 @@ import { createApiClient } from "./lib/api.js";
 import { relationTypeForDirection, relationTypeForEdge } from "./lib/tile-relations.js";
 import { createMapZoomSaver } from "./lib/map-zoom.js";
 import { readLayouts, positionTiles, tileDimensions } from "./lib/graph-layout.js";
+import { readArrangements } from "./lib/layered-layout.js";
 import { demoGraph, demoFiles } from "./lib/demo.js";
 const nav = [
   { id: "graph", label: "图谱工作台", icon: Network },
@@ -102,7 +107,7 @@ const visibleMaps = computed(() => demo.value ? demoMaps.value : maps.value);
 const currentMap = computed(() => visibleMaps.value.find(map => map.mapId === currentMapId.value));
 const mapStates = reactive({});
 function mapState(key, graph = { tiles: [], edges: [] }) {
-  return mapStates[key] ||= { ...graph, generating: false, loading: false, error: "", ui: null };
+  return mapStates[key] ||= { labels: [], ...graph, generating: false, loading: false, error: "", ui: null };
 }
 mapState("demo:demo", demoGraph());
 const workspaceKey = computed(() => demo.value ? `demo:${demoMapId.value}` : `live:${serverKey.value}:${liveMapId.value}`);
@@ -116,6 +121,7 @@ const related = ref([]),
 const selectedTile = computed(() =>
   workspace.value.tiles.find((t) => t.id === selected.value),
 );
+const selectedTileLabel = computed(() => labelForTile(selectedTile.value, workspace.value.labels));
 const selectedTileWeightLabel = computed(() => {
   const weight = selectedTile.value?.weight;
   if (weight == null) return "未设置";
@@ -223,10 +229,12 @@ watch(canvasZoom, zoom => {
   zoomSaves.save(workspaceKey.value, zoom, value => client.updateMapZoom(mapId, value));
 }, { flush: "sync" });
 const layouts = reactive(readLayouts());
+const arrangements = reactive(readArrangements());
 const layoutKey = computed(() => workspaceKey.value);
 // Carry existing demo positions into its map once.
 if (layouts.demo && !layouts["demo:demo"]) layouts["demo:demo"] = { ...layouts.demo };
 const tileLayout = computed(() => layouts[layoutKey.value] || {});
+const tileArrangement = computed(() => arrangements[layoutKey.value] || { mode: 'tree', routes: {} });
 function moveTile({ id, x, y, reset }) {
   const layout = layouts[layoutKey.value] ||= {};
   if (reset) delete layout[id];
@@ -235,11 +243,14 @@ function moveTile({ id, x, y, reset }) {
 function saveLayout() {
   try { localStorage.setItem('aureli-tile-layouts', JSON.stringify(layouts)); }
   catch { /* Moving still works when browser storage is unavailable. */ }
+  try { localStorage.setItem('aureli-canvas-arrangements', JSON.stringify(arrangements)); }
+  catch { /* The current arrangement remains available in memory. */ }
 }
-function arrangeCanvas(positions) {
+function arrangeCanvas({ positions, mode, routes }) {
   layouts[layoutKey.value] = Object.fromEntries(positions.map(({ id, x, y }) => [id, { x, y }]));
+  arrangements[layoutKey.value] = { mode, routes };
   saveLayout();
-  notify('画布已按关联顺序整理');
+  notify(mode === 'layered' ? '画布已按标签与关联分层整理' : '画布已按关联顺序树状整理');
 }
 function changeApiBase(base) {
   if (base === apiBase.value) { connection.value = 'connected'; return; }
@@ -271,6 +282,7 @@ async function loadWorkspace() {
     const result = await api.workspace();
     state.tiles = result.data.tiles;
     state.edges = result.data.edges;
+    state.labels = result.data.labels || [];
     if (key === workspaceKey.value) {
       if (!state.tiles.some(t => t.id === selected.value)) selected.value = state.tiles[0]?.id || null;
       related.value = related.value.filter(id => state.tiles.some(t => t.id === id));
@@ -384,6 +396,7 @@ async function deleteMap(map) {
   const key = demo.value ? `demo:${map.mapId}` : `live:${serverKey.value}:${map.mapId}`;
   zoomSaves.discard(key);
   delete layouts[key];
+  delete arrangements[key];
   if (demo.value && map.mapId === "demo") delete layouts.demo;
   saveLayout();
   delete mapStates[key];
@@ -455,7 +468,7 @@ async function splitSelectedTile(source) {
   if (demo.value) {
     const original = workspace.value.tiles.find(tile => tile.id === source.id);
     const tiles = ["核心要点", "条件与应用"].map(topic => ({
-      id: newId(), tileType: "QA", kind: "memory", status: "ready", weight: original.weight ?? 1,
+      id: newId(), tileType: "QA", kind: "memory", status: "ready", weight: original.weight ?? 1, labelId: original.labelId ?? null,
       message: `${original.message}：${topic}`,
       answer: `这是拆分示例，用于演示子 Tile 的关联与阅读。真实工作区会先由 AI 判断拆分价值，再细分回答。${requirements ? `\n\n本次要求：${requirements}` : ""}\n\n来源问答：\n${original.answer}`,
       relatedTileIds: [source.id],
@@ -510,6 +523,7 @@ async function fuseTiles(selection) {
       id: selection.tileId, tileType: "QA", kind: "memory", status: "ready",
       message: `综合讨论：${sources.map(tile => tile.message).join("；")}`,
       answer: `这是融合示例。真实工作区会由 AI 重组问题和回答。\n\n${sources.map(tile => tile.answer).join("\n\n")}`,
+      labelId: sources.every(source => (source.labelId ?? null) === (sources[0].labelId ?? null)) ? sources[0].labelId ?? null : null,
       relatedTileIds: ids, weight: Math.max(...sources.map(tile => tile.weight ?? 1)),
     };
     result = { tiles: [tile], edges: ids.map(sourceTileId => ({
@@ -1165,6 +1179,38 @@ async function editNodeNote(tile) {
   expanded.value = null;
   await openModal("editNote", tile);
 }
+async function openLabels() {
+  if (fusionBusy.value) return;
+  const mapId = currentMapId.value;
+  await openModal("labels", { state: workspace.value, tileIds: [...related.value], isDemo: demo.value,
+    client: createApiClient(apiBase.value, () => mapId) });
+}
+async function saveLabel(draft, id) {
+  const { state, isDemo, client } = modal.value.file;
+  const name = draft.name.trim(), colorHex = draft.colorHex.toUpperCase();
+  if (state.labels.some(label => label.id !== id && label.name === name)) throw new Error("当前图谱已有同名标签");
+  const label = isDemo ? { id: id ?? `label-${uniqueId()}`, mapId: currentMapId.value, name, colorHex }
+    : (await (id == null ? client.createLabel({ name, colorHex }) : client.updateLabel(id, { name, colorHex }))).data;
+  const index = state.labels.findIndex(item => item.id === id);
+  if (index < 0) state.labels.push(label); else state.labels.splice(index, 1, label);
+  notify(id == null ? "标签已创建" : "标签已更新");
+  return label;
+}
+async function removeLabel(id) {
+  const { state, isDemo, client } = modal.value.file;
+  if (!isDemo) await client.deleteLabel(id);
+  state.labels = state.labels.filter(label => label.id !== id);
+  for (const tile of state.tiles) if (String(tile.labelId) === String(id)) tile.labelId = null;
+  notify("标签已删除，Tile 已保留");
+}
+async function assignLabel(labelId) {
+  const { state, tileIds, isDemo, client } = modal.value.file;
+  if (!tileIds.length) throw new Error("请先通过“选择关联”选中 Tile");
+  if (!tileIds.every(id => state.tiles.some(tile => tile.id === id))) throw new Error("部分 Tile 已不存在，请同步后重试");
+  if (!isDemo) await client.assignLabel(tileIds, labelId);
+  for (const tile of state.tiles) if (tileIds.includes(tile.id)) tile.labelId = labelId;
+  notify(`已${labelId == null ? "清除" : "设置"} ${tileIds.length} 个 Tile 的标签`);
+}
 async function openModal(type, file) {
   modal.value = { type, file, tile: type === "deleteTile" ? file : null };
   remark.value = file?.remark || "";
@@ -1251,7 +1297,7 @@ async function confirmModal() {
         const original = type === "editNote" ? workspace.value.tiles.find(t => t.id === payload.tileId) : null;
         tile = { ...original, id: payload.tileId, title: payload.title, message: payload.title,
           content: payload.content, answer: payload.content, tileType: "NOTE", kind: "note",
-          relatedTileIds: payload.relatedTileIds, status: "ready", weight: original?.weight || 1 };
+          relatedTileIds: payload.relatedTileIds, status: "ready", weight: original?.weight || 1, labelId: original?.labelId ?? null };
       } else tile = (await (type === "editNote" ? api.updateNote(payload) : api.createNote(payload))).data;
       if (type === "editNote") {
         const index = workspace.value.tiles.findIndex(t => t.id === tile.id);
@@ -1267,6 +1313,7 @@ async function confirmModal() {
       if (!demo.value)
         await api.resetWorkspace();
       delete layouts[layoutKey.value];
+      delete arrangements[layoutKey.value];
       if (demo.value && demoMapId.value === "demo") delete layouts.demo;
       saveLayout();
       workspace.value.tiles = [];
@@ -1310,25 +1357,12 @@ async function confirmModal() {
     modalBusy.value = false;
   }
 }
+const exportDialog = ref(null);
 function exportGraph() {
-  const url = URL.createObjectURL(
-    new Blob(
-      [
-        JSON.stringify(
-          { mode: demo.value ? "demo" : "live", ...workspace.value, layout: tileLayout.value },
-          null,
-          2,
-        ),
-      ],
-      { type: "application/json" },
-    ),
-  );
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "aureli-graph.json";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  notify("图谱已导出为 JSON");
+  exportDialog.value.open(JSON.parse(JSON.stringify({
+    mode: demo.value ? "demo" : "live", ...workspace.value, layout: tileLayout.value,
+    name: currentMap.value?.name || "aureli-graph", arrangementMode: tileArrangement.value.mode,
+  })));
 }
 </script>
 
@@ -1563,11 +1597,15 @@ function exportGraph() {
                     <button class="icon-button graph-create-action" aria-label="添加便签" title="添加便签" @click="openModal('note')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><StickyNote :size="17" /></button>
                     <button class="icon-button graph-create-action" aria-label="添加文件" title="添加文件" @click="openModal('file')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><Upload :size="17" /></button>
                   </div>
+                  <button class="icon-button" aria-label="标签" title="管理标签或为所选 Tile 批量设置标签" aria-haspopup="dialog"
+                    :disabled="fusionBusy" @click="openLabels"><Tag :size="17" aria-hidden="true" /></button>
                   <button v-if="!demo" class="icon-button" aria-label="同步图谱" @click="loadWorkspace" :disabled="graphLoading || generating || nodeBusy || modalBusy"><RefreshCw :size="17" :class="{ spinning: graphLoading }" /></button>
                   <button
                     class="icon-button graph-secondary-action"
                     aria-label="导出图谱"
                     title="导出图谱"
+                    aria-haspopup="dialog"
+                    :disabled="graphLoading || generating || nodeBusy || modalBusy"
                     @click="exportGraph"
                   >
                     <Download :size="18" />
@@ -1603,7 +1641,10 @@ function exportGraph() {
                 v-if="tab === 'graph'"
                 v-model:zoom="canvasZoom"
                 :tiles="workspace.tiles"
+                :labels="workspace.labels"
                 :layout="tileLayout"
+                :arrangement="tileArrangement"
+                :workspace-id="workspaceKey"
                 :edges="workspace.edges"
                 :selected="selected"
                 :related="related"
@@ -1633,11 +1674,13 @@ function exportGraph() {
                 <article
                   v-for="tile in filteredTiles"
                   :key="tile.id"
-                  :class="{ chosen: selected === tile.id }"
+                  :class="{ chosen: selected === tile.id, 'tile-label-surface': !!labelForTile(tile, workspace.labels) }"
+                  :style="labelStyle(labelForTile(tile, workspace.labels))"
                 >
                   <button @click="select(tile.id)">
-                    <span class="mono">{{ tile.id }}</span
-                    ><strong>{{ tile.message }}</strong
+                    <span class="mono">{{ tile.id }}</span>
+                    <small v-if="labelForTile(tile, workspace.labels)" class="tile-label-badge">{{ labelForTile(tile, workspace.labels).name }}</small>
+                    <strong>{{ tile.message }}</strong
                     ><span>{{
                       tile.answer || tile.error || "生成中…"
                     }}</span></button
@@ -1765,10 +1808,16 @@ function exportGraph() {
                             : nodeType(selectedTile) === "QA" ? "回答已完成" : `${nodeLabel(selectedTile)}已保存`
                       }}</span
                     >
-                    <small
-                      class="tile-weight"
-                      :class="{ 'tile-weight-high': selectedTileWeightLabel === '非常重要' }"
-                    >{{ selectedTileWeightLabel }}</small>
+                    <div class="detail-tile-metadata">
+                      <span v-if="selectedTileLabel" class="detail-tile-label" :title="selectedTileLabel.name">
+                        <i :style="{ backgroundColor: selectedTileLabel.colorHex }" aria-hidden="true"></i>
+                        <span>{{ selectedTileLabel.name }}</span>
+                      </span>
+                      <small
+                        class="tile-weight"
+                        :class="{ 'tile-weight-high': selectedTileWeightLabel === '非常重要' }"
+                      >{{ selectedTileWeightLabel }}</small>
+                    </div>
                   </div>
                   <button
                     class="icon-button"
@@ -2134,7 +2183,10 @@ function exportGraph() {
       :mode="expanded.mode"
       :tile="expandedTile"
       :tiles="workspace.tiles"
+      :labels="workspace.labels"
       :layout="tileLayout"
+      :arrangement="tileArrangement"
+      :workspace-id="workspaceKey"
       :edges="workspace.edges"
       :selected="selected"
       :related="related"
@@ -2156,6 +2208,7 @@ function exportGraph() {
       @edit-note="editNodeNote"
     />
     </Transition>
+    <GraphExportDialog ref="exportDialog" :workspace-id="workspaceKey" @notify="notify($event)" />
     <Transition name="toast-motion" :css="motionEnabled">
     <div
       v-if="toast"
@@ -2176,7 +2229,7 @@ function exportGraph() {
     <dialog
       ref="dialog"
       class="modal"
-      :class="{ 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file', 'split', 'questionPlan'].includes(modal?.type) }"
+      :class="{ 'label-modal': modal?.type === 'labels', 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file', 'split', 'questionPlan', 'labels'].includes(modal?.type) }"
       aria-labelledby="workspace-modal-title"
       @cancel.self.prevent="closeModal"
     >
@@ -2184,7 +2237,8 @@ function exportGraph() {
         ><div class="modal-header">
           <h2 id="workspace-modal-title">
             {{
-              modal.type === "question" ? "添加Tile"
+              modal.type === "labels" ? "标签"
+                : modal.type === "question" ? "添加Tile"
                 : modal.type === "questionPlan" ? "AI 建议拆分问题"
                 : modal.type === "fusion" ? "融合选中的 AI 问答 Tile？"
                 : modal.type === "split" ? "拆分 AI 问答 Tile"
@@ -2215,7 +2269,10 @@ function exportGraph() {
           </button>
         </div>
         <div class="modal-body">
-          <QuestionForm v-if="modal.type === 'question'"
+          <LabelPanel v-if="modal.type === 'labels'" :labels="modal.file.state.labels" :tiles="modal.file.state.tiles"
+            :tile-ids="modal.file.tileIds" :save-label="saveLabel" :remove-label="removeLabel" :assign-label="assignLabel"
+            @busy="modalBusy = $event" />
+          <QuestionForm v-else-if="modal.type === 'question'"
             ref="questionDialogInput" form-id="dialog-question-form"
             :form="form" :related="related" :context-tiles="questionContextTiles"
             :generating="generating" :loading="graphLoading" :demo="demo" :error="formError"
@@ -2328,7 +2385,7 @@ function exportGraph() {
             {{
               demo
                 ? "将清空当前示例图谱。"
-                : "将清空服务中的所有 Tile 节点、消息和关系边，此操作不可撤销。"
+                : "将清空当前图谱的所有 Tile 节点、消息和关系边，保留标签，此操作不可撤销。"
             }}
             RAG 知识库将保留。
           </p>
@@ -2338,7 +2395,7 @@ function exportGraph() {
             }}
           </p>
           <p v-else-if="modal.type === 'deleteMap'">
-            将永久删除「{{ modal.file.name }}」及其全部 Tile、正文、附件、消息和关系，此操作不可撤销。
+            将永久删除「{{ modal.file.name }}」及其全部 Tile、标签、正文、附件、消息和关系，此操作不可撤销。
           </p>
           <p v-else-if="modal.type === 'deleteTile'">
             将永久删除「{{ modal.tile.id }}」以及它的正文、附件、全部消息和关系边。其他 Tile 将不再引用此节点，此操作不可撤销。
@@ -2361,7 +2418,7 @@ function exportGraph() {
         </div>
         <div class="modal-actions">
           <button class="secondary" @click="closeModal" :disabled="modalBusy">
-            {{ modal.type === "help" ? "知道了" : "取消" }}</button
+            {{ modal.type === "help" ? "知道了" : modal.type === "labels" ? "关闭" : "取消" }}</button
           ><template v-if="modal.type === 'questionPlan'">
             <button v-if="questionFlow?.phase === 'suggested'" class="secondary question-decline"
               :disabled="modalBusy" @click="decideQuestionFlow('DECLINE')">不执行拆分</button>
@@ -2374,7 +2431,7 @@ function exportGraph() {
             <LoaderCircle v-if="generating" :size="16" class="spinning" /><Send v-else :size="16" />
             {{ generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}
           </button><button v-else-if="modal.type === 'search'" class="primary" type="submit" form="graph-search-form">应用筛选</button><button
-            v-else-if="modal.type !== 'help'"
+            v-else-if="!['help', 'labels'].includes(modal.type)"
             :class="['edit', 'note', 'editNote', 'file', 'fusion', 'split'].includes(modal.type) ? 'primary' : 'danger'"
             :type="['note', 'editNote', 'file', 'split'].includes(modal.type) ? 'submit' : 'button'"
             :form="modal.type === 'split' ? 'split-form' : ['note', 'editNote', 'file'].includes(modal.type) ? 'node-form' : undefined"

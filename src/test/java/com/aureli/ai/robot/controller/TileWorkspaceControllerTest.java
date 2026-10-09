@@ -35,7 +35,7 @@ class TileWorkspaceControllerTest {
         when(messages.selectList(any())).thenReturn(List.of(
                 TileMessageDO.builder().mapId("map-test").tileId("root").content("旧回答").build(),
                 TileMessageDO.builder().mapId("map-test").tileId("root").content(fullAnswer).build()));
-        var response = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader()).workspace("map-test");
+        var response = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader(), mock(com.aureli.ai.robot.domain.mapper.LabelMapper.class)).workspace("map-test");
         assertEquals("no-store", response.getHeaders().getCacheControl());
         var data = response.getBody().getData();
         assertEquals(fullAnswer, data.tiles().get(0).answer());

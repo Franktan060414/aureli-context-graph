@@ -137,6 +137,12 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ zoom }), keepalive: true, signal: AbortSignal.timeout(30000),
     })),
+    createLabel: data => post("/customer-service/labels", scoped(data)),
+    updateLabel: (id, data) => post(`/customer-service/labels/${encodeURIComponent(id)}`, scoped(data)),
+    deleteLabel: async id => checkedResponse(await request(endpoint(base(), mapPath(`/customer-service/labels/${encodeURIComponent(id)}`)), {
+      method: "DELETE", signal: AbortSignal.timeout(30000),
+    })),
+    assignLabel: (tileIds, labelId) => post("/customer-service/tile/label", scoped({ tileIds, labelId })),
     workspace: () => get(mapPath("/customer-service/tile/workspace")),
     createNote: (data) => post("/customer-service/tile/note", scoped(data)),
     updateNote: (data) => post("/customer-service/tile/note/update", scoped(data)),

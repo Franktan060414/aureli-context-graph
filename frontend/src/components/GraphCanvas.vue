@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick, watch } from "vue";
 import {
   Plus,
   Minus,
@@ -14,18 +14,26 @@ import {
   Download,
   Pencil,
   ListTree,
+  LoaderCircle,
   X,
 } from "@lucide/vue";
 import { arrangeTiles, connectionGeometry, positionTiles, TILE_HEIGHT } from "../lib/graph-layout.js";
 import { useMotion } from "../composables/useMotion.js";
 import { relationTypeForEdge } from "../lib/tile-relations.js";
+import { labelForTile, labelStyle } from "../lib/labels.js";
+import { labelRegions } from "../lib/label-regions.js";
+import { arrangeLayeredTiles, layoutSignature } from "../lib/layered-layout.js";
+import { routeIsCurrent, polylineGeometry, rerouteConnection } from "../lib/graph-routing.js";
 import ImageThumbnail from "./ImageThumbnail.vue";
 import { isImageTile } from "../lib/image-preview.js";
 const { animateSurface } = useMotion();
 const zoom = defineModel("zoom", { type: Number, default: 1 });
 const props = defineProps({
   tiles: Array,
+  labels: { type: Array, default: () => [] },
   layout: { type: Object, default: () => ({}) },
+  arrangement: { type: Object, default: () => ({ mode: 'tree', routes: {} }) },
+  workspaceId: String,
   edges: Array,
   selected: String,
   related: Array,
@@ -37,28 +45,57 @@ const props = defineProps({
 });
 const emit = defineEmits(["select", "toggle", "extend", "new", "expand", "delete", "move", "move-end", "arrange", "file", "download", "edit-note"]);
 const nodeType = tile => tile.tileType || "QA";
+const relationTypes = ["RELATES", "EXTENDS", "FUSES", "DIVIDES"];
 const viewport = ref(null),
   dragging = ref(null),
   panning = ref(false),
   pan = ref({ x: 0, y: 0 });
 const arrangeDialog = ref(null);
+const arrangeMode = ref('tree'), arranging = ref(false), arrangeError = ref('');
+const focusedLabel = ref(null), regions = shallowRef([]);
+let arrangementRequest = 0, arrangementController, arrangeOrigin;
 const positions = computed(() => positionTiles(props.tiles, props.layout));
+watch([positions, () => props.labels], () => {
+  regions.value = labelRegions(positions.value, props.labels, regions.value);
+  if (!props.labels.some(label => String(label.id) === focusedLabel.value)) focusedLabel.value = null;
+}, { immediate: true, deep: true, flush: 'sync' });
+const usedLabels = computed(() => props.labels.filter(label =>
+  props.tiles.some(tile => tile.labelId != null && String(tile.labelId) === String(label.id))));
 const width = computed(() =>
-  Math.max(620, ...positions.value.map((t) => t.x + t.width + 24)),
+  Math.max(620, ...positions.value.map((t) => t.x + t.width + 24), ...regions.value.map(r => r.x + r.width + 12)),
 );
 const height = computed(() =>
-  Math.max(380, ...positions.value.map((t) => t.y + t.height + 24)),
+  Math.max(380, ...positions.value.map((t) => t.y + t.height + 24), ...regions.value.map(r => r.y + r.height + 12)),
 );
+const routeCache = new Map();
 const links = computed(() => {
   const byId = new Map(positions.value.map(tile => [tile.id, tile]));
+  const fingerprint = JSON.stringify(positions.value.map(({ id, x, y, width, height }) => [id, x, y, width, height]));
+  const liveIds = new Set(props.edges.map(edge => edge.id));
+  for (const id of routeCache.keys()) if (!liveIds.has(id)) routeCache.delete(id);
   return props.edges.map(edge => {
     const source = byId.get(edge.sourceTileId), target = byId.get(edge.targetTileId);
-    return source && target ? { ...edge, ...connectionGeometry(source, target) } : null;
+    if (!source || !target) return null;
+    let geometry;
+    if (props.arrangement.mode === 'layered') {
+      const route = props.arrangement.routes?.[edge.id];
+      if (routeIsCurrent(route, source, target, positions.value)) geometry = polylineGeometry(route.sections);
+      else if (dragging.value) geometry = connectionGeometry(source, target);
+      else {
+        const key = JSON.stringify([fingerprint, source.id, target.id]);
+        if (routeCache.get(edge.id)?.key !== key) routeCache.set(edge.id, {
+          key, geometry: rerouteConnection(source, target, positions.value),
+        });
+        geometry = routeCache.get(edge.id).geometry;
+      }
+    } else geometry = connectionGeometry(source, target);
+    return { ...edge, ...geometry, relationType: relationTypeForEdge(edge), dimmed: focusedLabel.value != null
+      && String(source.labelId) !== focusedLabel.value && String(target.labelId) !== focusedLabel.value };
   }).filter(Boolean);
 });
 let drag, dragFrame, suppressClick = false;
 function startDrag(event, tile) {
-  if (event.button !== 0 || !event.isPrimary || drag) return;
+  if (event.button !== 0 || !event.isPrimary || drag || arranging.value) return;
   suppressClick = false;
   if (event.target.closest('.node-expand, .node-bottom')) return;
   const world = viewport.value.querySelector('.graph-world');
@@ -252,18 +289,55 @@ function fit() {
 }
 function requestArrange() {
   if (props.busy || !props.tiles.length) return;
+  arrangeOrigin = document.activeElement;
+  arrangeMode.value = props.arrangement.mode === 'layered' ? 'layered' : 'tree';
+  arrangeError.value = '';
   if (!arrangeDialog.value.open) arrangeDialog.value.showModal();
 }
 function closeArrange() {
+  ++arrangementRequest;
+  arrangementController?.abort();
+  arrangementController = null;
+  arranging.value = false;
   arrangeDialog.value?.close();
+  nextTick(() => {
+    if (!arrangeDialog.value?.open && arrangeOrigin?.isConnected) arrangeOrigin.focus({ preventScroll: true });
+  });
 }
 async function arrange() {
-  if (!arrangeDialog.value?.open || props.busy || !props.tiles.length) return;
-  closeArrange();
+  if (!arrangeDialog.value?.open || props.busy || arranging.value || !props.tiles.length) return;
   if (drag) finishDrag();
-  emit('arrange', arrangeTiles(props.tiles, props.edges));
-  await nextTick();
-  fit();
+  const request = ++arrangementRequest, workspace = props.workspaceId;
+  const signature = layoutSignature(props.tiles, props.edges, props.labels), mode = arrangeMode.value;
+  const controller = new AbortController();
+  arrangementController = controller;
+  arranging.value = true;
+  arrangeError.value = '';
+  try {
+    const result = mode === 'layered'
+      ? await arrangeLayeredTiles(props.tiles, props.edges, props.labels, { signal: controller.signal })
+      : { positions: arrangeTiles(props.tiles, props.edges), routes: {} };
+    if (request !== arrangementRequest || workspace !== props.workspaceId || !arrangeDialog.value?.open) return;
+    if (props.busy || signature !== layoutSignature(props.tiles, props.edges, props.labels)) {
+      arrangeError.value = '图谱已发生变化，请重新整理。';
+      return;
+    }
+    emit('arrange', { ...result, mode });
+    closeArrange();
+    await nextTick();
+    fit();
+  } catch (error) {
+    if (request === arrangementRequest && error.name !== 'AbortError') {
+      arrangeError.value = '整理失败，当前布局已保留。' + (error.message || '请重试。');
+    }
+  } finally {
+    if (request === arrangementRequest) { arranging.value = false; arrangementController = null; }
+  }
+}
+watch(() => props.workspaceId, () => { closeArrange(); focusedLabel.value = null; routeCache.clear(); });
+function toggleLabel(id) {
+  const key = String(id);
+  focusedLabel.value = focusedLabel.value === key ? null : key;
 }
 function revealSelected() { revealTile(props.selected); }
 function revealTile(id) {
@@ -304,6 +378,7 @@ onMounted(() => {
   revealSelected();
 });
 onUnmounted(() => {
+  closeArrange();
   finishDrag();
   observer?.disconnect();
 });
@@ -347,10 +422,21 @@ watch(
             transform: `scale(${zoom})`,
           }"
         >
+          <div v-for="region in regions" :key="region.key" class="graph-label-region"
+            :style="{ ...labelStyle(region.label), left: region.x + 'px', top: region.y + 'px', width: region.width + 'px', height: region.height + 'px' }"
+            :class="{ 'label-region-dimmed': focusedLabel != null && String(region.label.id) !== focusedLabel }"
+            aria-hidden="true">
+            <span class="graph-label-region-caption" :class="{ 'caption-below': region.captionBelow }">
+              {{ region.label.name }} · {{ region.tileIds.length }} 张<span v-if="region.total > region.tileIds.length"> / 共 {{ region.total }} 张</span>
+            </span>
+          </div>
           <svg class="edges" :width="width" :height="height" aria-hidden="true">
             <defs>
               <marker
-                :id="markerId"
+                v-for="relationType in relationTypes"
+                :key="relationType"
+                :id="`${markerId}-${relationType}`"
+                :data-relation-type="relationType"
                 viewBox="0 0 10 10"
                 refX="9"
                 refY="5"
@@ -361,17 +447,17 @@ watch(
                 <path d="M0 0 L10 5 L0 10" fill="currentColor" />
               </marker>
             </defs>
-            <g v-for="e in links" :key="e.id">
+            <g v-for="e in links" :key="e.id" :data-relation-type="e.relationType" :class="{ 'label-link-dimmed': e.dimmed }">
               <path
                 :d="e.path"
                 fill="none"
-                :marker-end="`url(#${markerId})`"
+                :marker-end="`url(#${markerId}-${e.relationType})`"
                 :marker-start="
-                  e.direction === 'UNDIRECTED' ? `url(#${markerId})` : undefined
+                  e.direction === 'UNDIRECTED' ? `url(#${markerId}-${e.relationType})` : undefined
                 "
               />
               <text :x="e.x" :y="e.y" text-anchor="middle">
-                {{ relationTypeForEdge(e) }}
+                {{ e.relationType }}
               </text>
             </g>
           </svg>
@@ -382,15 +468,19 @@ watch(
             :class="[
               tile.kind,
               {
+                'tile-label-surface': !!labelForTile(tile, labels),
                 selected: selected === tile.id,
                 dragging: dragging === tile.id,
                 associated: related.includes(tile.id),
                 dimmed: !matches(tile),
+                'label-dimmed': focusedLabel != null && String(tile.labelId) !== focusedLabel,
+                'label-focused': focusedLabel != null && String(tile.labelId) === focusedLabel,
                 'weight-expanded': tile.height > TILE_HEIGHT,
                 'has-image': isImageTile(tile),
               },
             ]"
             :style="{
+              ...labelStyle(labelForTile(tile, labels)),
               left: tile.x + 'px', top: tile.y + 'px',
               width: tile.width + 'px', height: tile.height + 'px',
               '--tile-extra-height': tile.height - TILE_HEIGHT + 'px',
@@ -428,6 +518,7 @@ watch(
                       : nodeType(tile) === "NOTE" ? "便签" : nodeType(tile) === "FILE" ? "文件" : "已完成"
                 }}</span></span
               >
+              <small v-if="labelForTile(tile, labels)" class="tile-label-badge" :title="labelForTile(tile, labels).name">{{ labelForTile(tile, labels).name }}</small>
               <strong>{{ tile.message }}</strong
               >
               <ImageThumbnail v-if="isImageTile(tile) && loadFile" :tile="tile" :load-file="loadFile" />
@@ -477,6 +568,12 @@ watch(
         </button>
       </div>
     </div>
+    <div v-if="usedLabels.length" class="canvas-label-focus" role="group" aria-label="聚焦标签">
+      <button v-for="label in usedLabels" :key="label.id" type="button" :style="labelStyle(label)"
+        :aria-pressed="focusedLabel === String(label.id)" :title="`高亮所有「${label.name}」Tile，再次点击取消`"
+        @click="toggleLabel(label.id)"><span aria-hidden="true"></span>{{ label.name }}</button>
+      <button v-if="focusedLabel != null" type="button" class="clear-label-focus" @click="focusedLabel = null" aria-label="清除标签聚焦"><X :size="14" /></button>
+    </div>
     <div class="canvas-controls">
       <button @click="changeZoom(-0.1)" aria-label="缩小图谱">
         <Minus :size="16" /></button
@@ -487,29 +584,46 @@ watch(
       ><button @click="fit()" aria-label="适应画布">
         <Maximize :size="16" />
       </button>
-      <button @click="requestArrange" :disabled="busy || !tiles.length" aria-label="一键整理画布" title="一键整理画布：按关联从左向右树状排列">
+      <button @click="requestArrange" :disabled="busy || arranging || !tiles.length" aria-label="一键整理画布" title="整理画布：选择树状或 Layered 排列">
         <ListTree :size="16" aria-hidden="true" />
       </button>
     </div>
     <dialog
       ref="arrangeDialog"
-      class="modal"
+      class="modal arrange-modal"
       :aria-labelledby="`${markerId}-arrange-title`"
       :aria-describedby="`${markerId}-arrange-description`"
       @cancel.stop.prevent="closeArrange"
     >
       <div class="modal-header">
-        <h2 :id="`${markerId}-arrange-title`">整理画布？</h2>
-        <button class="icon-button" @click="closeArrange" aria-label="关闭整理确认">
+        <h2 :id="`${markerId}-arrange-title`">整理画布</h2>
+        <button class="icon-button" @click="closeArrange" aria-label="关闭排列选择">
           <X :size="19" aria-hidden="true" />
         </button>
       </div>
       <div class="modal-body">
-        <p :id="`${markerId}-arrange-description`">将按照关联顺序从左向右树状排列所有 Tile，并覆盖当前手动布局。是否继续？</p>
+        <p :id="`${markerId}-arrange-description`" class="arrange-description">选择一种排列方式，整理后仍可自由拖动 Tile。</p>
+        <fieldset class="arrange-options" :disabled="arranging || busy">
+          <legend class="sr-only">排列方式</legend>
+          <label class="arrange-option" :class="{ chosen: arrangeMode === 'tree' }">
+            <input v-model="arrangeMode" type="radio" :name="`${markerId}-arrange-mode`" value="tree" aria-label="树状排列" />
+            <ListTree :size="28" aria-hidden="true" />
+            <span><strong>树状排列</strong><small>按关联从左向右展开分支，适合阅读推演过程。</small></span>
+          </label>
+          <label class="arrange-option" :class="{ chosen: arrangeMode === 'layered' }">
+            <input v-model="arrangeMode" type="radio" :name="`${markerId}-arrange-mode`" value="layered" aria-label="Layered 排列" />
+            <Network :size="28" aria-hidden="true" />
+            <span><strong>Layered 排列<span class="arrange-badge">标签优先</span></strong><small>同标签集中分区，按关联分层排列，减少连线交叉。</small></span>
+          </label>
+        </fieldset>
+        <p v-if="arrangeMode === 'layered' && !usedLabels.length" class="field-help">当前没有已标记的 Tile，将按关联分层排列。</p>
+        <p class="arrange-layout-note">将覆盖当前手动布局。标签分区框随 Tile 位置调整；拖散后拆分或隐藏，标签保持不变。</p>
+        <p v-if="arranging" class="arrange-progress" role="status"><LoaderCircle :size="16" aria-hidden="true" />正在整理，可随时取消…</p>
+        <p v-if="arrangeError" class="inline-error" role="alert">{{ arrangeError }}</p>
       </div>
       <div class="modal-actions">
         <button class="secondary" @click="closeArrange" autofocus>取消</button>
-        <button class="primary" @click="arrange" :disabled="busy || !tiles.length">确认整理</button>
+        <button class="primary" @click="arrange" :disabled="busy || arranging || !tiles.length">{{ arranging ? '整理中…' : '开始整理' }}</button>
       </div>
     </dialog>
   </div>

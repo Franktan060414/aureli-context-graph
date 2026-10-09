@@ -28,6 +28,8 @@ public class TileDO {
     private Long id;
     private String mapId;
     private String tileId;
+    /** 当前 Map 的标签；NULL 表示未设置。 */
+    private Long labelId;
     private String title;
     /** QA 问答、NOTE 便签、FILE 临时附件；旧节点默认 QA。 */
     @Builder.Default

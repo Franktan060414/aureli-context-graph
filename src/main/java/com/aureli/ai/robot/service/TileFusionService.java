@@ -75,12 +75,17 @@ public class TileFusionService {
             requireNewId(tileId);
             if (!sources.equals(readSources(mapId, ids)))
                 throw new IllegalArgumentException("来源 Tile 已发生变化，请同步图谱后重新融合。");
+            var currentSources = tiles.selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
+                    .in(TileDO::getTileId, sources.stream().map(Source::tileId).toList()).last("FOR UPDATE"));
+            Long firstLabel = currentSources.get(0).getLabelId();
+            Long inheritedLabel = currentSources.stream().allMatch(tile -> java.util.Objects.equals(firstLabel, tile.getLabelId()))
+                    ? firstLabel : null;
             LocalDateTime now = LocalDateTime.now();
             String question = content.userMessage().trim(), answer = content.answer().trim();
             TileDO tile = TileDO.builder().mapId(mapId).tileId(tileId).tileType("QA")
                     .title(question.substring(0, Math.min(255, question.length())))
                     .userMessage(question).answerSummary(answer.substring(0, Math.min(1000, answer.length())))
-                    .weight(sources.stream().mapToInt(Source::weight).max().orElseThrow())
+                    .labelId(inheritedLabel).weight(sources.stream().mapToInt(Source::weight).max().orElseThrow())
                     .createTime(now).updateTime(now).build();
             tiles.insert(tile);
             messages.insert(TileMessageDO.builder().mapId(mapId).tileId(tileId).role("user").content(question).createTime(now).build());

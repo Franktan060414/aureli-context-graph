@@ -3,8 +3,6 @@ import { computed, onMounted, onUnmounted, ref, watch, nextTick } from "vue";
 import {
   ArrowDownLeft,
   Network,
-  Search,
-  X,
   GitBranch,
   Database,
   Link2,
@@ -16,6 +14,7 @@ import {
   Image as ImageIcon,
 } from "@lucide/vue";
 import { relationTypeForEdge } from "../lib/tile-relations.js";
+import { labelForTile, labelStyle } from "../lib/labels.js";
 import GraphCanvas from "./GraphCanvas.vue";
 import MarkdownAnswer from "./MarkdownAnswer.vue";
 import PdfDocumentViewer from "./PdfDocumentViewer.vue";
@@ -29,7 +28,10 @@ const props = defineProps({
   mode: String,
   tile: Object,
   tiles: Array,
+  labels: { type: Array, default: () => [] },
   layout: Object,
+  arrangement: Object,
+  workspaceId: String,
   edges: Array,
   selected: String,
   related: Array,
@@ -58,9 +60,7 @@ const isDocx = computed(() => props.mode !== "graph" && nodeType(props.tile) ===
 const isDocument = computed(() => isPdf.value || isDocx.value);
 const isImage = computed(() => props.mode !== "graph" && isImageTile(props.tile));
 const isPreview = computed(() => isDocument.value || isImage.value);
-const dialog = ref(null),
-  query = ref(""),
-  filter = ref("all");
+const dialog = ref(null);
 const connections = computed(() =>
   props.edges.filter(
     (e) =>
@@ -85,7 +85,7 @@ watch(
   () => [props.mode, props.tile?.id],
   async () => {
     await nextTick();
-    dialog.value?.querySelector("h2")?.focus();
+    (dialog.value?.querySelector("h2") || dialog.value?.querySelector(".fullscreen-header button"))?.focus();
   },
 );
 function close() {
@@ -100,22 +100,20 @@ function extend(id) {
   <dialog
     ref="dialog"
     class="fullscreen-viewer"
-    :class="{ 'fullscreen-document-viewer': isPreview }"
+    :class="{ 'fullscreen-document-viewer': isPreview, 'fullscreen-graph-viewer': mode === 'graph' }"
     :aria-label="
       mode === 'graph' ? '全页面图谱视图' : `全页面 Tile ${tile?.id}`
     "
     @cancel.prevent="close"
   >
     <header class="fullscreen-header">
-      <div>
+      <div v-if="mode !== 'graph'">
         <span class="fullscreen-symbol"><ImageIcon v-if="isImage" :size="22" /><FileText v-else-if="isDocument" :size="22" /><Network v-else :size="22" /></span>
         <div>
-          <h2 tabindex="-1">{{ mode === "graph" ? "图谱视图" : isPreview ? tile.fileName : tile?.id }}</h2>
+          <h2 tabindex="-1">{{ isPreview ? tile.fileName : tile?.id }}</h2>
           <p>
             {{
-              mode === "graph"
-                ? `${tiles.length} 个节点 · ${edges.length} 条关系`
-                : isImage ? "图片 · 完整预览" : isPdf ? "PDF · 完整文档" : isDocx ? "DOCX · 完整文档" : nodeType(tile) === "NOTE" ? "便签 · 完整正文" : nodeType(tile) === "FILE" ? "文件附件" : "Tile · 完整问题与回答"
+              isImage ? "图片 · 完整预览" : isPdf ? "PDF · 完整文档" : isDocx ? "DOCX · 完整文档" : nodeType(tile) === "NOTE" ? "便签 · 完整正文" : nodeType(tile) === "FILE" ? "文件附件" : "Tile · 完整问题与回答"
             }}<span v-if="demo"> · 示例模式</span>
           </p>
         </div>
@@ -127,36 +125,18 @@ function extend(id) {
       </button>
     </header>
     <template v-if="mode === 'graph'">
-      <div class="fullscreen-filters">
-        <label class="search-field"
-          ><Search :size="16" /><input
-            v-model="query"
-            aria-label="全页面搜索 Tile"
-            placeholder="搜索问题、回答或 Tile ID…" /><button
-            v-if="query"
-            @click="query = ''"
-            class="icon-button"
-            aria-label="清除全页面搜索"
-          >
-            <X :size="14" /></button></label
-        ><select v-model="filter" aria-label="全页面节点筛选">
-          <option value="all">全部节点</option>
-          <option value="QA">问答</option>
-          <option value="NOTE">便签</option>
-          <option value="FILE">文件</option>
-          <option value="root">独立节点</option>
-          <option value="related">关联节点</option>
-        </select>
-      </div>
       <GraphCanvas
         v-model:zoom="zoom"
         :tiles="tiles"
+        :labels="labels"
         :layout="layout"
+        :arrangement="arrangement"
+        :workspace-id="workspaceId"
         :edges="edges"
         :selected="selected"
         :related="related"
-        :query="query"
-        :filter="filter"
+        query=""
+        filter="all"
         :busy="busy"
         :load-file="loadFile"
         marker-id="fullscreen-arrow"
@@ -176,15 +156,10 @@ function extend(id) {
           emit('new');
         "
       />
-      <footer class="fullscreen-legend legend">
-        <span><i class="legend-dot root"></i>独立节点</span
-        ><span><i class="legend-dot rag"></i>检索主题</span
-        ><span><i class="legend-dot memory"></i>关联记忆</span>
-      </footer>
     </template>
     <template v-else-if="isPreview">
       <div class="document-actions">
-        <span class="mono">{{ tile.id }}</span>
+        <span class="mono">{{ tile.id }}</span><span v-if="labelForTile(tile, labels)" class="tile-label-badge" :style="labelStyle(labelForTile(tile, labels))">{{ labelForTile(tile, labels).name }}</span>
         <button class="secondary" @click="emit('download', tile)" :disabled="busy"><Download :size="16" />下载原文件</button>
         <button class="icon-button danger-icon" @click="emit('delete', tile)" :disabled="busy" :aria-label="`删除 ${tile.id}`" title="删除 Tile"><Trash2 :size="17" /></button>
       </div>
@@ -202,8 +177,9 @@ function extend(id) {
                 ? "生成失败"
                 : nodeType(tile) === "QA" ? "已完成" : "已保存"
           }}</span
-          ><span class="mono">{{ tile.id }}</span
-          ><button
+          ><span class="mono">{{ tile.id }}</span>
+          <span v-if="labelForTile(tile, labels)" class="tile-label-badge" :style="labelStyle(labelForTile(tile, labels))">{{ labelForTile(tile, labels).name }}</span>
+          <button
             class="icon-button danger-icon"
             @click="emit('delete', tile)"
             :disabled="busy"
@@ -285,6 +261,18 @@ function extend(id) {
 </template>
 
 <style scoped>
+.fullscreen-graph-viewer { overflow: hidden; }
+.fullscreen-graph-viewer .fullscreen-header {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 10;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.fullscreen-graph-viewer .fullscreen-header > button { background: var(--surface); }
+.fullscreen-graph-viewer .graph-wrap { height: 100%; min-height: 0; }
 .fullscreen-document-viewer { overflow: hidden; }
 .fullscreen-document-viewer .fullscreen-header h2 { font-size: 22px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .fullscreen-document-viewer .fullscreen-header > button { flex-shrink: 0; }

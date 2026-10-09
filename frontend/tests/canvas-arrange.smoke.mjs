@@ -30,11 +30,11 @@ async function confirmArrange(page, graph) {
   await graph.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const before = await layoutSnapshot(page, graph);
   await graph.getByRole('button', { name: '一键整理画布', exact: true }).click();
-  const dialog = graph.getByRole('dialog', { name: '整理画布？', exact: true });
+  const dialog = graph.getByRole('dialog', { name: '整理画布', exact: true });
   await dialog.waitFor();
   assert.match(await dialog.textContent(), /覆盖当前手动布局/);
   assert.deepEqual(await layoutSnapshot(page, graph), before, 'opening confirmation must not change the canvas');
-  await dialog.getByRole('button', { name: '确认整理', exact: true }).click();
+  await dialog.getByRole('button', { name: '开始整理', exact: true }).click();
   await dialog.waitFor({ state: 'hidden' });
 }
 async function toolbarFits(graph) {
@@ -67,9 +67,9 @@ try {
   const arranged = expected(demoGraph());
   const selected = await graph.locator('.graph-node.selected .node-top .mono').textContent();
   const before = await layoutSnapshot(page, graph);
-  for (const dismissal of ['取消', '关闭整理确认', 'Escape']) {
+  for (const dismissal of ['取消', '关闭排列选择', 'Escape']) {
     await graph.getByRole('button', { name: '一键整理画布', exact: true }).click();
-    const dialog = graph.getByRole('dialog', { name: '整理画布？', exact: true });
+    const dialog = graph.getByRole('dialog', { name: '整理画布', exact: true });
     await dialog.waitFor();
     if (dismissal === '取消') await page.screenshot({ path: 'artifacts/canvas-arrange-confirm.png' });
     if (dismissal === 'Escape') await page.keyboard.press('Escape');
@@ -86,7 +86,7 @@ try {
   assert.equal(saved[`live:${new URL(baseUrl).origin}`]['tile-001'].x, 1300, 'demo layout does not alter live layout');
   await graph.getByRole('button', { name: '一键整理画布', exact: true }).focus();
   await page.keyboard.press('Enter');
-  const keyboardDialog = graph.getByRole('dialog', { name: '整理画布？', exact: true });
+  const keyboardDialog = graph.getByRole('dialog', { name: '整理画布', exact: true });
   await keyboardDialog.waitFor();
   assert.ok(await keyboardDialog.getByRole('button', { name: '取消', exact: true }).evaluate(button => button === document.activeElement));
   await page.keyboard.press('Tab');
@@ -104,7 +104,7 @@ try {
   await page.keyboard.press('ArrowLeft');
   const panned = await layoutSnapshot(page, fullGraph);
   await fullGraph.getByRole('button', { name: '一键整理画布', exact: true }).click();
-  const fullDialog = fullGraph.getByRole('dialog', { name: '整理画布？', exact: true });
+  const fullDialog = fullGraph.getByRole('dialog', { name: '整理画布', exact: true });
   await fullDialog.waitFor();
   await page.keyboard.press('Escape');
   await fullDialog.waitFor({ state: 'hidden' });
@@ -137,7 +137,7 @@ try {
   workspace.tiles.reverse();
   await live.route('**/customer-service/**', route => {
   if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
-    if (route.request().method() !== 'GET') writes.push(route.request().url());
+    if (route.request().method() !== 'GET' && !new URL(route.request().url()).pathname.endsWith('/zoom')) writes.push(route.request().url());
     return route.fulfill({ json: { success: true,
       data: new URL(route.request().url()).pathname.endsWith('/tile/workspace') ? workspace : {} } });
   });

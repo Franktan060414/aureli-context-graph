@@ -122,6 +122,23 @@ ALTER TABLE t_tile_edge DROP CONSTRAINT IF EXISTS fk_tile_edge_target;
 ALTER TABLE t_tile_edge ADD CONSTRAINT fk_tile_edge_target FOREIGN KEY (map_id, target_tile_id)
     REFERENCES t_tile (map_id, tile_id) ON DELETE CASCADE;
 
+-- 标签仅属于一个 Map；NULL 表示 Tile 没有标签，历史数据无需回填。
+CREATE TABLE IF NOT EXISTS t_label (
+    id BIGSERIAL PRIMARY KEY,
+    map_id VARCHAR(128) NOT NULL REFERENCES t_map(map_id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL CHECK (length(trim(name)) > 0 AND name = trim(name)),
+    color_hex VARCHAR(7) NOT NULL CHECK (color_hex ~ '^#[0-9A-Fa-f]{6}$'),
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (map_id, name),
+    UNIQUE (map_id, id)
+);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS label_id BIGINT;
+ALTER TABLE t_tile DROP CONSTRAINT IF EXISTS fk_tile_label;
+ALTER TABLE t_tile ADD CONSTRAINT fk_tile_label FOREIGN KEY (map_id, label_id)
+    REFERENCES t_label (map_id, id);
+CREATE INDEX IF NOT EXISTS idx_t_tile_map_label ON t_tile (map_id, label_id);
+
 CREATE TABLE IF NOT EXISTS t_ai_customer_service_md_storage (
     id BIGSERIAL PRIMARY KEY,
     original_file_name VARCHAR(512) NOT NULL,

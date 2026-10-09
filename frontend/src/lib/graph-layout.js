@@ -40,9 +40,9 @@ export function positionTiles(tiles, layout = {}) {
 
 // Arrange a graph as a left-to-right forest. Shared descendants keep every
 // connection, but occupy one branch beneath their deepest parent.
-export function arrangeTiles(tiles, edges = []) {
+export function arrangeTiles(tiles, edges = [], { dimensions = tileDimensions } = {}) {
   const nodes = new Map(tiles.map(tile => [tile.id, {
-    tile: { ...tile, ...tileDimensions(tile) },
+    tile: { ...tile, ...dimensions(tile) },
     parents: new Set(), targets: new Set(), children: [], depth: 0,
   }]));
   const connect = (sourceId, targetId) => {
@@ -122,8 +122,8 @@ export function arrangeTiles(tiles, edges = []) {
 }
 
 // Choose facing card edges in either axis, preserving the edge's source/target.
-export function connectionGeometry(source, target) {
-  const sourceSize = tileDimensions(source), targetSize = tileDimensions(target);
+export function connectionGeometry(source, target, { dimensions = tileDimensions } = {}) {
+  const sourceSize = dimensions(source), targetSize = dimensions(target);
   const dx = target.x + targetSize.width / 2 - source.x - sourceSize.width / 2;
   const dy = target.y + targetSize.height / 2 - source.y - sourceSize.height / 2;
   const horizontal = Math.abs(dx) / (sourceSize.width + targetSize.width)

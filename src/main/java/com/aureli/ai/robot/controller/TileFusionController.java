@@ -22,7 +22,7 @@ public class TileFusionController {
             var tile = result.tile();
             var parents = result.edges().stream().map(edge -> edge.getSourceTileId()).toList();
             var node = new TileWorkspaceController.Node(tile.getTileId(), tile.getUserMessage(), result.answer(),
-                    parents, "ready", "memory", tile.getWeight(), "QA", tile.getTitle(), null, null, null, null);
+                    parents, "ready", "memory", tile.getWeight(), "QA", tile.getTitle(), null, null, null, null, tile.getLabelId());
             var edges = result.edges().stream().map(edge -> new TileWorkspaceController.Edge(edge.getEdgeId(),
                     edge.getSourceTileId(), edge.getTargetTileId(), edge.getDirection(), edge.getRelationType(),
                     edge.getWeight(), edge.getDescription())).toList();

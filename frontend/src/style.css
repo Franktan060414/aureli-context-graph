@@ -20,6 +20,10 @@
   --control-line: #94a3b8;
   --surface: #fff;
   --canvas: #f7f9fc;
+  --edge-relates: #0066cc;
+  --edge-extends: #087c79;
+  --edge-fuses: #7250be;
+  --edge-divides: #a64b00;
   --teal: #087c79;
   --teal-soft: #e9f6f3;
   --purple: #7250be;
@@ -716,11 +720,23 @@ h1 {
   pointer-events: none;
 }
 .edges g > path {
-  stroke: #99adc9;
+  stroke: currentColor;
   stroke-width: 1.6;
 }
+.edges [data-relation-type="RELATES"] {
+  color: var(--edge-relates);
+}
+.edges [data-relation-type="EXTENDS"] {
+  color: var(--edge-extends);
+}
+.edges [data-relation-type="FUSES"] {
+  color: var(--edge-fuses);
+}
+.edges [data-relation-type="DIVIDES"] {
+  color: var(--edge-divides);
+}
 .edges text {
-  fill: #5d6c82;
+  fill: currentColor;
   font-size: 9px;
   font-family: Inter, sans-serif;
   paint-order: stroke;

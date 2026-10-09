@@ -24,7 +24,7 @@ class TileArtifactControllerTest {
     private final TileMapper tiles = mock(TileMapper.class);
     private final TileEdgeMapper edges = mock(TileEdgeMapper.class);
     private final TileMessageMapper messages = mock(TileMessageMapper.class);
-    private final TileWorkspaceController controller = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader());
+    private final TileWorkspaceController controller = new TileWorkspaceController(tiles, edges, messages, new com.aureli.ai.robot.reader.TileFileContentReader(), mock(com.aureli.ai.robot.domain.mapper.LabelMapper.class));
 
     @Test
     void missingMapCannotReadOrWriteWorkspace() throws Exception {
