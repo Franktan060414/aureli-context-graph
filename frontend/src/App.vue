@@ -205,6 +205,7 @@ const toast = ref(null),
   formError = ref(""),
   connection = ref("unknown");
 const api = createApiClient(() => apiBase.value, () => liveMapId.value);
+const questionFlow = ref(null);
 let restoringMapZoom = false;
 const zoomSaves = createMapZoomSaver(error => notify(`缩放比例保存失败：${error.message}。调整比例后可重试。`, true));
 function restoreMapZoom() {
@@ -596,6 +597,7 @@ onMounted(() => {
   window.addEventListener("keydown", keyboardNav);
 });
 onUnmounted(() => {
+  questionFlow.value?.controller.abort();
   finishInspectorDrag();
   window.removeEventListener("hashchange", hashChanged);
   mobileMedia.removeEventListener("change", mediaChanged);
@@ -796,7 +798,153 @@ async function copy(text) {
     notify("复制失败，请手动选择并复制内容", true);
   }
 }
+function questionDraftFingerprint() {
+  return JSON.stringify({ form: { ...form }, related: [...related.value], workspace: workspaceKey.value });
+}
+function demoQuestionPlan(message) {
+  const questions = message.split(/[；;\n]+/).map(value => value.trim()).filter(Boolean);
+  const suggested = questions.length >= 2 && questions.length <= 4 && questions.every(value => value.length >= 4);
+  return { suggested, questions: suggested ? questions : [], reason: "本地示例：这些部分可以分别展开。", planId: uniqueId() };
+}
+function releaseQuestionFlow(flow) {
+  if (questionFlow.value !== flow) return;
+  questionFlow.value = null;
+  flow.origin.generating = false;
+  if (modal.value?.type === "questionPlan") {
+    dialog.value.close();
+    modal.value = null;
+  }
+}
+async function cancelQuestionFlow() {
+  const flow = questionFlow.value;
+  if (!flow || modalBusy.value) return;
+  flow.cancelled = true;
+  flow.controller.abort();
+  // 规划阶段没有落库。清理本次请求拥有的临时节点，绝不删除已有上下文来源。
+  const temporaryIds = new Set(flow.temporaryIds);
+  flow.origin.tiles = flow.origin.tiles.filter(tile => !temporaryIds.has(tile.id));
+  flow.origin.edges = flow.origin.edges.filter(edge => !temporaryIds.has(edge.sourceTileId) && !temporaryIds.has(edge.targetTileId));
+  if (!flow.isDemo && flow.proposal?.planId)
+    api.decideQuestion({ mapId: flow.payload.mapId, planId: flow.proposal.planId, action: "CANCEL" }).catch(() => {});
+  releaseQuestionFlow(flow);
+  if (flow.originKey === workspaceKey.value) {
+    Object.assign(form, flow.draft);
+    related.value = [...flow.payload.relatedTileIds];
+    selected.value = flow.previousSelection;
+    panel.value = "compose";
+    if (flow.fromDialog) await openQuestionDialog();
+    else { await nextTick(); questionInput.value?.focus(); }
+  }
+}
 async function sendTile(retryTile) {
+  if (retryTile) return generateSingleTile(retryTile);
+  if (generating.value || graphLoading.value || modalBusy.value || questionFlow.value) return;
+  formError.value = "";
+  if (!form.message.trim() || !form.tileId.trim()) {
+    formError.value = "请填写提问内容和 Tile ID。";
+    (modal.value?.type === "question" ? questionDialogInput : questionInput).value?.focus();
+    return;
+  }
+  if (workspace.value.tiles.some(tile => tile.id === form.tileId.trim())) {
+    formError.value = "Tile ID 已存在，请使用一个新的 ID。";
+    return;
+  }
+  const flow = reactive({
+    origin: workspace.value, originKey: workspaceKey.value, isDemo: demo.value,
+    draft: { ...form }, fingerprint: questionDraftFingerprint(), previousSelection: selected.value,
+    fromDialog: modal.value?.type === "question", controller: new AbortController(),
+    cancelled: false, phase: "planning", proposal: null, temporaryIds: [],
+    payload: { mapId: liveMapId.value, message: form.message.trim(), tileId: form.tileId.trim(),
+      relatedTileIds: [...related.value], memoryDepth: 3, edgeWeight: 1,
+      edgeDirection: form.edgeDirection, relationType: relationTypeForDirection(form.edgeDirection),
+      edgeDescription: form.edgeDescription.trim() || undefined },
+  });
+  if (flow.fromDialog) closeModal();
+  questionFlow.value = flow;
+  flow.origin.generating = true;
+  panel.value = "compose";
+  inspectorMinimized.value = false;
+  try {
+    const proposal = flow.isDemo ? demoQuestionPlan(flow.payload.message)
+      : (await api.planQuestion(flow.payload, flow.controller.signal)).data;
+    if (flow.cancelled || questionFlow.value !== flow) {
+      if (!flow.isDemo && proposal?.planId)
+        api.decideQuestion({ mapId: flow.payload.mapId, planId: proposal.planId, action: "CANCEL" }).catch(() => {});
+      return;
+    }
+    flow.proposal = proposal;
+    if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
+    if (typeof proposal?.suggested !== "boolean" || !Array.isArray(proposal.questions)
+      || (proposal.suggested && (!proposal.planId || proposal.questions.length < 2 || proposal.questions.length > 4
+        || proposal.questions.some(question => typeof question !== "string" || !question.trim()) || !proposal.reason)))
+      throw new Error("服务未返回有效拆分建议。");
+    if (!proposal.suggested) {
+      releaseQuestionFlow(flow);
+      return generateSingleTile(null, flow.payload);
+    }
+    flow.phase = "suggested";
+    await openModal("questionPlan");
+    dialog.value.querySelector('.question-decline')?.focus();
+  } catch (error) {
+    if (flow.cancelled || questionFlow.value !== flow) return;
+    if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
+    if (error.status === 400 || error.status === 409) {
+      await cancelQuestionFlow(); formError.value = error.message;
+      return;
+    }
+    releaseQuestionFlow(flow);
+    notify("暂时无法提供拆分建议，将按原问题生成问答。", true);
+    return generateSingleTile(null, flow.payload);
+  }
+}
+async function decideQuestionFlow(action) {
+  const flow = questionFlow.value;
+  if (!flow || flow.phase !== "suggested" || modalBusy.value) return;
+  if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
+  modalBusy.value = true;
+  modalError.value = "";
+  try {
+    const result = flow.isDemo ? action === "EXECUTE" ? {
+      tiles: [{ id: flow.payload.tileId, message: flow.payload.message, answer: "这是原问题的完整示例回答。",
+        relatedTileIds: flow.payload.relatedTileIds, tileType: "QA", weight: 1, status: "ready" },
+      ...flow.proposal.questions.map((message, index) => ({ id: `tile-divides-${flow.proposal.planId}-${index}`,
+        message, answer: `这是“${message}”的独立示例回答。`, relatedTileIds: [flow.payload.tileId], tileType: "QA", weight: 1, status: "ready" }))],
+      edges: [...flow.payload.relatedTileIds.map(id => ({ id: `edge-${uniqueId()}`, sourceTileId: id,
+        targetTileId: flow.payload.tileId, direction: flow.payload.edgeDirection, relationType: flow.payload.relationType,
+        weight: 1, description: flow.payload.edgeDescription })),
+      ...flow.proposal.questions.map((_, index) => ({ id: `edge-${uniqueId()}`, sourceTileId: flow.payload.tileId,
+        targetTileId: `tile-divides-${flow.proposal.planId}-${index}`, direction: "DIRECTED", relationType: "DIVIDES",
+        weight: 1, description: "AI 建议拆分" }))],
+    } : null : (await api.decideQuestion({ mapId: flow.payload.mapId, planId: flow.proposal.planId, action })).data;
+    if (action === "DECLINE") {
+      modalBusy.value = false;
+      if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
+      releaseQuestionFlow(flow);
+      return generateSingleTile(null, flow.payload);
+    }
+    if (!Array.isArray(result?.tiles) || result.tiles.length !== flow.proposal.questions.length + 1 || !Array.isArray(result.edges))
+      throw new Error("服务未返回完整的问答和拆分结果，请同步图谱确认。");
+    for (const tile of result.tiles) if (!flow.origin.tiles.some(existing => existing.id === tile.id))
+      flow.origin.tiles.push({ ...tile, kind: tile.relatedTileIds?.length ? "memory" : "root" });
+    for (const edge of result.edges) if (!flow.origin.edges.some(existing => existing.id === edge.id)) flow.origin.edges.push(edge);
+    modalBusy.value = false;
+    releaseQuestionFlow(flow);
+    if (flow.originKey === workspaceKey.value) {
+      selected.value = flow.payload.tileId;
+      panel.value = "detail";
+      form.message = "";
+      form.tileId = newId();
+      related.value = [];
+      connection.value = flow.isDemo ? connection.value : "connected";
+    } else if (flow.origin.ui) {
+      flow.origin.ui.form.message = ""; flow.origin.ui.form.tileId = newId(); flow.origin.ui.related = [];
+    }
+    notify(`已生成原问答及 ${flow.proposal.questions.length} 个子 Tile`);
+  } catch (error) {
+    modalError.value = error.message;
+  } finally { modalBusy.value = false; }
+}
+async function generateSingleTile(retryTile, plannedPayload) {
   formError.value = "";
   if (generating.value || graphLoading.value) return;
   if (!retryTile && (!form.message.trim() || !form.tileId.trim())) {
@@ -812,7 +960,7 @@ async function sendTile(retryTile) {
     return;
   }
   const origin = workspace.value, originKey = workspaceKey.value, isDemo = demo.value;
-  const payload = retryTile?.payload || {
+  const payload = retryTile?.payload || plannedPayload || {
     message: form.message.trim(),
     tileId: form.tileId.trim(),
     relatedTileIds: [...related.value],
@@ -1043,6 +1191,7 @@ function applyGraphSearch() {
   closeModal();
 }
 function closeModal() {
+  if (modal.value?.type === "questionPlan") { cancelQuestionFlow(); return; }
   if (!modalBusy.value) {
     dialog.value.close();
     modal.value = null;
@@ -1263,7 +1412,7 @@ function exportGraph() {
         <div class="context-note">
           <span class="mini-label">CONNECTED KNOWLEDGE</span
           ><GitBranch :size="24" /><strong>独立思考，自由连接。</strong>
-          <p>songyu.tan@techscience.com</p>
+          <p title="songyu.tan@techscience.com">songyu.tan@techscience.com</p>
           <button @click="openModal('help')">
             了解 Tile 工作流<ArrowUpRight :size="15" />
           </button>
@@ -1273,7 +1422,7 @@ function exportGraph() {
         </button>
         <div class="profile">
           <span class="profile-avatar">A</span
-          ><span><strong>songyu.tan@techscience.com</strong><small>本地会话</small></span
+          ><span><strong title="songyu.tan@techscience.com">songyu.tan@techscience.com</strong><small>本地会话</small></span
           ><span class="profile-dot"></span>
         </div>
       </div>
@@ -1779,9 +1928,11 @@ function exportGraph() {
                 ref="questionInput"
                 class="inspector-body"
                 :form="form" :related="related" :generating="generating"
+                :planning="questionFlow?.phase === 'planning'"
                 :loading="graphLoading" :demo="demo" :error="formError"
                 @change="Object.assign(form, $event)" @toggle="toggle"
                 @clear-related="related = []" @submit="sendTile()" @blank="compose()"
+                @cancel="cancelQuestionFlow()"
               />
               </aside>
             </Transition>
@@ -2025,7 +2176,7 @@ function exportGraph() {
     <dialog
       ref="dialog"
       class="modal"
-      :class="{ 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file', 'split'].includes(modal?.type) }"
+      :class="{ 'question-modal': modal?.type === 'question', 'artifact-modal': ['note', 'editNote', 'file', 'split', 'questionPlan'].includes(modal?.type) }"
       aria-labelledby="workspace-modal-title"
       @cancel.self.prevent="closeModal"
     >
@@ -2034,6 +2185,7 @@ function exportGraph() {
           <h2 id="workspace-modal-title">
             {{
               modal.type === "question" ? "添加Tile"
+                : modal.type === "questionPlan" ? "AI 建议拆分问题"
                 : modal.type === "fusion" ? "融合选中的 AI 问答 Tile？"
                 : modal.type === "split" ? "拆分 AI 问答 Tile"
                 : modal.type === "search" ? "搜索与筛选"
@@ -2071,6 +2223,27 @@ function exportGraph() {
             @change="Object.assign(form, $event)" @toggle="toggle" @clear-related="related = []"
             @submit="sendTile()"
           />
+          <template v-else-if="modal.type === 'questionPlan' && questionFlow">
+            <section class="question-plan-original" aria-labelledby="question-plan-original-title">
+              <h3 id="question-plan-original-title">原问题</h3>
+              <MarkdownAnswer :content="questionFlow.payload.message" />
+            </section>
+            <section class="question-plan-reason" aria-labelledby="question-plan-reason-title">
+              <h3 id="question-plan-reason-title">拆分理由</h3>
+              <MarkdownAnswer :content="questionFlow.proposal.reason" />
+            </section>
+            <section class="question-plan-questions" aria-labelledby="question-plan-questions-title">
+              <h3 id="question-plan-questions-title">建议的子问题</h3>
+              <ol class="question-plan-list" aria-label="建议的子问题">
+                <li v-for="(question, index) in questionFlow.proposal.questions" :key="index"><MarkdownAnswer :content="question" /></li>
+              </ol>
+            </section>
+            <p>执行后将生成 <strong>1 个原始问答 Tile 和 {{ questionFlow.proposal.questions.length }} 个子问答 Tile</strong>，以 DIVIDES 连接。</p>
+            <p v-if="modalBusy" role="status" class="question-plan-status">
+              <LoaderCircle :size="18" class="spinning" aria-hidden="true" />正在生成问答，整组完成后保存，请稍候…
+            </p>
+            <p class="field-help">取消将停止本次提问并保留草稿，方便修改问题后重新提交。</p>
+          </template>
           <form v-else-if="modal.type === 'search'" id="graph-search-form" class="graph-search-form" @submit.prevent="applyGraphSearch">
             <label for="graph-search-query">搜索内容</label>
             <div class="search-field">
@@ -2189,7 +2362,14 @@ function exportGraph() {
         <div class="modal-actions">
           <button class="secondary" @click="closeModal" :disabled="modalBusy">
             {{ modal.type === "help" ? "知道了" : "取消" }}</button
-          ><button v-if="modal.type === 'question'" class="primary"
+          ><template v-if="modal.type === 'questionPlan'">
+            <button v-if="questionFlow?.phase === 'suggested'" class="secondary question-decline"
+              :disabled="modalBusy" @click="decideQuestionFlow('DECLINE')">不执行拆分</button>
+            <button v-if="questionFlow?.phase === 'suggested'" class="primary"
+              :disabled="modalBusy" @click="decideQuestionFlow('EXECUTE')">
+              <LoaderCircle v-if="modalBusy" :size="16" class="spinning" aria-hidden="true" />执行拆分
+            </button>
+          </template><button v-else-if="modal.type === 'question'" class="primary"
             type="submit" form="dialog-question-form" :disabled="generating || graphLoading">
             <LoaderCircle v-if="generating" :size="16" class="spinning" /><Send v-else :size="16" />
             {{ generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}

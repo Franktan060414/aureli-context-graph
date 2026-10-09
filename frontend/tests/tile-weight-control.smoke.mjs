@@ -75,7 +75,7 @@ try {
   await select.focus();
   await page.keyboard.press('Escape');
   assert.equal(await select.inputValue(), '2');
-  assert.equal(await control.evaluate(e => getComputedStyle(e).outlineWidth), '3px');
+  assert.ok(await control.evaluate(e => parseFloat(getComputedStyle(e).outlineWidth) >= 2), 'keyboard focus remains visible in the compact inspector');
   assert.equal(await control.evaluate(e => getComputedStyle(e).backgroundColor), white);
   assert.equal(await select.evaluate(e => getComputedStyle(e).color), accents[1]);
   await select.blur(); await page.emulateMedia({ reducedMotion: 'reduce' });

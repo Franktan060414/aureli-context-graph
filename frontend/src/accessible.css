@@ -26,6 +26,7 @@
   --weight-important: #b45309;
   --weight-critical: #b4232f;
   --radius: 12px;
+  --dock-scale: .8;
   --ease-out: cubic-bezier(.23,1,.32,1);
   --ease-panel: cubic-bezier(.32,.72,0,1);
   color: var(--text);
@@ -70,6 +71,7 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 
 /* Dock is a separate, outlined navigation surface; active state also has a geometric marker. */
 .sidebar {
+  zoom: var(--dock-scale);
   width: 196px; inset: 12px auto 12px 12px; padding: 24px 8px 0;
   border: 2px solid var(--primary); border-radius: 16px; background: white; overflow-y: auto;
 }
@@ -91,14 +93,17 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 .mini-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--blue-ink); }
 .context-note strong { font-size: 15px; }
 .context-note p { font-size: 13px; color: var(--muted); }
+.sidebar .context-note p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .context-note button { font-size: 13px; color: var(--blue-ink); }
 .help-link { font-size: 14px; padding: 16px 10px; color: var(--text); }
 .profile { gap: 8px; padding: 18px 0; border-top: 2px solid var(--text); }
 .profile-avatar,.user-avatar { width: 36px; height: 36px; background: var(--yellow); border: 2px solid var(--text); color: var(--text); font-size: 15px; font-weight: 900; }
 .profile strong { font-size: 13px; }
+.sidebar .profile > span:nth-child(2) { flex: 1; min-width: 0; }
+.sidebar .profile strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .profile small { font-size: 12px; }
 .profile-dot { width: 8px; height: 8px; background: var(--primary); }
-.main-shell { margin-left: 224px; }
+.main-shell { margin-left: calc(224px * var(--dock-scale)); }
 @media (min-width: 1200px) {
   .sidebar { padding-top: 16px; overflow-y: hidden; }
   .workspace-switch { margin-top: 16px; padding-block: 6px; }
@@ -252,7 +257,7 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 .tile-weight-control select:disabled { cursor: not-allowed; }
 .section-icon { display: inline-grid; place-items: center; width: 27px; height: 27px; border-radius: 5px; font-size: 13px; color: var(--text); background: var(--yellow); }
 .section-icon.ai { color: white; background: var(--primary); font-size: 12px; }
-.detail-section .question-text { font-size: 18px; font-weight: 800; line-height: 1.6; }
+.detail-section .question-text { font-size: 15px; font-weight: 800; line-height: 1.6; }
 .answer-text { font-size: 15px; line-height: 1.85; color: var(--text); max-height: 270px; }
 .source-item { background: var(--canvas); border: 1px solid var(--line); padding: 12px; border-radius: 8px; }
 .source-item strong { font-size: 14px; }
@@ -389,7 +394,7 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 }
 @media (max-width: 1199px) {
   .sidebar { width: 196px; padding-inline: 10px; }
-  .main-shell { margin-left: 228px; }
+  .main-shell { margin-left: calc(228px * var(--dock-scale)); }
   .main-content { padding: 28px 24px; }
   .topbar { padding: 0 24px; }
   .brand { padding-inline: 2px; }
@@ -606,6 +611,7 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 
 /* The node configurator floats above the canvas and can collapse to a control bar. */
 .graph-workbench .inspector {
+  --inspector-content-scale: .8;
   position: absolute;
   z-index: 10;
   top: 174px;
@@ -619,6 +625,10 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
   border-color: var(--text);
   box-shadow: 0 12px 32px #10101024;
   transform-origin: top right;
+}
+/* Scale the contents together while keeping the floating panel's bounds and drag coordinates. */
+.graph-workbench .inspector > :is(.inspector-header, .inspector-body, .empty-inspector) {
+  zoom: var(--inspector-content-scale);
 }
 .graph-workbench .inspector.dragging {
   user-select: none;
@@ -810,6 +820,14 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 .question-modal .compose-form .inline-error { margin-top: 0; }
 
 .artifact-modal { max-width: 640px; }
+.question-plan-status { display: flex; align-items: center; gap: 8px; }
+.question-plan-original { padding: 16px; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; }
+.question-plan-reason { margin-top: 20px; padding: 4px 0 4px 16px; border-left: 4px solid var(--primary); }
+.question-plan-questions { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.question-plan-original > h3, .question-plan-reason > h3, .question-plan-questions > h3 { margin: 0 0 12px; font-size: 16px; line-height: 1.5; }
+.question-plan-reason > h3 { color: var(--blue-ink); }
+.question-plan-list { padding-left: 24px; display: grid; gap: 12px; }
+.question-plan-list > li { overflow-wrap: anywhere; }
 .artifact-modal[open] { display: flex; flex-direction: column; overflow: hidden; }
 .artifact-modal .modal-header, .artifact-modal .modal-actions { flex: none; }
 .artifact-modal .modal-body { min-height: 0; overflow-y: auto; }

@@ -209,6 +209,29 @@ test('map zoom updates use an explicit captured map ID and retain the request on
   assert.equal(calls[0].options.keepalive, true);
 });
 
+test('question plans capture map ownership, support cancellation and preserve conflict codes', async context => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, options });
+    if (JSON.parse(options.body).planId === 'stale')
+      return Response.json({ success: false, errorCode: 'QUESTION_CONTEXT_CHANGED', message: '关联内容已发生变化' }, { status: 409 });
+    return Response.json({ success: true, data: { suggested: true, planId: 'plan', questions: ['问题一', '问题二'] } });
+  });
+  let active = 'map-a';
+  const api = createApiClient('', () => active);
+  const controller = new AbortController();
+  await api.planQuestion({ tileId: 'new', message: '问题' }, controller.signal);
+  active = 'map-b';
+  await api.decideQuestion({ mapId: 'map-a', planId: 'plan', action: 'CANCEL' });
+  assert.equal(JSON.parse(calls[0].options.body).mapId, 'map-a');
+  assert.equal(JSON.parse(calls[1].options.body).mapId, 'map-a');
+  assert.equal(calls[0].options.signal.aborted, false);
+  controller.abort();
+  assert.equal(calls[0].options.signal.aborted, true);
+  await assert.rejects(api.decideQuestion({ planId: 'stale', action: 'EXECUTE' }),
+    error => error.status === 409 && error.code === 'QUESTION_CONTEXT_CHANGED');
+});
+
 test('map deletion explicitly addresses its own encoded ID, independent of active map', async context => {
   const calls = [];
   context.mock.method(globalThis, 'fetch', async (url, options) => {

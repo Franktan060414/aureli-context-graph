@@ -28,6 +28,7 @@ await page.route("**/customer-service/**", async (route) => {
   const request = route.request(),
     path = new URL(request.url()).pathname;
   requests.push({ path, body: request.postData() });
+  if (path.endsWith('/question/plan')) return route.fulfill({ json: { success: true, data: { suggested: false, reason: '单一问题', questions: [], planId: null } } });
   if (path.endsWith("/tile/workspace"))
     return route.fulfill({ json: { success: true, data: { tiles: [], edges: [] } } });
   if (path.endsWith("/completion"))

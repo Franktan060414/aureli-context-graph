@@ -6,11 +6,15 @@ export async function checkedResponse(response) {
   } catch {
     data = null;
   }
-  if (!response.ok || data?.success === false)
-    throw new Error(
+  if (!response.ok || data?.success === false) {
+    const error = new Error(
       data?.message ||
         `请求失败（${response.status}），请检查接口地址或稍后重试。`,
     );
+    error.status = response.status;
+    error.code = data?.errorCode;
+    throw error;
+  }
   if (!data) throw new Error("服务返回了非 JSON 内容，请检查接口地址。");
   if (typeof data !== 'object' || Array.isArray(data) || typeof data.success !== 'boolean')
     throw new Error("服务响应格式不正确，请检查项目服务地址。");
@@ -174,6 +178,20 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
       return checkedResponse(await request(endpoint(base(), "/customer-service/tile/split"), {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
+      }));
+    },
+    async planQuestion(data, signal) {
+      return checkedResponse(await request(endpoint(base(), "/customer-service/tile/question/plan"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, mapId: data.mapId ?? getMap() }),
+        signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(45000)]) : AbortSignal.timeout(45000),
+      }));
+    },
+    async decideQuestion(data) {
+      return checkedResponse(await request(endpoint(base(), "/customer-service/tile/question/decision"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, mapId: data.mapId ?? getMap() }),
+        signal: AbortSignal.timeout(data.action === "EXECUTE" ? 660000 : 30000),
       }));
     },
     resetWorkspace: () => post("/customer-service/tile/reset", scoped({})),

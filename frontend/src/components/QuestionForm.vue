@@ -10,13 +10,14 @@ const props = defineProps({
   related: { type: Array, required: true },
   contextTiles: { type: Array, default: null },
   generating: Boolean,
+  planning: Boolean,
   loading: Boolean,
   demo: Boolean,
   error: String,
   formId: { type: String, default: "inspector-question-form" },
   showActions: { type: Boolean, default: true },
 });
-const emit = defineEmits(["change", "toggle", "clear-related", "submit", "blank"]);
+const emit = defineEmits(["change", "toggle", "clear-related", "submit", "blank", "cancel"]);
 const questionInput = ref(null);
 const disabled = computed(() => props.generating || props.loading);
 const errorId = computed(() => `${props.formId}-error`);
@@ -69,9 +70,10 @@ defineExpose({ focus: () => questionInput.value?.focus() });
     <template v-if="showActions">
       <button class="primary full-width" :disabled="disabled">
         <LoaderCircle v-if="generating" class="spinning" :size="16" /><Send v-else :size="16" />
-        {{ generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}
+        {{ planning ? "正在提交…" : generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}
       </button>
-      <button type="button" class="text-button full-width" @click="emit('blank')" :disabled="disabled">空白处提问</button>
+      <button v-if="planning" type="button" class="text-button full-width" @click="emit('cancel')">取消提问</button>
+      <button v-else type="button" class="text-button full-width" @click="emit('blank')" :disabled="disabled">空白处提问</button>
     </template>
   </form>
 </template>

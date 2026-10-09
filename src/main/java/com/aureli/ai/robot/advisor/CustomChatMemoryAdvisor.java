@@ -77,6 +77,15 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
 
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
+        List<Message> messageList = new java.util.ArrayList<>(memoryMessages());
+        messageList.addAll(chatClientRequest.prompt().getInstructions());
+        ChatClientRequest processed = chatClientRequest.mutate()
+                .prompt(chatClientRequest.prompt().mutate().messages(messageList).build()).build();
+        return streamAdvisorChain.nextStream(processed);
+    }
+
+    /** 规划与执行复用同一个图记忆范围；只读取数据，不调用模型或保存节点。 */
+    public List<Message> memoryMessages() {
         log.info("## 自定义 Tile 图记忆 Advisor...");
 
         Set<String> relatedTileIds = collectRelatedTileIds();
@@ -131,16 +140,7 @@ public class CustomChatMemoryAdvisor implements StreamAdvisor {
             messageList.add(new UserMessage(CustomerServicePrompts.tileRelations(storedEdges, visiblePendingEdges)));
         }
 
-        // 除了记忆消息，还需要添加当前用户消息
-        messageList.addAll(chatClientRequest.prompt().getInstructions());
-
-        // 构建一个新的 ChatClientRequest 请求对象
-        ChatClientRequest processedChatClientRequest = chatClientRequest
-                .mutate()
-                .prompt(chatClientRequest.prompt().mutate().messages(messageList).build())
-                .build();
-
-        return streamAdvisorChain.nextStream(processedChatClientRequest);
+        return List.copyOf(messageList);
     }
 
     private Set<String> collectRelatedTileIds() {

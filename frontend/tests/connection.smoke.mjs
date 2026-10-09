@@ -8,6 +8,7 @@ page.on('pageerror', error => errors.push(error.message));
 await page.route('**/customer-service/**', async route => {
   if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
   const path = new URL(route.request().url()).pathname;
+  if (path.endsWith('/question/plan')) return route.fulfill({ json: { success: true, data: { suggested: false, reason: '单一问题', questions: [], planId: null } } });
   if (path.endsWith('/tile/workspace')) {
     if (unavailable) return route.abort('connectionrefused');
     return route.fulfill({ json: { success: true, data: { tiles: [{ id: 'stored-tile', message: '数据库中的问题', answer: '数据库中的完整回答', relatedTileIds: [], status: 'ready', kind: 'root' }], edges: [] } } });
