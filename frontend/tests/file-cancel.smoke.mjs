@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from "node:assert/strict";
 const playwright = await import(process.env.PLAYWRIGHT_MODULE_PATH || "playwright");
 const engine = process.env.BROWSER_ENGINE || "chromium";
@@ -20,8 +21,8 @@ const assertClosed = async () => {
   await dialog.waitFor({ state: "hidden" });
   assert.equal(await dialog.evaluate(el => el.open || el.matches(":modal")), false, "the native modal and its blocking backdrop are closed");
   // A real click verifies that the remaining canvas is no longer inert.
-  await page.getByRole("button", { name: "Tile 列表", exact: true }).click();
-  await page.getByRole("button", { name: "图谱视图", exact: true }).click();
+  await selectView(page, "Tile 列表");
+  await selectView(page, "图谱视图");
 };
 const cancelPicker = async () => {
   // HTML specifies a bubbling, non-cancelable cancel event on the file input

@@ -19,7 +19,6 @@ import {
   Search,
   ArrowUpRight,
   ArrowRight,
-  Layers3,
   GitBranch,
   Merge,
   Split,
@@ -52,6 +51,7 @@ import {
 import LabelPanel from "./components/LabelPanel.vue";
 import { labelForTile, labelStyle } from "./lib/labels.js";
 import GraphCanvas from "./components/GraphCanvas.vue";
+import ViewSelect from "./components/ViewSelect.vue";
 import GraphExportDialog from "./components/GraphExportDialog.vue";
 import QuestionForm from "./components/QuestionForm.vue";
 import ContextPicker from "./components/ContextPicker.vue";
@@ -1564,21 +1564,7 @@ function exportGraph() {
                   >
                     <Menu :size="20" />
                   </button>
-                  <div class="view-tabs">
-                    <button
-                      :class="{ active: tab === 'graph' }"
-                      @click="tab = 'graph'"
-                      :aria-pressed="tab === 'graph'"
-                    >
-                      <Network :size="16" />图谱视图</button
-                    ><button
-                      :class="{ active: tab === 'list' }"
-                      @click="tab = 'list'"
-                      :aria-pressed="tab === 'list'"
-                    >
-                      <Layers3 :size="16" />Tile 列表
-                    </button>
-                  </div>
+                  <ViewSelect v-model="tab" :motion-enabled="motionEnabled" />
                 </div>
                 <div class="graph-toolbar-actions">
                   <button type="button" class="icon-button graph-fusion-action" aria-label="融合选中的 AI 问答 Tile" aria-haspopup="dialog"

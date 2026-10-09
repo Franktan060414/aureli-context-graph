@@ -723,16 +723,16 @@ h1 {
   stroke: currentColor;
   stroke-width: 1.6;
 }
-.edges [data-relation-type="RELATES"] {
+.edges [data-relation-type="RELATES"], .graph-export-relation[data-relation-type="RELATES"] {
   color: var(--edge-relates);
 }
-.edges [data-relation-type="EXTENDS"] {
+.edges [data-relation-type="EXTENDS"], .graph-export-relation[data-relation-type="EXTENDS"] {
   color: var(--edge-extends);
 }
-.edges [data-relation-type="FUSES"] {
+.edges [data-relation-type="FUSES"], .graph-export-relation[data-relation-type="FUSES"] {
   color: var(--edge-fuses);
 }
-.edges [data-relation-type="DIVIDES"] {
+.edges [data-relation-type="DIVIDES"], .graph-export-relation[data-relation-type="DIVIDES"] {
   color: var(--edge-divides);
 }
 .edges text {

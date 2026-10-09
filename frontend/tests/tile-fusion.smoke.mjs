@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -33,7 +34,7 @@ try {
   await page.addInitScript(() => { localStorage.setItem('aureli-mode', 'live'); localStorage.removeItem('aureli-api-base'); });
   await page.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
   await fusion.waitFor();
-  await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
+  await selectView(page, "Tile 列表");
   assert.equal(await fusion.isDisabled(), true);
   await toggle('qa-1'); await toggle('note'); await toggle('file');
   assert.equal(await fusion.isDisabled(), true, 'notes and files cannot supply the second QA');
@@ -77,7 +78,7 @@ try {
   assert.equal((await page.locator('.answer-text').first().textContent()).trim(), '模型融合后的完整回答');
   assert.equal(await fusion.isDisabled(), true, 'selection is cleared after success');
   await page.reload();
-  await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
+  await selectView(page, "Tile 列表");
   await card(writes[0].tileId).waitFor();
   await card(writes[0].tileId).locator('button').first().click();
   assert.equal(await page.locator('.tile-weight-control').getAttribute('data-weight'), '2');
@@ -101,7 +102,7 @@ try {
   const demoPage = await browser.newPage();
   await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
   await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await demoPage.getByRole('button', { name: 'Tile 列表', exact: true }).click();
+  await selectView(demoPage, "Tile 列表");
   await demoPage.locator('.tile-list article').nth(0).getByRole('button', { name: '选择关联', exact: true }).click();
   await demoPage.locator('.tile-list article').nth(1).getByRole('button', { name: '选择关联', exact: true }).click();
   await demoPage.getByRole('button', { name: '融合选中的 AI 问答 Tile', exact: true }).click();

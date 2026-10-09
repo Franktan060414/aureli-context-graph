@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
@@ -84,7 +85,7 @@ try {
   await query.press('Enter');
   await dialog.waitFor({ state: 'hidden' });
   assert.deepEqual(await matchingIds(), ['search-file']);
-  await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
+  await selectView(page, "Tile 列表");
   assert.equal(await page.locator('.tile-list article').count(), 1);
   await open();
   await dialog.getByRole('button', { name: '清除搜索', exact: true }).click();

@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from "node:assert/strict";
 const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE_PATH || "playwright"
@@ -138,9 +139,9 @@ try {
   await click("搜索与筛选");
   await fill("搜索 Tile", "不存在的查询");
   await click("应用筛选");
-  await click("Tile 列表");
+  await selectView(page, "Tile 列表");
   await page.waitForSelector("text=暂无匹配的 Tile");
-  await click("图谱视图");
+  await selectView(page, "图谱视图");
   await click("搜索与筛选");
   await click("清除搜索和筛选");
   await click("应用筛选");

@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
 import { demoGraph } from '../src/lib/demo.js';
 
@@ -40,8 +41,8 @@ try {
   await assertZoom(0.8);
   await page.setViewportSize({ width: 1100, height: 800 });
   await assertZoom(0.8);
-  await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
-  await page.getByRole('button', { name: '图谱视图', exact: true }).click();
+  await selectView(page, "Tile 列表");
+  await selectView(page, "图谱视图");
   await assertZoom(0.8);
   await page.getByRole('link', { name: '知识库管理', exact: true }).click();
   await page.getByRole('link', { name: /图谱工作台/ }).click();

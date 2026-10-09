@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -76,8 +77,8 @@ try {
   await graph.waitFor({ state: 'detached' });
   const normalNode = page.locator('.graph-node').nth(1);
   assertPoint(await point(normalNode), before);
-  await page.getByRole('button', { name: 'Tile 列表', exact: true }).click();
-  await page.getByRole('button', { name: '图谱视图', exact: true }).click();
+  await selectView(page, "Tile 列表");
+  await selectView(page, "图谱视图");
   assertPoint(await point(normalNode), before);
   await page.reload();
   await normalNode.waitFor();

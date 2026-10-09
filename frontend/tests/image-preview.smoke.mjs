@@ -1,3 +1,4 @@
+import { selectView } from "./helpers/view-select.js";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || "playwright");
@@ -112,7 +113,7 @@ try {
   await page.locator(".fullscreen-viewer .image-thumbnail img").first().waitFor();
   await page.locator(".fullscreen-viewer").getByRole("button", { name: "全页面查看 image-a", exact: true }).click();
   await rendered(); await close();
-  await page.getByRole("button", { name: "Tile 列表", exact: true }).click();
+  await selectView(page, "Tile 列表");
   await page.waitForFunction(() => previewUrls.created.every(url => previewUrls.revoked.includes(url)));
   // Opening from the list and closing during download must not create a late URL.
   delay = true;
@@ -126,7 +127,7 @@ try {
   await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 100)));
   assert.equal(await page.evaluate(() => previewUrls.created.length), before);
   delay = false;
-  await page.getByRole("button", { name: "图谱视图", exact: true }).click();
+  await selectView(page, "图谱视图");
   await page.getByRole("button", { name: "添加文件", exact: true }).click();
   await page.locator("#node-file").setInputFiles({ name: "上传图片.png", mimeType: "image/png", buffer: png });
   await page.getByRole("button", { name: "添加到画布", exact: true }).click();

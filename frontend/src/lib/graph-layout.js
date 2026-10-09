@@ -40,7 +40,9 @@ export function positionTiles(tiles, layout = {}) {
 
 // Arrange a graph as a left-to-right forest. Shared descendants keep every
 // connection, but occupy one branch beneath their deepest parent.
-export function arrangeTiles(tiles, edges = [], { dimensions = tileDimensions } = {}) {
+export function arrangeTiles(tiles, edges = [], { dimensions = tileDimensions, spacingScale = 1 } = {}) {
+  const horizontalGap = ARRANGE_HORIZONTAL_GAP * spacingScale;
+  const verticalGap = ARRANGE_VERTICAL_GAP * spacingScale;
   const nodes = new Map(tiles.map(tile => [tile.id, {
     tile: { ...tile, ...dimensions(tile) },
     parents: new Set(), targets: new Set(), children: [], depth: 0,
@@ -93,20 +95,20 @@ export function arrangeTiles(tiles, edges = [], { dimensions = tileDimensions } 
   for (let i = ordered.length - 1; i >= 0; i--) {
     const node = nodes.get(ordered[i]);
     node.childrenHeight = node.children.reduce((sum, id) => sum + nodes.get(id).branchHeight, 0)
-      + Math.max(0, node.children.length - 1) * ARRANGE_VERTICAL_GAP;
+      + Math.max(0, node.children.length - 1) * verticalGap;
     node.branchHeight = Math.max(node.tile.height, node.childrenHeight);
   }
   const columnX = [];
   let x = 24;
   columnWidths.forEach((width, depth) => {
     columnX[depth] = x;
-    x += width + ARRANGE_HORIZONTAL_GAP;
+    x += width + horizontalGap;
   });
   const positions = new Map(), stack = [];
   let top = 24;
   roots.forEach(id => {
     stack.push({ id, top });
-    top += nodes.get(id).branchHeight + ARRANGE_VERTICAL_GAP;
+    top += nodes.get(id).branchHeight + verticalGap;
   });
   while (stack.length) {
     const { id, top } = stack.pop(), node = nodes.get(id);
@@ -115,7 +117,7 @@ export function arrangeTiles(tiles, edges = [], { dimensions = tileDimensions } 
     let childTop = top + (node.branchHeight - node.childrenHeight) / 2;
     node.children.forEach(childId => {
       stack.push({ id: childId, top: childTop });
-      childTop += nodes.get(childId).branchHeight + ARRANGE_VERTICAL_GAP;
+      childTop += nodes.get(childId).branchHeight + verticalGap;
     });
   }
   return tiles.map(tile => positions.get(tile.id));
