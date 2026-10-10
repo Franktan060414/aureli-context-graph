@@ -20,10 +20,40 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Locate Visual Studio and PostgreSQL
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-not (Test-Path $vswhere)) { throw 'Visual Studio discovery tool vswhere.exe is missing' }
+          $vsRoot = & $vswhere -latest -prerelease -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if ($LASTEXITCODE -ne 0 -or -not $vsRoot) { throw 'No Visual Studio installation with x64 C++ tools was found' }
+          $vsRoot = ($vsRoot | Select-Object -First 1).Trim()
+          $vcvars = Join-Path $vsRoot 'VC\Auxiliary\Build\vcvars64.bat'
+          if (-not (Test-Path $vcvars)) { throw "Missing x64 C++ environment script: $vcvars" }
+
+          $pgRoot = $env:PGROOT
+          if (-not $pgRoot -or -not (Test-Path "$pgRoot\bin\postgres.exe")) {
+            if ($env:PGBIN) { $pgRoot = Split-Path $env:PGBIN -Parent }
+          }
+          if (-not $pgRoot -or -not (Test-Path "$pgRoot\bin\postgres.exe")) {
+            $pgRoot = Get-ChildItem "$env:ProgramFiles\PostgreSQL" -Directory -ErrorAction SilentlyContinue |
+              Where-Object { Test-Path (Join-Path $_.FullName 'bin\postgres.exe') } |
+              Sort-Object { [version]$_.Name } -Descending |
+              Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $pgRoot -or -not (Test-Path "$pgRoot\include\server\postgres.h")) {
+            throw 'PostgreSQL executable and C server headers were not found on the runner'
+          }
+          "AURELI_VS_ROOT=$vsRoot" >> $env:GITHUB_ENV
+          "AURELI_VCVARS64=$vcvars" >> $env:GITHUB_ENV
+          "PGROOT=$pgRoot" >> $env:GITHUB_ENV
+          Write-Host "Visual Studio: $vsRoot"
+          Write-Host "PostgreSQL: $pgRoot"
+
       - name: Build pgvector for the runner PostgreSQL
         shell: cmd
         run: |
-          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          call "%AURELI_VCVARS64%"
           if errorlevel 1 exit /b 1
           if not exist "%PGROOT%\bin\postgres.exe" exit /b 1
           git clone --depth 1 --branch v0.8.6 https://github.com/pgvector/pgvector.git "%RUNNER_TEMP%\aureli-pgvector"
@@ -40,8 +70,8 @@ jobs:
           $javaRuntime = Join-Path $env:RUNNER_TEMP 'aureli-java-21'
           & "$env:JAVA_HOME\bin\jlink.exe" --add-modules ALL-MODULE-PATH --strip-debug --no-header-files --no-man-pages --compress=2 --output $javaRuntime
           if ($LASTEXITCODE -ne 0) { throw 'Java runtime creation failed' }
-          $vsRoot = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-          $crt = Get-ChildItem "$vsRoot\VC\Redist\MSVC\*\x64\Microsoft.VC143.CRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          $crt = Get-ChildItem "$env:AURELI_VS_ROOT\VC\Redist\MSVC\*\x64\Microsoft.VC*.CRT" -Directory |
+            Sort-Object FullName -Descending | Select-Object -First 1
           if (-not $crt) { throw 'Microsoft x64 CRT redistributable directory missing' }
           "AURELI_JAVA_SOURCE=$javaRuntime" >> $env:GITHUB_ENV
           "AURELI_POSTGRES_SOURCE=$env:PGROOT" >> $env:GITHUB_ENV
