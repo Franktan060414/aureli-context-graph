@@ -10,6 +10,7 @@
 **/target/
 **/node_modules/
 **/dist/
+/desktop/resources/
 **/.vite/
 /frontend/artifacts/
 /frontend/test-results/

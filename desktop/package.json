@@ -1,17 +1,23 @@
 {
   "name": "desktop",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aureli 本地图式 AI 工作台，内置 Java 和 PostgreSQL",
   "main": "main.cjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "test": "node --test tests/*.test.cjs",
+    "start": "electron .",
+    "prepare:desktop": "node scripts/prepare-resources.cjs",
+    "prepare:win": "node scripts/prepare-win-resources.cjs",
+    "dist:mac": "node scripts/build-mac.cjs",
+    "dist:win": "node scripts/build-win.cjs"
   },
   "keywords": [],
-  "author": "",
+  "author": "Aureli",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^44.5.1"
+    "adm-zip": "0.6.1",
+    "electron": "^44.7.0",
+    "electron-builder": "26.17.0"
   }
 }

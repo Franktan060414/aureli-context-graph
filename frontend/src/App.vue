@@ -52,6 +52,7 @@ import LabelPanel from "./components/LabelPanel.vue";
 import { labelForTile, labelStyle } from "./lib/labels.js";
 import GraphCanvas from "./components/GraphCanvas.vue";
 import ViewSelect from "./components/ViewSelect.vue";
+import BranchDialogue from "./components/BranchDialogue.vue";
 import GraphExportDialog from "./components/GraphExportDialog.vue";
 import QuestionForm from "./components/QuestionForm.vue";
 import ContextPicker from "./components/ContextPicker.vue";
@@ -60,6 +61,7 @@ import MarkdownAnswer from "./components/MarkdownAnswer.vue";
 import ApiSettings from "./components/ApiSettings.vue";
 import { useMotion } from "./composables/useMotion.js";
 import { useCanvasZoom } from "./composables/useCanvasZoom.js";
+import { useViewMode } from "./composables/useViewMode.js";
 const { animateSurface, motionEnabled } = useMotion();
 const canvasZoom = useCanvasZoom();
 import { createApiClient } from "./lib/api.js";
@@ -92,7 +94,7 @@ const isMobile = ref(window.matchMedia("(max-width: 767px)").matches);
 const mobileMedia = window.matchMedia("(max-width: 767px)");
 const demo = ref(localStorage.getItem("aureli-mode") === "demo"),
   mobileNav = ref(false),
-  tab = ref("graph"),
+  tab = useViewMode(),
   panel = ref("detail"),
   inspectorMinimized = ref(false),
   query = ref(""),
@@ -118,6 +120,7 @@ const mapSwitchDisabled = computed(() => weightBusy.value || nodeBusy.value || m
 let mapListRequest = 0;
 const related = ref([]),
   selected = ref(demo.value ? "tile-003" : null);
+const branchCollapsed = ref([]);
 const selectedTile = computed(() =>
   workspace.value.tiles.find((t) => t.id === selected.value),
 );
@@ -327,12 +330,14 @@ function rememberMap() {
 }
 function stashMapUi() {
   workspace.value.ui = { selected: selected.value, related: [...related.value], form: { ...form },
+    branchCollapsed: [...branchCollapsed.value],
     query: query.value, filter: filter.value, panel: panel.value };
 }
 function resetMapUi() {
   const ui = workspace.value.ui;
   selected.value = ui?.selected || workspace.value.tiles[0]?.id || null;
   related.value = [...(ui?.related || [])];
+  branchCollapsed.value = [...(ui?.branchCollapsed || [])];
   Object.assign(form, ui?.form || { message: "", tileId: newId(), edgeDirection: "DIRECTED", edgeDescription: "" });
   query.value = ui?.query || "";
   filter.value = ui?.filter || "all";
@@ -425,6 +430,7 @@ watch(panel, async (value, previous) => {
 });
 const questionDialogInput = ref(null),
   questionInput = ref(null),
+  branchInput = ref(null),
   heading = ref(null),
   inspectorRoot = ref(null),
   inspectorToggle = ref(null),
@@ -592,7 +598,7 @@ function mediaChanged(event) {
 function keyboardNav(event) {
   if (event.key === "Escape" && mobileNav.value) {
     mobileNav.value = false;
-    nextTick(() => document.querySelector(".mobile-menu")?.focus());
+    nextTick(() => document.querySelector(".mobile-menu, .branch-navigation")?.focus());
   }
 }
 watch(mobileNav, async (open) => {
@@ -662,6 +668,19 @@ function toggle(id) {
     ? related.value.filter((x) => x !== id)
     : [...related.value, id];
 }
+function focusQuestionInput() {
+  (tab.value === "branch" ? branchInput : questionInput).value?.focus();
+}
+function sendBranchTile() {
+  const failed = workspace.value.tiles.find(tile => tile.id === form.tileId && tile.status === "error");
+  if (failed && failed.message === form.message.trim()) return sendTile(failed);
+  if (failed) form.tileId = newId();
+  return sendTile();
+}
+watch(tab, async () => {
+  await nextTick();
+  document.querySelector(".view-select-trigger")?.focus({ preventScroll: true });
+});
 async function compose(id) {
   if (generating.value || graphLoading.value) return;
   if (id) related.value = [id];
@@ -671,7 +690,7 @@ async function compose(id) {
   form.tileId = newId();
   await nextTick();
   keepInspectorInBounds();
-  questionInput.value?.focus();
+  focusQuestionInput();
 }
 async function openQuestionDialog() {
   if (generating.value || graphLoading.value || modalBusy.value || nodeBusy.value) return;
@@ -815,6 +834,19 @@ async function copy(text) {
 function questionDraftFingerprint() {
   return JSON.stringify({ form: { ...form }, related: [...related.value], workspace: workspaceKey.value });
 }
+function finishQuestionDraft(origin, originKey, tileId, startedInBranch) {
+  // Never introduce automatic context in the graph view, including late responses.
+  const nextRelated = startedInBranch && tab.value === "branch" ? [tileId] : [];
+  if (originKey === workspaceKey.value) {
+    form.message = "";
+    form.tileId = newId();
+    related.value = nextRelated;
+  } else if (origin.ui) {
+    origin.ui.form.message = "";
+    origin.ui.form.tileId = newId();
+    origin.ui.related = nextRelated;
+  }
+}
 function demoQuestionPlan(message) {
   const questions = message.split(/[；;\n]+/).map(value => value.trim()).filter(Boolean);
   const suggested = questions.length >= 2 && questions.length <= 4 && questions.every(value => value.length >= 4);
@@ -847,7 +879,7 @@ async function cancelQuestionFlow() {
     selected.value = flow.previousSelection;
     panel.value = "compose";
     if (flow.fromDialog) await openQuestionDialog();
-    else { await nextTick(); questionInput.value?.focus(); }
+    else { await nextTick(); focusQuestionInput(); }
   }
 }
 async function sendTile(retryTile) {
@@ -856,7 +888,8 @@ async function sendTile(retryTile) {
   formError.value = "";
   if (!form.message.trim() || !form.tileId.trim()) {
     formError.value = "请填写提问内容和 Tile ID。";
-    (modal.value?.type === "question" ? questionDialogInput : questionInput).value?.focus();
+    if (modal.value?.type === "question") questionDialogInput.value?.focus();
+    else focusQuestionInput();
     return;
   }
   if (workspace.value.tiles.some(tile => tile.id === form.tileId.trim())) {
@@ -866,6 +899,7 @@ async function sendTile(retryTile) {
   const flow = reactive({
     origin: workspace.value, originKey: workspaceKey.value, isDemo: demo.value,
     draft: { ...form }, fingerprint: questionDraftFingerprint(), previousSelection: selected.value,
+    startedInBranch: tab.value === "branch",
     fromDialog: modal.value?.type === "question", controller: new AbortController(),
     cancelled: false, phase: "planning", proposal: null, temporaryIds: [],
     payload: { mapId: liveMapId.value, message: form.message.trim(), tileId: form.tileId.trim(),
@@ -894,7 +928,7 @@ async function sendTile(retryTile) {
       throw new Error("服务未返回有效拆分建议。");
     if (!proposal.suggested) {
       releaseQuestionFlow(flow);
-      return generateSingleTile(null, flow.payload);
+      return generateSingleTile(null, flow.payload, flow.startedInBranch);
     }
     flow.phase = "suggested";
     await openModal("questionPlan");
@@ -908,7 +942,7 @@ async function sendTile(retryTile) {
     }
     releaseQuestionFlow(flow);
     notify("暂时无法提供拆分建议，将按原问题生成问答。", true);
-    return generateSingleTile(null, flow.payload);
+    return generateSingleTile(null, flow.payload, flow.startedInBranch);
   }
 }
 async function decideQuestionFlow(action) {
@@ -934,7 +968,7 @@ async function decideQuestionFlow(action) {
       modalBusy.value = false;
       if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
       releaseQuestionFlow(flow);
-      return generateSingleTile(null, flow.payload);
+      return generateSingleTile(null, flow.payload, flow.startedInBranch);
     }
     if (!Array.isArray(result?.tiles) || result.tiles.length !== flow.proposal.questions.length + 1 || !Array.isArray(result.edges))
       throw new Error("服务未返回完整的问答和拆分结果，请同步图谱确认。");
@@ -943,27 +977,24 @@ async function decideQuestionFlow(action) {
     for (const edge of result.edges) if (!flow.origin.edges.some(existing => existing.id === edge.id)) flow.origin.edges.push(edge);
     modalBusy.value = false;
     releaseQuestionFlow(flow);
+    finishQuestionDraft(flow.origin, flow.originKey, flow.payload.tileId, flow.startedInBranch);
     if (flow.originKey === workspaceKey.value) {
       selected.value = flow.payload.tileId;
       panel.value = "detail";
-      form.message = "";
-      form.tileId = newId();
-      related.value = [];
       connection.value = flow.isDemo ? connection.value : "connected";
-    } else if (flow.origin.ui) {
-      flow.origin.ui.form.message = ""; flow.origin.ui.form.tileId = newId(); flow.origin.ui.related = [];
     }
     notify(`已生成原问答及 ${flow.proposal.questions.length} 个子 Tile`);
   } catch (error) {
     modalError.value = error.message;
   } finally { modalBusy.value = false; }
 }
-async function generateSingleTile(retryTile, plannedPayload) {
+async function generateSingleTile(retryTile, plannedPayload, startedInBranch = tab.value === "branch") {
   formError.value = "";
   if (generating.value || graphLoading.value) return;
   if (!retryTile && (!form.message.trim() || !form.tileId.trim())) {
     formError.value = "请填写提问内容和 Tile ID。";
-    (modal.value?.type === "question" ? questionDialogInput : questionInput).value?.focus();
+    if (modal.value?.type === "question") questionDialogInput.value?.focus();
+    else focusQuestionInput();
     return;
   }
   if (
@@ -1035,13 +1066,10 @@ async function generateSingleTile(retryTile, plannedPayload) {
       if (originKey === workspaceKey.value) connection.value = "connected";
     }
     tile.status = "ready";
+    finishQuestionDraft(origin, originKey, tile.id, startedInBranch);
     if (originKey === workspaceKey.value) {
-      form.message = "";
-      form.tileId = newId();
-      related.value = [];
       notify(isDemo ? "示例 Tile 已创建" : "Tile 已生成");
     } else {
-      if (origin.ui) { origin.ui.form.message = ""; origin.ui.form.tileId = newId(); origin.ui.related = []; }
       notify("另一张图谱的 Tile 已生成");
     }
   } catch (error) {
@@ -1553,7 +1581,7 @@ function exportGraph() {
             :class="{ 'inspector-is-minimized': inspectorMinimized }"
           >
             <section class="graph-panel surface" aria-label="知识图谱">
-              <div class="graph-header">
+              <div v-if="tab !== 'branch'" class="graph-header">
                 <div class="graph-header-leading">
                   <button
                     v-if="isMobile"
@@ -1651,7 +1679,7 @@ function exportGraph() {
                 @download="downloadNodeFile"
                 @edit-note="editNodeNote"
               />
-              <div class="tile-list" v-else>
+              <div class="tile-list" v-else-if="tab === 'list'">
                 <div v-if="!filteredTiles.length" class="empty-state">
                   <Search :size="30" />
                   <h3>暂无匹配的 Tile</h3>
@@ -1694,7 +1722,17 @@ function exportGraph() {
                   </button>
                 </article>
               </div>
-              <div class="graph-footer">
+              <BranchDialogue v-else ref="branchInput" :key="workspaceKey"
+                v-model:view="tab" v-model:message="form.message" v-model:collapsed="branchCollapsed"
+                :tiles="workspace.tiles" :edges="workspace.edges" :related="related" :active-tile-id="selected"
+                :busy="fusionBusy" :loading="graphLoading" :generating="generating"
+                :planning="questionFlow?.phase === 'planning'" :error="formError"
+                :retry-tile="workspace.tiles.find(tile => tile.id === form.tileId && tile.status === 'error')"
+                :motion-enabled="motionEnabled" :mobile="isMobile" :navigation-open="mobileNav"
+                @toggle="toggle" @submit="sendBranchTile" @retry="sendTile" @cancel="cancelQuestionFlow"
+                @file="openModal('file')" @note="openModal('note')" @navigation="mobileNav = !mobileNav"
+              />
+              <div v-if="tab !== 'branch'" class="graph-footer">
                 <div class="legend">
                   <span><i class="legend-dot root"></i>独立节点</span
                   ><span><i class="legend-dot rag"></i>检索主题</span
@@ -1712,6 +1750,7 @@ function exportGraph() {
             </section>
             <Transition name="inspector-motion" :css="motionEnabled">
               <aside
+                v-if="tab !== 'branch'"
                 :key="inspectorMinimized ? 'minimized' : 'expanded'"
                 ref="inspectorRoot"
                 class="inspector surface"

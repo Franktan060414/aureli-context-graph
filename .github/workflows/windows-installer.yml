@@ -1,0 +1,67 @@
+name: Windows installer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build pgvector for the runner PostgreSQL
+        shell: cmd
+        run: |
+          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          if errorlevel 1 exit /b 1
+          if not exist "%PGROOT%\bin\postgres.exe" exit /b 1
+          git clone --depth 1 --branch v0.8.6 https://github.com/pgvector/pgvector.git "%RUNNER_TEMP%\aureli-pgvector"
+          if errorlevel 1 exit /b 1
+          cd /d "%RUNNER_TEMP%\aureli-pgvector"
+          nmake /F Makefile.win
+          if errorlevel 1 exit /b 1
+          nmake /F Makefile.win install
+          if errorlevel 1 exit /b 1
+
+      - name: Prepare Java and Microsoft CRT runtime sources
+        shell: pwsh
+        run: |
+          $javaRuntime = Join-Path $env:RUNNER_TEMP 'aureli-java-21'
+          & "$env:JAVA_HOME\bin\jlink.exe" --add-modules ALL-MODULE-PATH --strip-debug --no-header-files --no-man-pages --compress=2 --output $javaRuntime
+          if ($LASTEXITCODE -ne 0) { throw 'Java runtime creation failed' }
+          $vsRoot = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          $crt = Get-ChildItem "$vsRoot\VC\Redist\MSVC\*\x64\Microsoft.VC143.CRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $crt) { throw 'Microsoft x64 CRT redistributable directory missing' }
+          "AURELI_JAVA_SOURCE=$javaRuntime" >> $env:GITHUB_ENV
+          "AURELI_POSTGRES_SOURCE=$env:PGROOT" >> $env:GITHUB_ENV
+          "AURELI_VC_REDIST_SOURCE=$($crt.FullName)" >> $env:GITHUB_ENV
+
+      - name: Install build dependencies
+        working-directory: desktop
+        run: npm ci
+
+      - name: Build and test Windows installer
+        working-directory: desktop
+        run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aureli-Windows-x64
+          path: desktop/dist/windows/Aureli-Setup-*-x64.exe
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
