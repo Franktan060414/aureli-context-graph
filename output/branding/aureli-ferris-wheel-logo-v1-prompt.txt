@@ -1,0 +1,9 @@
+Generated with the built-in image generation tool.
+
+Use case: logo-brand.
+Create one polished Aureli brand logo inspired by the supplied reference photograph, not a photo recreation.
+Reference image role: inspiration for the dramatic low-angle upward view of a Ferris wheel: its tilted elliptical rim, spokes converging toward a lower-right hub, and feeling of ascent.
+Design a sophisticated, restrained flat vector-style combination mark. Solid deep midnight/cobalt blue background (#103C78), crisp white symbol and exact white wordmark "Aureli", small warm yellow accents (#FFD351). A single centered horizontal lockup with the symbol to the left and wordmark to the right, generous blue negative space.
+Symbol: an elegantly simplified Ferris wheel in strong perspective, elliptical rim leaning from upper-left to lower-right, 5-7 purposeful spokes converging at an off-center hub towards lower-right, simplified support geometry subtly suggesting a capital A. A few tiny geometric gondola cues integrated into the rim, not detailed cabins. Make one short segment of the rim yellow and its adjacent tiny gondola yellow, all other geometry white. Use clean substantial strokes legible at small sizes. Keep the wheel abstract and memorable but still recognizably derived from an upward-view Ferris wheel, not a planet with an orbit.
+Typography: highly polished custom-looking contemporary sans serif, title case "Aureli" spelled A-u-r-e-l-i, medium weight, balanced optical kerning, clean humanist geometric forms. White letters; yellow dot on the i is permitted as a very restrained second accent.
+Flat solid colors only. No gradients, no shadows, no texture, no glow, no 3D, no photograph, no mockup, no slogans, no captions, no extra text, no design sheet, no borders, no repeated alternate logos. One finished logo on a blue field, landscape composition. The mark and wordmark should feel cohesive and distinctive, with professional identity design precision.

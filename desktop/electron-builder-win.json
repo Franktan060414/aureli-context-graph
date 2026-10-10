@@ -1,0 +1,25 @@
+{
+  "appId": "com.aureli.contextgraph",
+  "productName": "Aureli",
+  "artifactName": "Aureli-Setup-${version}-${arch}.${ext}",
+  "directories": { "output": "dist/windows", "buildResources": "build" },
+  "files": ["main.cjs", "backend.cjs", "postgres.cjs", "runtime-paths.cjs", "package.json"],
+  "extraResources": [
+    { "from": "resources/win32-x64/java", "to": "java" },
+    { "from": "resources/win32-x64/postgres", "to": "postgres", "filter": ["**/*", "!include/**/*"] },
+    { "from": "resources/win32-x64/backend", "to": "backend" },
+    { "from": "resources/win32-x64/config", "to": "config" }
+  ],
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }],
+    "icon": "build/icon.png"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "deleteAppDataOnUninstall": false
+  }
+}

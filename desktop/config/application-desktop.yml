@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${AURELI_DATABASE_URL}
+    username: aureli
+    password: ${AURELI_DATABASE_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+  sql:
+    init:
+      mode: always
+  ai:
+    openai:
+      base-url: ${AURELI_MODEL_BASE_URL:http://127.0.0.1:11434/v1}
+      api-key: ${AURELI_MODEL_API_KEY:ollama}
+      embedding:
+        base-url: ${AURELI_MODEL_BASE_URL:http://127.0.0.1:11434/v1}
+        api-key: ${AURELI_MODEL_API_KEY:ollama}
+        model: ${AURELI_EMBEDDING_MODEL:qwen3-embedding:4b}
+        dimensions: 1536
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        table-name: t_vector_store
+
+customer-service:
+  md-storage-path: ${AURELI_MARKDOWN_PATH}
+  model-settings-path: ${AURELI_MODEL_SETTINGS_PATH}
+  base-url: ${AURELI_MODEL_BASE_URL:http://127.0.0.1:11434/v1}
+  api-key: ${AURELI_MODEL_API_KEY:ollama}
+  model: ${AURELI_CHAT_MODEL:llama3:latest}

@@ -1,0 +1,9 @@
+Generated with the built-in image generation tool.
+
+Use case: precise-object-edit / logo-brand.
+Edit the supplied existing Ferris wheel logo with ONLY a palette inversion for a white-background version.
+Replace the solid blue background and all blue negative space (including cabin windows and gaps between spokes) with pure white #FFFFFF.
+Replace all currently white wheel shapes, rim, spokes, hub, cabin bodies, suspension stems, and cabin outlines with the original Aureli brand blue #0053D2.
+Preserve every golden-yellow element exactly: existing yellow curved rim segment, connecting stem, and nearest yellow gondola, matching its current golden yellow #FCAB02. Yellow remains yellow, with white window cutouts.
+Keep the same square canvas, exact composition, perspective, proportions, object positions, number of spokes and cabins, contours, line widths, and margins. No redesign, no additions or removals, no typography, no letters, no text. Keep the pictorial symbol free of any letterform.
+Crisp flat logo finish on solid white, no gradient, shadows, texture or mockup.

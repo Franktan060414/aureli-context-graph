@@ -1,0 +1,35 @@
+{
+  "appId": "com.aureli.contextgraph",
+  "productName": "Aureli",
+  "artifactName": "${productName}-${version}-${arch}.${ext}",
+  "directories": {
+    "output": "dist",
+    "buildResources": "build"
+  },
+  "electronDist": "node_modules/electron/dist",
+  "files": ["main.cjs", "backend.cjs", "postgres.cjs", "runtime-paths.cjs", "package.json"],
+  "extraResources": [
+    { "from": "resources/java", "to": "java" },
+    { "from": "resources/postgres", "to": "postgres", "filter": ["**/*", "!include/**/*"] },
+    { "from": "resources/backend", "to": "backend" },
+    { "from": "resources/config", "to": "config" }
+  ],
+  "mac": {
+    "target": [{ "target": "dmg", "arch": ["arm64"] }],
+    "category": "public.app-category.productivity",
+    "icon": "build/icon.png",
+    "minimumSystemVersion": "13.0",
+    "identity": "-",
+    "hardenedRuntime": false,
+    "notarize": false
+  },
+  "dmg": {
+    "title": "Aureli 安装",
+    "format": "UDZO",
+    "window": { "width": 540, "height": 380 },
+    "contents": [
+      { "x": 130, "y": 190, "type": "file" },
+      { "x": 410, "y": 190, "type": "link", "path": "/Applications" }
+    ]
+  }
+}

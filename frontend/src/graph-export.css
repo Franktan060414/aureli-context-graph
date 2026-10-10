@@ -1,0 +1,49 @@
+.graph-export-document {
+  --text: #172033; --muted: #536076; --canvas: #f3f5f8; --line: #cbd3df;
+  --primary: #075ec8; --surface: #ffffff;
+  color: var(--text); background: var(--canvas); font: 16px/1.7 system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  text-align: left; letter-spacing: normal;
+}
+.graph-export-stage { position: fixed; left: -100000px; top: 0; width: 480px; height: 1px; pointer-events: none; }
+.graph-export-brand {
+  position: absolute; left: 32px; top: 32px; width: 260px; line-height: 0; background: var(--canvas);
+}
+.graph-export-brand img {
+  display: block; width: 100%; height: auto;
+  /* Blend the original white-backed logo into the PDF canvas without a white box. */
+  mix-blend-mode: multiply;
+}
+.graph-export-card {
+  --text: var(--tile-label-fg, #172033); --muted: var(--tile-label-fg, #536076);
+  --primary: var(--tile-label-fg, #075ec8);
+  --canvas: color-mix(in srgb, var(--tile-label-bg, #ffffff) 92%, var(--text));
+  --line: color-mix(in srgb, var(--text) 25%, transparent);
+  box-sizing: border-box; position: absolute; padding: 24px; margin: 0; height: auto;
+  color: var(--text); background: var(--tile-label-bg, #ffffff);
+  border: 2px solid #aebdd0; border-radius: 12px; overflow: visible;
+  overflow-wrap: anywhere; white-space: normal;
+}
+.graph-export-card section + section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.graph-export-card h3 { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.5; }
+.graph-export-card .graph-export-question { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.6; white-space: pre-wrap; }
+.graph-export-plain { margin: 0; white-space: pre-wrap; }
+.graph-export-label {
+  display: inline-block; max-width: 100%; box-sizing: border-box; margin: 0 0 16px; padding: 4px 10px;
+  background: var(--tile-label-bg, #eef4fc); color: var(--tile-label-fg, #172033);
+  border: 1px solid #17203330; border-radius: 6px; font-size: 13px; line-height: 1.6; white-space: pre-wrap;
+}
+.graph-export-card .markdown-answer { font-size: 16px; line-height: 1.7; }
+.graph-export-card .markdown-answer pre,
+.graph-export-card .markdown-answer pre code { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+.graph-export-card .markdown-answer pre,
+.graph-export-card .markdown-answer .markdown-table { overflow: visible; }
+.graph-export-card .markdown-answer table { table-layout: fixed; width: 100%; min-width: 0; }
+.graph-export-card .markdown-answer th,
+.graph-export-card .markdown-answer td {
+  min-width: 0; max-width: none; padding: 6px; overflow-wrap: anywhere;
+  white-space: normal; overflow: visible; text-overflow: clip;
+}
+.graph-export-relation {
+  position: absolute; display: block; width: max-content; margin: 0; padding: 3px 6px; transform: translate(-50%, -100%);
+  color: #536076; background: var(--canvas); font-size: 12px; line-height: 1.5; white-space: nowrap;
+}

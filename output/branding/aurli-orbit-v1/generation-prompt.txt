@@ -1,0 +1,8 @@
+Generation mode: built-in image_gen
+
+Use case: logo-brand.
+Create one finished premium app icon for the brand AURLI, a true 1:1 square image, 1024x1024 composition.
+Full-bleed uniform rich electric cobalt blue background (#1457EB) covers the entire square edge to edge, with no outside margins and no rounded-corner container.
+A brilliant pure white symbol sits optically centered: a custom bold futuristic uppercase letter A functions as the atomic nucleus, surrounded by TWO refined elliptical electron orbit bands at opposing diagonal angles, with sophisticated intentional gaps where paths overlap for spatial depth. The A must remain clearly legible. Use strong smooth clean geometric curves and generous internal negative space, a visually balanced distinctive silhouette. Two white circular electron nodes integrated naturally into the outer orbit arcs. Inventive restrained orbital engineering aesthetic, confident future-facing AI brand identity. Keep orbit architecture simple and readable at small sizes; bold line thickness, avoid tangled intersections. Symbol occupies about 65 percent of canvas width, placed slightly above center.
+Below the symbol, add a compact clean geometric sans-serif wordmark reading exactly "AURLI" (A U R L I, five letters), white uppercase, medium-wide tracking, centered. Wordmark should be visually subordinate, width about 34 percent of the canvas; generous breathing room between symbol and wordmark.
+Flat vector-like finish with precise edges, only two colors blue and white. No gradient, no shadow, no glow, no texture, no 3D, no mockup, no extra shapes, no stars, no borders, no captions, no watermark. Deliver the single square icon artwork only.
