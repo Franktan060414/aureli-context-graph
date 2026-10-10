@@ -23,17 +23,26 @@ class PostgresRuntime {
     this.failure = null;
   }
 
-  tool(name, args, database = "postgres") {
-    return run(path.join(this.bin, executableName(name)), args, {
+  tool(name, args, database = "postgres", input) {
+    const operation = run(path.join(this.bin, executableName(name)), args, {
       cwd: this.dataRoot, timeout: 20000, maxBuffer: 1024 * 1024,
-      windowsHide: true,
+      windowsHide: true, encoding: "utf8",
       env: { ...process.env, PGHOST: "127.0.0.1", PGPORT: String(this.port),
-        PGUSER: "aureli", PGPASSWORD: this.password, PGDATABASE: database, PGCONNECT_TIMEOUT: "2" },
+        PGUSER: "aureli", PGPASSWORD: this.password, PGDATABASE: database,
+        PGCONNECT_TIMEOUT: "2", PGCLIENTENCODING: "UTF8" },
+    });
+    if (input === undefined) return operation;
+    return new Promise((resolve, reject) => {
+      operation.then(resolve, reject);
+      operation.child.stdin.once("error", reject);
+      operation.child.stdin.end(input, "utf8");
     });
   }
 
   sql(query, database = "postgres") {
-    return this.tool("psql", ["-X", "-w", "-A", "-t", "-v", "ON_ERROR_STOP=1", "-c", query], database);
+    // Windows native argv may replace Chinese with '?' before psql sees it.
+    // Send UTF-8 bytes through stdin and select UTF-8 for both input and results.
+    return this.tool("psql", ["-X", "-w", "-A", "-t", "-v", "ON_ERROR_STOP=1", "-f", "-"], database, query + "\n");
   }
 
   async startWindowsPostgres() {

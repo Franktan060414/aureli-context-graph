@@ -95,6 +95,7 @@ jobs:
           path: |
             target/surefire-reports/
             ${{ runner.temp }}/aureli-maven-*/logs/
+            ${{ runner.temp }}/aureli-embedded-test-*/logs/
           if-no-files-found: ignore
           retention-days: 7
 

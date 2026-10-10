@@ -20,7 +20,14 @@ async function freePort() {
 test("bundled Java and PostgreSQL initialize, persist and shut down together", { timeout: 180000 }, async (t) => {
   const desktopRoot = path.resolve(__dirname, "..");
   const resourcesRoot = process.env.AURELI_TEST_RESOURCES || developmentResources(desktopRoot);
-  const dataRoot = fs.mkdtempSync(path.join(os.tmpdir(), "aureli-embedded-test-"));
+  const dataRoot = fs.mkdtempSync(path.join(process.env.RUNNER_TEMP || os.tmpdir(), "aureli-embedded-test-"));
+  // A machine's legacy client encoding must not change SQL input or output.
+  const previousEncoding = process.env.PGCLIENTENCODING;
+  process.env.PGCLIENTENCODING = "LATIN1";
+  t.after(() => {
+    if (previousEncoding === undefined) delete process.env.PGCLIENTENCODING;
+    else process.env.PGCLIENTENCODING = previousEncoding;
+  });
   const databasePort = await freePort();
   let backendPort = await freePort();
   while (backendPort === databasePort) backendPort = await freePort();
@@ -42,6 +49,7 @@ test("bundled Java and PostgreSQL initialize, persist and shut down together", {
   assert.equal(extensions.stdout.replaceAll("\r", "").trim(), "uuid-ossp\nvector");
   const listen = await database.sql("SHOW listen_addresses");
   assert.equal(listen.stdout.trim(), "127.0.0.1");
+  assert.equal((await database.sql("SHOW client_encoding")).stdout.trim(), "UTF8");
   const occupied = new PostgresRuntime({ resourcesRoot, dataRoot, port: databasePort });
   await assert.rejects(occupied.start(), /已被占用/);
   await occupied.stop();
@@ -66,6 +74,9 @@ test("bundled Java and PostgreSQL initialize, persist and shut down together", {
   const schema = await database.sql("SELECT to_regclass('t_tile'), to_regclass('t_vector_store')", "robot");
   assert.equal(schema.stdout.trim(), "t_tile|t_vector_store");
   await database.sql("CREATE TABLE desktop_persistence_check(value text); INSERT INTO desktop_persistence_check VALUES ('中文数据已保留');", "robot");
+  // ASCII hex output distinguishes corrupted stored bytes from display problems.
+  const stored = await database.sql("SELECT encode(convert_to(value, 'UTF8'), 'hex') FROM desktop_persistence_check", "robot");
+  assert.equal(stored.stdout.trim(), Buffer.from("中文数据已保留", "utf8").toString("hex"));
   const password = connection.password;
   await backend.stop();
   assert.ok(backend.child.exitCode !== null || backend.child.signalCode !== null);
