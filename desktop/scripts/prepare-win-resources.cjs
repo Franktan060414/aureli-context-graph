@@ -4,6 +4,7 @@ const { execFileSync } = require("node:child_process");
 const AdmZip = require("adm-zip");
 const { findJar } = require("../backend.cjs");
 const { developmentResources } = require("../runtime-paths.cjs");
+const { inspectWindowsJava21 } = require("./java-runtime.cjs");
 
 const desktopRoot = path.resolve(__dirname, "..");
 const resources = developmentResources(desktopRoot, "win32", "x64");
@@ -32,12 +33,8 @@ try {
   if (!javaSource || !postgresSource) {
     throw new Error("请设置 AURELI_JAVA_SOURCE 和 AURELI_POSTGRES_SOURCE，分别指向 Windows Java 21 与含 pgvector 的 PostgreSQL。");
   }
-  execFileSync(path.join(javaSource, "bin", "java.exe"), ["-version"], { stdio: "ignore", windowsHide: true });
-  // The release file also exists in a jlink runtime.
-  const release = fs.readFileSync(path.join(javaSource, "release"), "utf8");
-  if (!/^JAVA_VERSION="21\./m.test(release) || !/^OS_ARCH="(amd64|x86_64)"/m.test(release)) {
-    throw new Error("应用需要 Windows x64 Java 21 运行环境。");
-  }
+  const java = inspectWindowsJava21(path.join(javaSource, "bin", "java.exe"));
+  console.log(`Java 运行环境校验通过：${java.version}, ${java.os}, ${java.arch}`);
   for (const name of ["bin/postgres.exe", "bin/initdb.exe", "bin/psql.exe", "bin/pg_ctl.exe",
     "lib/vector.dll", "share/extension/vector.control", "lib/uuid-ossp.dll", "share/extension/uuid-ossp.control"]) {
     if (!fs.existsSync(path.join(postgresSource, name))) throw new Error(`Windows PostgreSQL 源目录缺少 ${name}`);
