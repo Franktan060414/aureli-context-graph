@@ -273,7 +273,9 @@ watch(expanded, (value, previous) => {
 function restoreFullscreenFocus() {
   if (!expanded.value && fullscreenOrigin?.isConnected) fullscreenOrigin.focus({ preventScroll: true });
 }
-const graphLoading = computed(() => workspace.value.loading || !currentMap.value || (!demo.value && mapListLoading.value));
+const workspaceLoading = computed(() => workspace.value.loading || (!demo.value && mapListLoading.value));
+// Graph actions need a selected map; service settings and mode switching do not.
+const graphLoading = computed(() => workspaceLoading.value || !currentMap.value);
 const graphError = computed(() => workspace.value.error);
 async function loadWorkspace() {
   if (!liveMapId.value) return;
@@ -636,7 +638,7 @@ watch(section, (id) => {
 async function switchMode() {
   if (
     generating.value ||
-    graphLoading.value ||
+    workspaceLoading.value ||
     uploadBusy.value ||
     modalBusy.value ||
     fileLoading.value ||
@@ -2191,7 +2193,7 @@ function exportGraph() {
         <ApiSettings
           v-else
           :api-base="apiBase"
-          :busy="generating || graphLoading || uploadBusy"
+          :busy="generating || workspaceLoading || uploadBusy"
           @base-change="changeApiBase"
           @notify="notify($event.message, $event.error)"
         />
