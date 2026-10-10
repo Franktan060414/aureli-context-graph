@@ -1,0 +1,33 @@
+# Only on the test classpath; credentials and paths are generated for each build.
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${AURELI_CI_DATABASE_URL}
+    username: aureli
+    password: ${AURELI_CI_DATABASE_PASSWORD}
+  sql:
+    init:
+      mode: always
+  ai:
+    openai:
+      base-url: http://127.0.0.1:11434/v1
+      api-key: ci-placeholder
+      embedding:
+        base-url: http://127.0.0.1:11434/v1
+        api-key: ci-placeholder
+        model: ci-embedding
+        dimensions: 1536
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        table-name: t_vector_store
+
+customer-service:
+  md-storage-path: ${AURELI_CI_MARKDOWN_PATH}
+  model-settings-path: ${AURELI_CI_MODEL_SETTINGS_PATH}
+  base-url: http://127.0.0.1:11434/v1
+  api-key: ci-placeholder
+  model: ci-chat

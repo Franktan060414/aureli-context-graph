@@ -3,6 +3,7 @@ const { execFileSync } = require("node:child_process");
 const desktopRoot = path.resolve(__dirname, "..");
 const projectRoot = path.resolve(desktopRoot, "..");
 const { version } = require("../package.json");
+const { packageBackend } = require("./package-backend.cjs");
 
 function npm(args, cwd) {
   // Calling the JS entry point avoids Windows .cmd quoting and spawn errors.
@@ -10,13 +11,13 @@ function npm(args, cwd) {
   execFileSync(process.execPath, [process.env.npm_execpath, ...args], { cwd, stdio: "inherit" });
 }
 
-try {
+async function main() {
   if (process.platform !== "win32" || process.arch !== "x64") {
     throw new Error("此入口需要 Windows x64；只有 Mac 时请运行 Windows installer GitHub Actions 工作流。");
   }
   npm(["ci"], path.join(projectRoot, "frontend"));
   npm(["run", "build"], path.join(projectRoot, "frontend"));
-  execFileSync("cmd.exe", ["/d", "/s", "/c", "mvn.cmd package"], { cwd: projectRoot, stdio: "inherit" });
+  await packageBackend();
   npm(["run", "prepare:win"], desktopRoot);
   npm(["test"], desktopRoot);
   execFileSync(process.execPath, [require.resolve("electron-builder/cli.js"),
@@ -28,7 +29,9 @@ try {
     env: { ...process.env, AURELI_TEST_RESOURCES: path.join(desktopRoot, "dist", "windows", "win-unpacked", "resources") },
   });
   console.log(`安装包已生成：${path.join(desktopRoot, "dist", "windows", `Aureli-Setup-${version}-x64.exe`)}`);
-} catch (error) {
+}
+
+main().catch((error) => {
   console.error("Windows 安装包构建失败：", error.message);
   process.exitCode = 1;
-}
+});

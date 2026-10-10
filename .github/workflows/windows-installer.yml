@@ -87,6 +87,17 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
 
+      - name: Upload build diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aureli-Windows-diagnostics
+          path: |
+            target/surefire-reports/
+            ${{ runner.temp }}/aureli-maven-*/logs/
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:

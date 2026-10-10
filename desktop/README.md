@@ -62,6 +62,8 @@ npm start
 
 工作流在 GitHub 的 Windows x64 机器上准备 Java 21 运行环境，使用该机器自带的 PostgreSQL 17 编译 pgvector 0.8.6，并复制所需的 Microsoft CRT DLL。接着构建前端、后端和 NSIS 安装包，验证内置数据库创建、持久化及正常退出。测试还会对打包后的资源执行一次。Mac 版 Java 和 Postgres.app 不会进入 Windows 安装包。
 
+后端打包前会在临时目录创建独立的 PostgreSQL 测试库，使用随机端口和密码，并通过仅用于测试的 `application-ci.yml` 提供配置。Maven 测试成功或失败后都会停止该数据库；成功时删除临时数据，失败时保留日志并上传 **Aureli-Windows-diagnostics**。这一过程不依赖本机 `application-dev.yml` 或 Docker 数据库，测试配置不会进入发布 JAR。不要通过跳过测试来绕过数据库配置错误。
+
 Windows 与 Mac 都使用 `build/icon.png` 中的摩天轮图标。Windows 安装包的数据库是全新创建的，用户数据默认保存在 `%APPDATA%\Aureli\`，卸载时保留用户数据。AI 模型需要另外配置。
 
 Windows 构建目前只完成了配置、脚本和 Mac 上的兼容性验证；必须等上述 Windows 工作流实际成功后，才能确认 `.exe` 构建通过。工作流不自动发布 GitHub Release，当前未配置 Windows 代码签名。正式发布前还需在目标 Windows 电脑上验证安装和首次启动。

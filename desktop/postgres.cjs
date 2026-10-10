@@ -9,9 +9,9 @@ const { executableName } = require("./runtime-paths.cjs");
 const run = promisify(execFile);
 
 class PostgresRuntime {
-  constructor({ resourcesRoot, dataRoot, port = 54329, onUnexpectedExit = () => {} }) {
+  constructor({ resourcesRoot, postgresRoot, dataRoot, port = 54329, onUnexpectedExit = () => {} }) {
     if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error("数据库端口无效。");
-    this.bin = path.join(resourcesRoot, "postgres", "bin");
+    this.bin = path.join(postgresRoot || path.join(resourcesRoot, "postgres"), "bin");
     this.dataRoot = dataRoot;
     this.dataDir = path.join(dataRoot, "postgres-data");
     this.passwordPath = path.join(dataRoot, "config", "database-password");
