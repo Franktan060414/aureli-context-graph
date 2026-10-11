@@ -8,6 +8,14 @@ const { checkPort } = require("./backend.cjs");
 const { executableName } = require("./runtime-paths.cjs");
 const run = promisify(execFile);
 
+function readPidFile(pidPath) {
+  try { return fs.readFileSync(pidPath, "utf8"); }
+  catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 class PostgresRuntime {
   constructor({ resourcesRoot, postgresRoot, dataRoot, port = 54329, onUnexpectedExit = () => {} }) {
     if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error("数据库端口无效。");
@@ -47,7 +55,23 @@ class PostgresRuntime {
 
   async startWindowsPostgres() {
     const pidPath = path.join(this.dataDir, "postmaster.pid");
-    if (fs.existsSync(pidPath)) throw new Error("数据库目录存在进程锁，请先检查之前的数据库是否仍在运行。");
+    const previousLock = readPidFile(pidPath);
+    if (previousLock !== null) {
+      let running = true;
+      try {
+        await run(path.join(this.bin, "pg_ctl.exe"), ["-D", this.dataDir, "status"], {
+          cwd: this.dataRoot, timeout: 10000, windowsHide: true,
+        });
+      } catch (error) {
+        // pg_ctl status returns 3 only when the server is not running.
+        if (error.code !== 3) {
+          throw new Error(`无法确认数据库进程状态，请检查 ${this.logPath}。`, { cause: error });
+        }
+        running = false;
+      }
+      if (running) throw new Error("此数据库仍有进程正在运行，请先退出之前的 Aureli 后重试。");
+      // PostgreSQL validates and removes stale locks itself; never delete one here.
+    }
     try {
       // pg_ctl starts Windows PostgreSQL with a restricted token, including on an elevated build runner.
       await run(path.join(this.bin, "pg_ctl.exe"), [
@@ -55,8 +79,14 @@ class PostgresRuntime {
         "-o", `-h 127.0.0.1 -p ${this.port}`, "-w", "-t", "30", "start",
       ], { cwd: this.dataRoot, timeout: 40000, windowsHide: true });
     } finally {
-      if (fs.existsSync(pidPath)) {
-        this.ownedPid = Number(fs.readFileSync(pidPath, "utf8").split(/\r?\n/)[0]);
+      const currentLock = readPidFile(pidPath);
+      // A failed launch may leave the old lock untouched. Never claim its process.
+      if (currentLock !== null && currentLock !== previousLock) {
+        const pid = Number(currentLock.split(/\r?\n/)[0]);
+        if (Number.isSafeInteger(pid) && pid > 0) {
+          this.ownedPid = pid;
+          this.ownedLockIdentity = currentLock.split(/\r?\n/).slice(0, 3).join("\n");
+        }
       }
     }
     this.windowsMonitor = setInterval(() => {
@@ -161,9 +191,10 @@ class PostgresRuntime {
       clearInterval(this.windowsMonitor);
       if (!this.ownedPid) return;
       const pidPath = path.join(this.dataDir, "postmaster.pid");
-      if (!fs.existsSync(pidPath)) return;
-      const pid = Number(fs.readFileSync(pidPath, "utf8").split(/\r?\n/)[0]);
-      if (pid !== this.ownedPid) throw new Error("数据库进程锁已改变，应用不会停止其他进程。");
+      const currentLock = readPidFile(pidPath);
+      if (currentLock === null) return;
+      const identity = currentLock.split(/\r?\n/).slice(0, 3).join("\n");
+      if (identity !== this.ownedLockIdentity) throw new Error("数据库进程锁已改变，应用不会停止其他进程。");
       // Node's Windows SIGINT terminates a process; pg_ctl requests a real clean shutdown.
       await run(path.join(this.bin, executableName("pg_ctl")), [
         "-D", this.dataDir, "-m", "fast", "-w", "-t", "30", "stop",

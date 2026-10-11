@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const net = require("node:net");
+const { execFileSync } = require("node:child_process");
 const { pathToFileURL } = require("node:url");
 const { PostgresRuntime } = require("../postgres.cjs");
 const { BackendRuntime } = require("../backend.cjs");
@@ -84,6 +85,10 @@ test("bundled Java and PostgreSQL initialize, persist and shut down together", {
   if (process.platform !== "win32") assert.ok(database.child.exitCode !== null || database.child.signalCode !== null);
   assert.equal(fs.existsSync(path.join(database.dataDir, "postmaster.pid")), false);
 
+  // Leave a lock from an exited process, then verify recovery preserves the data.
+  const exitedPid = execFileSync(process.execPath, ["-e", "process.stdout.write(String(process.pid))"], { encoding: "utf8" }).trim();
+  fs.writeFileSync(path.join(database.dataDir, "postmaster.pid"),
+    `${exitedPid}\n${database.dataDir}\n${Math.floor(Date.now() / 1000) - 60}\n${databasePort}\n\n127.0.0.1\n0\nready\n`);
   database = new PostgresRuntime({ resourcesRoot, dataRoot, port: databasePort });
   assert.equal((await database.start()).password, password);
   const preserved = await database.sql("SELECT value FROM desktop_persistence_check", "robot");

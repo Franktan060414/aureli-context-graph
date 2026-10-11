@@ -66,6 +66,8 @@ npm start
 
 Windows 与 Mac 都使用 `build/icon.png` 中的摩天轮图标。Windows 安装包的数据库是全新创建的，用户数据默认保存在 `%APPDATA%\Aureli\`，卸载时保留用户数据。AI 模型需要另外配置。
 
+Windows 异常退出或断电后，可能留下 `postgres-data/postmaster.pid`。启动时会先用 PostgreSQL 自带的 `pg_ctl status` 检查进程；确认进程已退出后，由 PostgreSQL 在启动时校验并处理旧锁文件，继续使用原有数据库和凭据。若进程仍在运行或无法确认状态，应用会停止启动并提示检查，不会强制删除锁文件或停止其他数据库进程。不要删除整个 `postgres-data` 目录来解决启动问题。
+
 Windows 构建目前只完成了配置、脚本和 Mac 上的兼容性验证；必须等上述 Windows 工作流实际成功后，才能确认 `.exe` 构建通过。工作流不自动发布 GitHub Release，当前未配置 Windows 代码签名。正式发布前还需在目标 Windows 电脑上验证安装和首次启动。
 
 ## 在 Windows 电脑本地构建
