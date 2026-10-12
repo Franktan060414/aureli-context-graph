@@ -35,7 +35,7 @@ await page.route('**/customer-service/tile/label', async route => {
   return route.fulfill({ json: { success: true } });
 });
 const dialog = page.locator('dialog[aria-labelledby="workspace-modal-title"]'), panel = page.locator('.label-panel');
-const card = id => page.locator('.graph-node').filter({ has: page.locator('.mono', { hasText: new RegExp(`^${id}$`) }) });
+const card = id => page.locator(`.graph-node[data-tile-id="${id}"]`);
 async function open() { await page.getByRole('button', { name: '标签', exact: true }).click(); await panel.waitFor(); }
 async function close() { await dialog.getByRole('button', { name: '关闭', exact: true }).click(); await page.waitForFunction(() => !document.querySelector('dialog[aria-labelledby="workspace-modal-title"]').open); }
 async function create(name, color) {
@@ -46,6 +46,19 @@ async function create(name, color) {
   await panel.getByRole('radio', { name, exact: true }).waitFor();
 }
 async function color(id) { return card(id).evaluate(el => getComputedStyle(el).backgroundColor); }
+async function openTileLabels(id, fullscreen = false, keyboard = false) {
+  const graph = page.locator(fullscreen ? '.fullscreen-viewer .graph-wrap' : '.graph-workbench .graph-wrap');
+  const main = graph.locator(`.graph-node[data-tile-id="${id}"] .node-main`);
+  await graph.locator('.graph-viewport').press('Tab'); await main.focus();
+  if (keyboard) await main.press('Shift+F10'); else await main.click({ button: 'right' });
+  await page.getByRole('menu', { name: '节点快捷操作' }).getByRole('menuitem', { name: '标签', exact: true }).click();
+  await panel.waitFor();
+  assert.equal(await page.getByRole('menu').count(), 0, 'menu closes when the label dialog opens');
+  assert.match(await panel.locator('.label-selection-summary').textContent(), /已选择 1 个 Tile/);
+  assert.equal(await panel.getByRole('radio', { name: /研究|重点/, exact: true }).isChecked(), true, 'the target Tile current label is selected');
+  const focusInside = await dialog.evaluate(el => el.contains(document.activeElement));
+  assert.equal(focusInside, true, 'focus enters the label dialog');
+}
 try {
   await page.addInitScript(() => { localStorage.setItem('aureli-mode', 'live'); localStorage.removeItem('aureli-api-base'); });
   await page.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173'); await card('qa').waitFor();
@@ -86,7 +99,10 @@ try {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await dialog.screenshot({ path: '/tmp/aureli-label-compact-panel.png' });
   await close();
-  for (const id of ['qa', 'note', 'file']) await card(id).getByRole('button', { name: '选择关联', exact: true }).click();
+  for (const id of ['qa', 'note', 'file']) {
+    await card(id).locator('.node-main').click();
+    await page.locator('.detail-relate').click();
+  }
   await open(); await panel.getByRole('radio', { name: '研究', exact: true }).check();
   await panel.getByRole('button', { name: '应用到 3 个 Tile', exact: true }).click();
   await page.getByRole('status').filter({ hasText: '已设置 3 个' }).waitFor(); await close();
@@ -99,8 +115,28 @@ try {
   let exported;
   await page.evaluate(() => { window.labelExport = null; const create = URL.createObjectURL; URL.createObjectURL = blob => { if (blob.type === 'application/json') window.labelExport = blob; return create(blob); }; });
   await page.getByRole('button', { name: '导出图谱', exact: true }).click();
+  await page.getByRole('dialog', { name: '导出图谱', exact: true }).getByRole('button', { name: '导出', exact: true }).click();
+  await page.waitForFunction(() => window.labelExport != null);
   exported = await page.evaluate(async () => JSON.parse(await window.labelExport.text()));
   assert.equal(exported.labels[0].name, '研究'); assert.ok(exported.tiles.every(tile => tile.labelId === 1));
+  // Right-click a different Tile while three others are in the association selection.
+  const selectedBefore = await page.locator('.graph-node.selected').getAttribute('data-tile-id');
+  await openTileLabels('note');
+  await panel.getByRole('radio', { name: '清除标签', exact: true }).check();
+  await panel.getByRole('button', { name: '清除 1 个 Tile 的标签', exact: true }).click();
+  await page.getByRole('status').filter({ hasText: '已清除 1' }).waitFor();
+  assert.deepEqual(writes.filter(w => w.path === 'assign').at(-1).body, { mapId: 'a', tileIds: ['note'], labelId: null });
+  await close();
+  assert.equal(await page.locator('.graph-node.associated').count(), 3);
+  assert.equal(await page.locator('.graph-node.selected').getAttribute('data-tile-id'), selectedBefore);
+  assert.equal(await color('qa'), 'rgb(232, 242, 255)'); assert.equal(await color('file'), 'rgb(232, 242, 255)');
+  assert.notEqual(await color('note'), 'rgb(232, 242, 255)');
+  await card('note').locator('.node-main').press('Shift+F10');
+  await page.getByRole('menu').getByRole('menuitem', { name: '标签', exact: true }).click(); await panel.waitFor();
+  assert.equal(await panel.getByRole('radio', { name: '清除标签', exact: true }).isChecked(), true);
+  await panel.getByRole('radio', { name: '研究', exact: true }).check();
+  await panel.getByRole('button', { name: '应用到 1 个 Tile', exact: true }).click();
+  await page.getByRole('status').filter({ hasText: '已设置 1' }).waitFor(); await close();
   await open(); await panel.getByRole('button', { name: '编辑标签 研究', exact: true }).click();
   await panel.getByLabel('标签名称', { exact: true }).fill('重点'); await panel.getByLabel('颜色 HEX', { exact: true }).fill('#000000');
   failSave = true; await panel.getByRole('button', { name: '保存标签', exact: true }).click(); await panel.getByRole('alert').waitFor();
@@ -114,6 +150,11 @@ try {
   await selectView(page, "图谱视图");
   await page.getByRole('button', { name: '全页面查看图谱', exact: true }).click();
   assert.equal(await page.locator('.fullscreen-viewer .graph-node.tile-label-surface').count(), 3);
+  await openTileLabels('file', true, true);
+  await panel.getByRole('button', { name: '应用到 1 个 Tile', exact: true }).click();
+  await page.getByRole('status').filter({ hasText: '已设置 1' }).waitFor();
+  assert.deepEqual(writes.filter(w => w.path === 'assign').at(-1).body.tileIds, ['file']);
+  await close(); assert.equal(await page.locator('.fullscreen-viewer').count(), 1, 'closing labels keeps the fullscreen graph open');
   await page.locator('.fullscreen-viewer').getByRole('button', { name: /退出全页面/ }).first().click();
   await open(); await panel.getByRole('radio', { name: '清除标签', exact: true }).check();
   failAssign = true; await panel.getByRole('button', { name: '清除 3 个 Tile 的标签', exact: true }).click(); await panel.getByRole('alert').waitFor();
@@ -122,7 +163,10 @@ try {
   assert.notEqual(await color('qa'), 'rgb(0, 0, 0)');
   // Mixed original labels and refresh persistence.
   graphs.a.tiles[0].labelId = 1; await page.reload(); await card('qa').waitFor(); assert.equal(await color('qa'), 'rgb(0, 0, 0)');
-  for (const id of ['qa', 'note']) await card(id).getByRole('button', { name: '选择关联', exact: true }).click();
+  for (const id of ['qa', 'note']) {
+    await card(id).locator('.node-main').click();
+    await page.locator('.detail-relate').click();
+  }
   await open(); assert.equal(await panel.getByRole('radio', { name: /多个标签/ }).isChecked(), true);
   await panel.getByRole('button', { name: '删除标签 重点', exact: true }).click();
   await panel.getByRole('button', { name: '保留标签', exact: true }).click(); assert.equal(graphs.a.labels.length, 1);

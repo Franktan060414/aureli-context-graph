@@ -63,7 +63,14 @@ try {
   await page.goto(process.env.UI_TEST_URL || "http://127.0.0.1:4173");
   await page.waitForSelector(".graph-node");
   assert.equal(await page.locator(".graph-node").count(), 6);
+  assert.equal(await page.locator('.graph-node .node-symbol, .graph-node .node-top .mono, .graph-node .node-bottom').count(), 0);
+  assert.equal(await page.getByRole('button', { name: '复制 Tile ID', exact: true }).count(), 0);
+  await page.locator('.detail-relate').click();
+  assert.equal(await page.locator('.detail-relate').getAttribute('aria-pressed'), 'true');
+  await page.locator('.detail-relate').press('Space');
+  assert.equal(await page.locator('.detail-relate').getAttribute('aria-pressed'), 'false');
   await page.screenshot({ path: "artifacts/desktop.png", fullPage: true });
+  await page.locator('.graph-node[data-tile-id="tile-001"] .node-main').click();
   await page
     .getByRole("button", { name: "删除 tile-001", exact: true })
     .first()
@@ -72,14 +79,11 @@ try {
   await click("删除 Tile");
   await page.waitForFunction(() => document.querySelectorAll(".graph-node").length === 5);
   assert.equal(requests.length, 0, "示例 Tile 删除不得请求后端");
-  await page
-    .getByRole("button", { name: "选择关联", exact: true })
-    .nth(0)
-    .click();
-  await page
-    .getByRole("button", { name: "选择关联", exact: true })
-    .nth(0)
-    .click();
+  for (let index = 0; index < 2; index++) {
+    await page.locator('.graph-node .node-main').nth(index).click();
+    await page.locator('.detail-relate').click();
+  }
+  assert.equal(await page.locator('.graph-node.associated').count(), 2);
   await click("添加Tile");
   await fill("提问内容 *", "多来源上下文示例");
   await click("生成示例 Tile");
@@ -134,7 +138,7 @@ try {
   await click("重置画布");
   await click("确认重置");
   await page.waitForSelector("text=从一个问题，开始连接知识");
-  await click("使用指南");
+  await click("了解 Tile 工作流");
   await page.getByRole("dialog").getByRole("button", { name: "查看示例", exact: true }).click();
   await click("搜索与筛选");
   await fill("搜索 Tile", "不存在的查询");
@@ -177,7 +181,7 @@ try {
     }
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await click("使用指南");
+  await click("了解 Tile 工作流");
   await page.keyboard.press("Tab");
   assert.equal(
     await page.evaluate(() =>

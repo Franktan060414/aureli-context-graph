@@ -100,6 +100,50 @@ class TileSplitControllerTest {
         verify(tiles, never()).delete(any());
     }
 
+    @Test void overwriteChildrenInheritIncomingAndOutgoingEdgesWithoutReferencingDeletedSource() throws Exception {
+        when(edges.selectList(any())).thenReturn(List.of(
+                TileEdgeDO.builder().sourceTileId("parent").targetTileId("source").direction("DIRECTED")
+                        .relationType("EXTENDS").weight(new java.math.BigDecimal("0.7")).description("父边").build(),
+                TileEdgeDO.builder().sourceTileId("source").targetTileId("neighbour").direction("UNDIRECTED")
+                        .relationType("RELATES").weight(new java.math.BigDecimal("0.4")).description("邻边").build()));
+        when(tiles.delete(any())).thenReturn(1);
+        mvc.perform(post("/customer-service/tile/split").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"mapId\":\"map-test\",\"sourceTileId\":\"source\",\"overwrite\":true}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.tiles.length()").value(2))
+                .andExpect(jsonPath("$.data.tiles[0].relatedTileIds[0]").value("parent"))
+                .andExpect(jsonPath("$.data.tiles[1].relatedTileIds[0]").value("parent"))
+                .andExpect(jsonPath("$.data.edges.length()").value(4))
+                .andExpect(jsonPath("$.data.edges[0].description").value("父边"))
+                .andExpect(jsonPath("$.data.edges[0].weight").value(0.7))
+                .andExpect(jsonPath("$.data.edges[2].direction").value("UNDIRECTED"));
+        var links = ArgumentCaptor.forClass(TileEdgeDO.class);
+        verify(edges, times(4)).insert(links.capture());
+        assertTrue(links.getAllValues().stream().noneMatch(edge -> "source".equals(edge.getSourceTileId())
+                || "source".equals(edge.getTargetTileId()) || "DIVIDES".equals(edge.getRelationType())));
+        verify(messages).delete(any());
+        verify(tiles).delete(any());
+    }
+
+    @Test void rejectedOverwriteNeverDeletesSource() {
+        when(model.call(any(Prompt.class))).thenReturn(reply("{\"splittable\":false,\"reason\":\"没有拆分价值\"}"));
+        assertThrows(TileSplitService.NotSplittableException.class,
+                () -> service.split(new SplitTileReqVO("source", null, "map-test", "overwrite-rejected", true)));
+        verify(tiles, never()).delete(any());
+        verify(messages, never()).delete(any());
+        noWrites();
+    }
+
+    @Test void overwriteWithoutNeighboursCreatesIndependentChildren() throws Exception {
+        when(tiles.delete(any())).thenReturn(1);
+        mvc.perform(post("/customer-service/tile/split").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"mapId\":\"map-test\",\"sourceTileId\":\"source\",\"overwrite\":true}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.edges.length()").value(0))
+                .andExpect(jsonPath("$.data.tiles[0].relatedTileIds.length()").value(0))
+                .andExpect(jsonPath("$.data.tiles[0].kind").value("root"));
+        verify(edges, never()).insert(any(TileEdgeDO.class));
+        verify(tiles).delete(any());
+    }
+
     @Test void rejectedValueReturnsSpecificReasonWithoutGeneratingOrWritingAnything() throws Exception {
         when(model.call(any(Prompt.class))).thenReturn(reply("{\"splittable\":false,\"reason\":\"当前只是一个简单定义，没有两个可独立展开的子问题。\"}"));
         mvc.perform(post("/customer-service/tile/split").contentType(MediaType.APPLICATION_JSON)

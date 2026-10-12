@@ -1,6 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { arrangeTiles, ARRANGE_HORIZONTAL_GAP, ARRANGE_VERTICAL_GAP, connectionGeometry, positionTiles } from '../src/lib/graph-layout.js';
+import { arrangeTiles, ARRANGE_HORIZONTAL_GAP, ARRANGE_VERTICAL_GAP, connectionGeometry, positionTiles, readLayouts } from '../src/lib/graph-layout.js';
+
+test('saved layouts preserve finite coordinates in every quadrant and discard malformed points', () => {
+  const original = globalThis.localStorage;
+  globalThis.localStorage = { getItem: () => JSON.stringify({ map: {
+    negative: { x: -1000000, y: -2000000 }, origin: { x: 0, y: 0 }, mixed: { x: 500, y: -300 },
+    invalid: { x: null, y: 12 }, missing: { x: 12 }, text: { x: '12', y: 12 },
+  } }) };
+  try {
+    assert.deepEqual(readLayouts(), { map: {
+      negative: { x: -1000000, y: -2000000 }, origin: { x: 0, y: 0 }, mixed: { x: 500, y: -300 },
+    } });
+  } finally {
+    if (original === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = original;
+  }
+});
 
 test('connections use facing boundaries when a Tile crosses horizontal or vertical sides', () => {
   const source = { x: 400, y: 400 };

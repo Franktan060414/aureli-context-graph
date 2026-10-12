@@ -154,7 +154,7 @@ export function readLayouts() {
     for (const [workspace, positions] of Object.entries(saved || {})) {
       if (!positions || typeof positions !== 'object') continue;
       layouts[workspace] = Object.fromEntries(Object.entries(positions).filter(([, point]) =>
-        point && Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 12 && point.y >= 12,
+        point && Number.isFinite(point.x) && Number.isFinite(point.y),
       ));
     }
     return layouts;

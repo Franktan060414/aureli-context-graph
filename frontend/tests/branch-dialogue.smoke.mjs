@@ -262,14 +262,14 @@ try {
   while (!releaseCompletion) await new Promise(resolve => setTimeout(resolve, 10));
   releaseCompletion(); holdCompletion = false;
   await page.locator('.status-text', { hasText: '回答已完成' }).waitFor();
-  assert.equal(await page.locator('.node-bottom button[aria-pressed="true"]').count(), 0);
+  assert.equal(await page.locator('.graph-node.associated').count(), 0);
 
   // Creating in graph mode also keeps automatic continuation disabled.
   await page.getByRole('button', { name: '打开添加Tile弹窗', exact: true }).click();
   await modal.getByLabel('提问内容').fill('图谱模式保持手动选择关联');
   await modal.getByRole('button', { name: '发送并生成 Tile', exact: true }).click();
   await page.locator('.status-text', { hasText: '回答已完成' }).waitFor();
-  assert.equal(await page.locator('.node-bottom button[aria-pressed="true"]').count(), 0);
+  assert.equal(await page.locator('.graph-node.associated').count(), 0);
   await selectView(page, '分支对话');
   assert.equal(await tile(completions.at(-1).tileId).getAttribute('aria-pressed'), 'false');
 

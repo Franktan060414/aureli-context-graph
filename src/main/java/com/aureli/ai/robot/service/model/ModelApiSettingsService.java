@@ -5,6 +5,8 @@ import com.aureli.ai.robot.service.model.ModelApiSettingsRepository.StoredEndpoi
 import com.aureli.ai.robot.service.model.ModelApiSettingsRepository.StoredSettings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.anthropic.AnthropicChatModel;
+import org.springframework.ai.anthropic.AnthropicChatOptions;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
@@ -49,8 +51,8 @@ public class ModelApiSettingsService {
         String chatUrl = env.getProperty("customer-service.base-url", commonUrl);
         String embeddingUrl = env.getProperty("spring.ai.openai.embedding.base-url", commonUrl);
         StoredSettings initial = new StoredSettings(
-                new StoredEndpoint(provider(chatUrl), normalizeUrl(chatUrl), env.getProperty("customer-service.model", "llama3:latest"), env.getProperty("customer-service.api-key", commonKey)),
-                new StoredEndpoint(provider(embeddingUrl), normalizeUrl(embeddingUrl), env.getProperty("spring.ai.openai.embedding.model", "qwen3-embedding:4b"), env.getProperty("spring.ai.openai.embedding.api-key", commonKey)), dimensions);
+                new StoredEndpoint("openai", normalizeUrl(chatUrl), env.getProperty("customer-service.model", "llama3:latest"), env.getProperty("customer-service.api-key", commonKey)),
+                new StoredEndpoint("openai", normalizeUrl(embeddingUrl), env.getProperty("spring.ai.openai.embedding.model", "qwen3-embedding:4b"), env.getProperty("spring.ai.openai.embedding.api-key", commonKey)), dimensions);
         StoredSettings fallback = validate(toRequest(initial), initial);
         current = new AtomicReference<>(runtime(loadInitial(env, fallback)));
     }
@@ -119,8 +121,11 @@ public class ModelApiSettingsService {
 
     private StoredEndpoint validateEndpoint(EndpointRequest value, StoredEndpoint previous, String label) {
         if (value == null) throw new IllegalArgumentException("请提供" + label + "模型配置。");
-        if (!"local".equals(value.provider()) && !"openai".equals(value.provider()))
-            throw new IllegalArgumentException("请选择本地模型或 OpenAI 标准接口。");
+        String provider = normalizeProvider(value.provider());
+        if (!"openai".equals(provider) && !"anthropic".equals(provider))
+            throw new IllegalArgumentException("请选择 Anthropic 标准接口或 OpenAI 标准接口。");
+        if ("向量".equals(label) && "anthropic".equals(provider))
+            throw new IllegalArgumentException("Anthropic 不提供向量接口，请为向量模型选择 OpenAI 标准接口。");
         String url;
         try { url = normalizeUrl(value.baseUrl()); }
         catch (Exception e) { throw new IllegalArgumentException(label + "模型 API 地址无效，请使用 HTTP / HTTPS 地址。"); }
@@ -128,16 +133,20 @@ public class ModelApiSettingsService {
         if (model.isBlank() || model.length() > 200) throw new IllegalArgumentException("请填写有效的" + label + "模型名称（最多 200 字符）。");
         String key = value.apiKey() == null ? "" : value.apiKey().trim();
         if (key.length() > 4096) throw new IllegalArgumentException("API Key 长度超出限制。");
-        if (key.isBlank() && value.provider().equals(previous.provider()) && url.equals(previous.baseUrl())) key = previous.apiKey();
+        if (key.isBlank() && provider.equals(normalizeProvider(previous.provider())) && url.equals(previous.baseUrl())) key = previous.apiKey();
         if (key == null || key.isBlank()) {
-            if ("openai".equals(value.provider())) throw new IllegalArgumentException("请填写" + label + "模型的 API Key。");
+            if ("anthropic".equals(provider) || !isLocalUrl(url)) throw new IllegalArgumentException("请填写" + label + "模型的 API Key。");
             key = "ollama";
         }
-        return new StoredEndpoint(value.provider(), url, model, key);
+        return new StoredEndpoint(provider, url, model, key);
     }
 
     private RuntimeSettings runtime(StoredSettings stored) {
-        ChatModel chat = OpenAiChatModel.builder().options(OpenAiChatOptions.builder()
+        ChatModel chat = "anthropic".equals(stored.chat().provider())
+                ? AnthropicChatModel.builder().options(AnthropicChatOptions.builder()
+                    .baseUrl(stored.chat().baseUrl()).apiKey(stored.chat().apiKey())
+                    .model(stored.chat().model()).maxTokens(4096).build()).build()
+                : OpenAiChatModel.builder().options(OpenAiChatOptions.builder()
                 .baseUrl(stored.chat().baseUrl()).apiKey(stored.chat().apiKey())
                 .model(stored.chat().model()).temperature(temperature).build()).build();
         EmbeddingModel embedding = OpenAiEmbeddingModel.builder().options(OpenAiEmbeddingOptions.builder()
@@ -154,12 +163,13 @@ public class ModelApiSettingsService {
             throw new IllegalArgumentException("无效的服务地址。");
         return normalized;
     }
-    private static String provider(String url) {
+    private static boolean isLocalUrl(String url) {
         String host = URI.create(url).getHost();
         return host != null && (host.equals("localhost") || host.startsWith("127.") || host.contains("::1")
                 || host.startsWith("192.168.") || host.startsWith("10.")
-                || host.matches("172\\.(1[6-9]|2\\d|3[01])\\..*")) ? "local" : "openai";
+                || host.matches("172\\.(1[6-9]|2\\d|3[01])\\..*"));
     }
+    private static String normalizeProvider(String value) { return "local".equals(value) ? "openai" : value; }
     private static EndpointRequest toRequest(StoredEndpoint value) { return new EndpointRequest(value.provider(), value.baseUrl(), value.model(), value.apiKey()); }
     private static SettingsRequest toRequest(StoredSettings value) { return new SettingsRequest(toRequest(value.chat()), toRequest(value.embedding()), value.dimensions()); }
     private static EndpointView view(StoredEndpoint value) { return new EndpointView(value.provider(), value.baseUrl(), value.model(), value.apiKey() != null && !value.apiKey().isBlank()); }

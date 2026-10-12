@@ -41,7 +41,7 @@ public class TileFusionService {
         this.transactions = transactions;
     }
 
-    public record Result(TileDO tile, String answer, List<TileEdgeDO> edges) {}
+    public record Result(TileDO tile, String answer, List<TileEdgeDO> edges, List<String> deletedTileIds) {}
 
     public Result fuse(FuseTilesReqVO request) {
         String tileId = request.tileId().trim();
@@ -73,10 +73,11 @@ public class TileFusionService {
         }
         return transactions.execute(status -> {
             requireNewId(tileId);
+            var currentSources = tiles.selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
+                    .in(TileDO::getTileId, sources.stream().map(Source::tileId).toList())
+                    .orderByAsc(TileDO::getTileId).last("FOR UPDATE"));
             if (!sources.equals(readSources(mapId, ids)))
                 throw new IllegalArgumentException("来源 Tile 已发生变化，请同步图谱后重新融合。");
-            var currentSources = tiles.selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
-                    .in(TileDO::getTileId, sources.stream().map(Source::tileId).toList()).last("FOR UPDATE"));
             Long firstLabel = currentSources.get(0).getLabelId();
             Long inheritedLabel = currentSources.stream().allMatch(tile -> java.util.Objects.equals(firstLabel, tile.getLabelId()))
                     ? firstLabel : null;
@@ -94,8 +95,11 @@ public class TileFusionService {
                     .edgeId("edge-" + UUID.randomUUID()).sourceTileId(source.tileId()).targetTileId(tileId)
                     .direction("DIRECTED").relationType("FUSES").weight(BigDecimal.ONE)
                     .createTime(now).updateTime(now).build()).toList();
-            links.forEach(edges::insert);
-            return new Result(tile, answer, links);
+            if (request.overwrite()) links = TileReplacementSupport.replace(mapId,
+                    sources.stream().map(Source::tileId).toList(), List.of(tileId), tiles, messages, edges);
+            else links.forEach(edges::insert);
+            return new Result(tile, answer, links,
+                    request.overwrite() ? sources.stream().map(Source::tileId).toList() : List.of());
         });
     }
 

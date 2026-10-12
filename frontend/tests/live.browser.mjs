@@ -16,7 +16,8 @@ try {
   const uiId = `${state.prefix}-ui`;
   if (await page.locator(`.graph-node button[aria-label^="查看 ${uiId}："]`).count() === 0) {
     for (const id of state.tileIds.slice(0,2)) {
-      await page.locator(`.graph-node:has(button[aria-label^="查看 ${id}："])`).getByRole('button', { name: '选择关联', exact: true }).click();
+      await page.locator(`.graph-node button[aria-label^="查看 ${id}："]`).click();
+      await page.locator('.detail-relate').click();
     }
     await page.getByRole('button', { name: '添加Tile', exact: true }).click();
     if (!state.tileIds.includes(uiId)) state.tileIds.push(uiId);

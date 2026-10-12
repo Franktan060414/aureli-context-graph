@@ -1,6 +1,6 @@
 /* A moving accent layer keeps the label and icon stationary. */
 :root { --motion-button-fill: 320ms; }
-:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
   --button-accent: var(--yellow);
   --button-on-accent: var(--text);
   --button-rest-text: var(--blue-ink);
@@ -63,7 +63,7 @@
   --button-on-accent: #fff;
   --button-rest-text: var(--danger);
 }
-:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
   content: '';
   display: block;
   position: absolute;
@@ -77,7 +77,7 @@
   transform: translate3d(-101%,0,0);
   transition: transform var(--motion-button-fill) linear;
 }
-.node-expand,.sidebar-close { --button-position: absolute; }
+.node-expand,.node-relate,.sidebar-close { --button-position: absolute; }
 .app-shell .inspector .tile-weight-control[data-weight] {
   --button-rest-fill: var(--surface);
   --button-accent: var(--weight-normal);
@@ -95,38 +95,41 @@
   --button-rest-text: var(--weight-critical);
 }
 /* Selection is still identifiable when the accent layer is outside the control. */
+.app-shell .inspector .detail-relate[aria-pressed=true],
+.graph-wrap .graph-node .node-relate[aria-pressed=true] {
+  --button-rest-fill: var(--yellow);
+  --button-rest-text: var(--text);
+}
 .provider-options label.selected { box-shadow: inset 0 -3px 0 var(--primary); }
-.node-bottom button { border: 1px solid transparent; border-radius: 5px; }
-.node-bottom button[aria-pressed=true] { border-color: var(--primary); box-shadow: inset 0 -3px 0 var(--yellow); }
 
 @media (hover: hover) and (pointer: fine) {
-  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover {
     background: var(--button-rest-fill, var(--surface));
     color: var(--button-on-accent);
   }
-  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover::after {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)):hover::after {
     transform: translate3d(0,0,0);
   }
 }
 /* Keyboard feedback and a real press are immediate; touch never depends on hover. */
-:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible)) {
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible)) {
   color: var(--button-on-accent);
   transition-duration: 0s;
 }
-:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible))::after {
+:is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label):not(:disabled):not(:has(input:disabled,select:disabled)):is(:focus-visible,:active,:has(input:focus-visible,select:focus-visible))::after {
   transform: translate3d(0,0,0);
   transition-duration: 0s;
 }
 @media (hover: none), (pointer: coarse) {
-  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled)) {
     transition-duration: 0s;
   }
-  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control):not(:disabled):not(:has(input:disabled,select:disabled))::after {
     transition-duration: 0s;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.canvas-controls button,.node-bottom button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control)::after {
+  :is(.primary,.secondary,.test-connection,.icon-button,.node-expand,.node-relate,.canvas-controls button,.view-tabs button,.inspector-tabs button,.sidebar nav a,.map-item,.provider-options label,.tile-weight-control)::after {
     transition: none;
   }
 }

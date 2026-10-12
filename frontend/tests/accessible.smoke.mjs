@@ -26,8 +26,11 @@ try {
  assert.equal((await styles('.sidebar')).border,blue); assert.equal((await styles('.sidebar nav a.active')).background,'rgb(255, 255, 255)'); assert.equal((await styles('.sidebar nav a.active')).border,blue);
  const button=await styles('.workspace-actions .export-button'); assert.ok(contrast(button.color,button.background)>=4.5);
  const selected=await styles('.graph-node.selected'); assert.equal(selected.border,blue); assert.equal(selected.outline,yellow);
- for (const selector of ['.workspace-actions .export-button','.graph-toolbar-actions .icon-button','.node-expand','.node-bottom button','.canvas-controls button']) {
+ for (const selector of ['.workspace-actions .export-button','.graph-toolbar-actions .icon-button','.canvas-controls button']) {
   const box=await page.locator(selector).first().boundingBox(); assert.ok(box.width>=44&&box.height>=44,`${selector} must have a large target`);
+ }
+ for (const selector of ['.node-relate','.node-expand']) {
+  const box=await page.locator(selector).first().boundingBox(); assert.ok(box.width>=24&&box.height>=24,`${selector} must have a compact desktop target`);
  }
  const focus=page.getByRole('button',{name:'导出图谱',exact:true}); await focus.focus(); const focused=await styles('.workspace-actions .export-button'); assert.equal(focused.outline,blue); assert.equal(focused.outlineWidth,'3px'); assert.ok(focused.shadow.includes(yellow));
  await page.locator('h1').focus(); await page.screenshot({path:artifact('accessible-graph.png')});
@@ -38,7 +41,7 @@ try {
  await page.getByRole('button',{name:/^编辑 .* 备注$/}).first().click(); assert.equal((await styles('.modal')).border,blue); await page.keyboard.press('Escape');
  await page.getByRole('link',{name:'服务设置',exact:true}).click(); await page.waitForSelector('#chat-model:enabled'); await assertPage();
  assert.equal((await styles('.model-config-section')).border,blue); assert.equal((await styles('.provider-options label.selected')).background,'rgb(255, 255, 255)');
- await page.getByLabel('本地模型',{exact:true}).first().focus(); assert.equal((await styles('.provider-options label.selected')).outline,blue);
+ await page.getByLabel('OpenAI 标准接口',{exact:true}).first().focus(); assert.equal((await styles('.provider-options label.selected')).outline,blue);
  await page.locator('h1').focus(); await page.screenshot({path:artifact('accessible-settings.png'),fullPage:true});
  for (const width of [375,768,1024,1440]) {
   await page.setViewportSize({width,height:900}); await assertPage();

@@ -81,10 +81,10 @@ try {
  assert.equal(await disabled.isDisabled(), true); await disabled.hover(); assert.notEqual((await state(disabled)).fill, blue);
  const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true });
  await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'demo')); await touch.goto(url);
- await touch.getByRole('button', { name: '最小化节点配置', exact: true }).tap();
- const touchButton = touch.getByRole('button', { name: '延伸', exact: true }).first(); await touchButton.waitFor(); await touchButton.tap();
- await touch.waitForFunction(() => document.activeElement?.tagName === 'TEXTAREA' && !document.querySelector('.node-bottom button:last-child').matches(':active'));
- assert.equal((await state(touchButton)).background, white); assert.ok((await state(touchButton)).x < 0, 'touch does not retain a hover fill'); await touch.close();
+ const touchButton = touch.locator('.detail-relate'); await touchButton.waitFor(); await touchButton.tap();
+ await touch.waitForFunction(() => document.querySelector('.detail-relate')?.getAttribute('aria-pressed') === 'true');
+ await touch.waitForFunction(() => new DOMMatrix(getComputedStyle(document.querySelector('.detail-relate'), '::after').transform).m41 < 0);
+ assert.equal((await state(touchButton)).background, yellow); assert.ok((await state(touchButton)).x < 0, 'touch does not retain a hover fill'); await touch.close();
  assert.deepEqual(errors, []);
  console.log('PASS: uniform 320ms across widths, resizing, zoom and dynamic pages, white rest, blue/yellow fill and text, stable bounds, interrupted exit, keyboard/pointer, reduced motion, disabled and touch states');
 } finally { await browser.close(); }

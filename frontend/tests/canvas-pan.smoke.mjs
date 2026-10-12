@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { demoGraph } from '../src/lib/demo.js';
+import { selectView } from './helpers/view-select.js';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -16,7 +17,7 @@ async function prepare(page) {
   await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   await page.route('**/customer-service/**', route => {
   if (new URL(route.request().url()).pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } });
-    if (route.request().method() !== 'GET') writes.push(route.request().url());
+    if (route.request().method() !== 'GET' && !new URL(route.request().url()).pathname.endsWith('/zoom')) writes.push(route.request().url());
     return route.fulfill({ json: { success: true, data: new URL(route.request().url()).pathname.endsWith('/tile/workspace') ? workspace : {} } });
   });
   await page.goto(baseUrl);
@@ -41,7 +42,7 @@ async function snapshot(graph) {
       return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height,
         left: item.style.left, top: item.style.top, path: item.getAttribute('d') };
     }),
-    selected: element.querySelector('.graph-node.selected .mono')?.textContent,
+    selected: element.querySelector('.graph-node.selected')?.dataset.tileId,
     layout: localStorage.getItem('aureli-tile-layouts'),
     zoom: element.querySelector('.graph-world').style.transform,
   }));
@@ -67,6 +68,47 @@ async function pan(page, graph, dx, dy) {
   assertMoved(before, await snapshot(graph), dx, dy);
   assert.equal(await graph.locator('.panning, .dragging').count(), 0);
 }
+const settle = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+async function trackpad(page, graph, samples) {
+  const before = await snapshot(graph), start = await blankPoint(graph);
+  await graph.locator('.graph-viewport').evaluate((viewport, { start, samples }) => {
+    for (const sample of samples) {
+      const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, clientX: start.x, clientY: start.y,
+        deltaX: sample.x, deltaY: sample.y, deltaMode: 0 });
+      if (sample.momentum) Object.defineProperty(event, 'momentum', { value: true });
+      viewport.dispatchEvent(event);
+      if (!event.defaultPrevented) throw new Error('Trackpad pan must consume scrolling inside the graph');
+    }
+  }, { start, samples });
+  await settle(page);
+  assertMoved(before, await snapshot(graph), -samples.reduce((sum, s) => sum + s.x, 0), -samples.reduce((sum, s) => sum + s.y, 0));
+}
+async function pinch(page, graph, delta) {
+  const before = await snapshot(graph), start = await blankPoint(graph);
+  const anchor = await graph.locator('.graph-world').evaluate((world, point) => {
+    const b = world.getBoundingClientRect(), scale = b.width / world.offsetWidth;
+    return { x: (point.x - b.left) / scale, y: (point.y - b.top) / scale };
+  }, start);
+  await graph.locator('.graph-viewport').evaluate((viewport, { start, delta }) => {
+    const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, clientX: start.x, clientY: start.y,
+      deltaX: 0, deltaY: delta, ctrlKey: true });
+    viewport.dispatchEvent(event);
+    if (!event.defaultPrevented) throw new Error('Pinch must zoom the graph, not the page');
+  }, { start, delta });
+  await settle(page);
+  const after = await snapshot(graph);
+  assert.notEqual(after.zoom, before.zoom);
+  for (const key of ['selected', 'layout']) assert.equal(after[key], before[key]);
+  for (let i = 0; i < before.items.length; i++) {
+    for (const key of ['left', 'top', 'path']) assert.equal(after.items[i][key], before.items[i][key]);
+  }
+  const error = await graph.locator('.graph-world').evaluate((world, { start, anchor }) => {
+    const b = world.getBoundingClientRect(), scale = b.width / world.offsetWidth;
+    return Math.hypot(b.left + anchor.x * scale - start.x, b.top + anchor.y * scale - start.y);
+  }, { start, anchor });
+  assert.ok(error < 0.1, `pinch keeps cursor anchor still (${error}px)`);
+  assert.equal(await page.evaluate(() => visualViewport.scale), 1);
+}
 
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
@@ -78,6 +120,41 @@ try {
   assert.equal(await graph.locator('.graph-node.note').count(), 1);
   assert.equal(await graph.locator('.graph-node.file').count(), 1);
 
+  // Two-finger scroll, including horizontal, vertical, diagonal and momentum.
+  await trackpad(page, graph, [{ x: 0, y: 12 }, { x: 0, y: 80 }, { x: 0, y: 110 }, { x: 0, y: 6 }]);
+  await trackpad(page, graph, [{ x: -50, y: 0 }, { x: -35.5, y: -18.5 }, { x: 0, y: -90, momentum: true }]);
+  await trackpad(page, graph, Array.from({ length: 20 }, () => ({ x: -0.5, y: -1.25 })));
+  await pinch(page, graph, -10); await pinch(page, graph, 10);
+  assert.equal(await graph.locator('.graph-world').evaluate(e => e.style.transform), 'scale(1)');
+  // Real browser-delivered wheel input with two axes also pans.
+  let padBefore = await snapshot(graph), padPoint = await blankPoint(graph);
+  await page.mouse.move(padPoint.x, padPoint.y); await page.mouse.wheel(9, 13); await settle(page);
+  assertMoved(padBefore, await snapshot(graph), -9, -13);
+  // Wheel behavior is local to the graph, not a global page listener.
+  const outside = await page.locator('.sidebar').evaluate(sidebar => {
+    const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 10, deltaY: 20 });
+    sidebar.dispatchEvent(event); return event.defaultPrevented;
+  });
+  assert.equal(outside, false);
+  await selectView(page, 'Tile 列表'); assert.equal(await page.locator('.graph-wrap').count(), 0);
+  for (const ctrlKey of [false, true]) {
+    const prevented = await page.locator('.tile-list').evaluate((list, ctrlKey) => {
+      const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 0, deltaY: 8, ctrlKey });
+      list.dispatchEvent(event); return event.defaultPrevented;
+    }, ctrlKey);
+    assert.equal(prevented, false, 'list view preserves its native scrolling and pinch');
+  }
+  await selectView(page, '图谱视图');
+  assert.equal(await graph.locator('.graph-world').evaluate(e => e.style.transform), 'scale(1)');
+  // The details panel also retains normal scrolling while graph view is open.
+  await page.getByRole('button', { name: '展开节点配置', exact: true }).click();
+  const detailsPrevented = await page.locator('.inspector-body').evaluate(panel => {
+    const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 1, deltaY: 10 });
+    panel.dispatchEvent(event); return event.defaultPrevented;
+  });
+  assert.equal(detailsPrevented, false);
+  await page.getByRole('button', { name: '最小化节点配置', exact: true }).click();
+
   // Movement below the threshold and secondary clicks do not pan.
   let before = await snapshot(graph), start = await blankPoint(graph);
   await page.mouse.move(start.x, start.y);
@@ -88,6 +165,11 @@ try {
   await page.mouse.down({ button: 'right' });
   await page.mouse.move(start.x + 50, start.y + 30);
   await page.mouse.up({ button: 'right' });
+  assertMoved(before, await snapshot(graph), 0, 0);
+  await page.getByRole('menu').waitFor();
+  assert.equal(await page.locator('dialog.modal[open]').count(), 0, 'right-button release must not invoke a menu action');
+  await page.keyboard.press('Escape');
+  await page.getByRole('menu').waitFor({ state: 'hidden' });
   assertMoved(before, await snapshot(graph), 0, 0);
 
   // Escape rolls back a pan; the next drag still works.
@@ -116,6 +198,7 @@ try {
     assert.equal(await graph.locator('.graph-world').evaluate(element => element.style.transform), `scale(${zoom})`);
     await pan(page, graph, 60, 45);
     await pan(page, graph, -80, -60);
+    await trackpad(page, graph, [{ x: -8, y: -12 }]);
     if (zoom > 0.8) await graph.getByRole('button', { name: '缩小图谱', exact: true }).click();
   }
 
@@ -133,8 +216,10 @@ try {
   assert.ok(Math.abs(positionAfter.x - positionBefore.x - 50) < 1, JSON.stringify({ positionBefore, positionAfter }));
   assert.ok(Math.abs(positionAfter.y - positionBefore.y - 40) < 1, JSON.stringify({ positionBefore, positionAfter }));
 
-  // Scroll position does not change the distance of a subsequent pan.
+  // The infinite viewport cannot be scrolled independently of its camera.
   await graph.locator('.graph-viewport').evaluate(element => { element.scrollLeft = 65; element.scrollTop = 50; });
+  assert.deepEqual(await graph.locator('.graph-viewport').evaluate(e => [e.scrollLeft, e.scrollTop]), [0, 0]);
+  await trackpad(page, graph, [{ x: 5, y: 8 }]);
   await pan(page, graph, 40, 25);
 
   // Releasing outside the canvas and cancellation both clean up capture.
@@ -157,7 +242,6 @@ try {
   assertMoved(before, await snapshot(graph), 0, 0);
   assert.equal(await page.locator('.fullscreen-viewer').count(), 1);
   await graph.getByRole('button', { name: '适应画布', exact: true }).click();
-  assert.equal(await graph.locator('.graph-space').evaluate(element => element.style.transform), 'translate(0px, 0px)');
   const viewport = await graph.locator('.graph-viewport').boundingBox();
   for (const item of (await snapshot(graph)).items.slice(0, workspace.tiles.length)) {
     assert.ok(item.x >= viewport.x - 1 && item.x + item.width <= viewport.x + viewport.width + 1);
@@ -193,7 +277,7 @@ try {
 
   assert.deepEqual(errors, []);
   assert.deepEqual(writes, [], 'panning does not write node or relationship data');
-  console.log('PASS: blank-area pan moves Tiles, notes, files, arrows and labels together; zoom, scroll, threshold, controls, cancellation, capture, card drag, fit and touch');
+  console.log('PASS: blank-area and trackpad pan, two-axis/accelerated/momentum/batched scrolling, pinch anchor and zoom, graph-only scope (list/sidebar/details), fullscreen, zoom, scroll, threshold, controls, cancellation, capture, card drag, fit and touch');
 } finally {
   await browser.close();
 }

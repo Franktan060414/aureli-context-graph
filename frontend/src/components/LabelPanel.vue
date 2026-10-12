@@ -59,7 +59,7 @@ async function apply() {
 <template>
   <div class="label-panel" :aria-busy="busy">
     <p class="label-selection-summary" role="status">{{ tileIds.length ? `已选择 ${tileIds.length} 个 Tile` : '尚未选择 Tile，可先管理标签' }}</p>
-    <p class="field-help">{{ tileIds.length ? '应用后会替换所选 Tile 的原标签。搜索隐藏的已选 Tile 也包含在内。' : '通过 Tile 上的“选择关联”选中一个或多个 Tile，再打开标签面板。' }}</p>
+    <p class="field-help">{{ tileIds.length ? '应用后会替换所选 Tile 的原标签。搜索隐藏的已选 Tile 也包含在内。' : '在节点详情中点击“关联节点”选中一个或多个 Tile，再打开标签面板。' }}</p>
     <fieldset class="label-options" :disabled="busy">
       <legend>当前图谱的标签</legend>
       <div class="label-options-list" role="radiogroup" aria-label="选择 Tile 标签">

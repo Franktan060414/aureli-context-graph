@@ -40,7 +40,7 @@ export function labelRegions(tiles, labels = [], previous = []) {
       const top = Math.min(...component.map(tile => tile.y));
       const right = Math.max(...component.map(tile => tile.x + tile.width));
       const bottom = Math.max(...component.map(tile => tile.y + tile.height));
-      const x = Math.max(12, left - 20), y = Math.max(12, top - 44);
+      const x = left - 20, y = top - 44;
       const captionBelow = top - y < 36;
       regions.push({ key: JSON.stringify([labelId, tileIds]), label: known.get(labelId), tileIds,
         total: members.length, x, y, width: right + 20 - x,

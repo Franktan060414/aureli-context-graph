@@ -52,8 +52,8 @@ class ModelApiSettingsServiceTest {
     }
 
     private void assertLanFallback(ModelApiSettingsService service) {
-        assertEquals(new ModelApiSettingsService.EndpointView("local", "http://192.168.0.106:11434/v1", "llama3:latest", true), service.view().chat());
-        assertEquals(new ModelApiSettingsService.EndpointView("local", "http://192.168.0.106:11434/v1", "qwen3-embedding:4b", true), service.view().embedding());
+        assertEquals(new ModelApiSettingsService.EndpointView("openai", "http://192.168.0.106:11434/v1", "llama3:latest", true), service.view().chat());
+        assertEquals(new ModelApiSettingsService.EndpointView("openai", "http://192.168.0.106:11434/v1", "qwen3-embedding:4b", true), service.view().embedding());
         assertEquals(1536, service.dimensions());
         assertNotNull(service.chatModel());
         assertNotNull(service.embeddingModel());
@@ -181,7 +181,7 @@ class ModelApiSettingsServiceTest {
         assertEquals("http://10.0.0.5:11434/v1", service.view().embedding().baseUrl());
         assertEquals("custom-chat", service.view().chat().model());
         assertEquals("custom-embedding", service.view().embedding().model());
-        assertEquals("local", service.view().chat().provider());
+        assertEquals("openai", service.view().chat().provider());
     }
 
     @Test void chatRequestsImmediatelyUseSavedAddressModelAndKey() throws Exception {
@@ -223,6 +223,102 @@ class ModelApiSettingsServiceTest {
             // A newly created service restores credentials as well as the public configuration.
             assertEquals("fixture-answer", new ModelApiSettingsService(env(file), repository).chatModel().call("question"));
             assertEquals("Bearer next-key", authorization.get());
+        } finally { server.stop(0); }
+    }
+
+    @Test void normalizesLegacyLocalAndKeepsCredentials() {
+        persisted.set(new StoredSettings(
+                new ModelApiSettingsRepository.StoredEndpoint("local", "http://127.0.0.1:11434/v1", "old-chat", "old-chat-key"),
+                new ModelApiSettingsRepository.StoredEndpoint("local", "http://127.0.0.1:11434/v1", "old-vector", "old-vector-key"), 1536));
+        var service = new ModelApiSettingsService(env(directory.resolve("absent.json")), repository);
+        assertEquals("openai", service.view().chat().provider());
+        assertEquals("openai", service.view().embedding().provider());
+        service.save(new ModelApiSettingsService.SettingsRequest(
+                endpoint("openai", service.view().chat().baseUrl(), "old-chat", ""),
+                endpoint("openai", service.view().embedding().baseUrl(), "old-vector", ""), 1536));
+        assertEquals("old-chat-key", persisted.get().chat().apiKey());
+        assertEquals("old-vector-key", persisted.get().embedding().apiKey());
+    }
+
+    @Test void rejectsAnthropicWithoutKeyAndAnthropicEmbeddings() {
+        var service = new ModelApiSettingsService(env(directory.resolve("absent.json")), repository);
+        var before = service.view();
+        assertThrows(IllegalArgumentException.class, () -> service.save(new ModelApiSettingsService.SettingsRequest(
+                endpoint("anthropic", "https://api.anthropic.com", "claude-fixture", ""), settings("fixture").embedding(), 1536)));
+        assertThrows(IllegalArgumentException.class, () -> service.save(new ModelApiSettingsService.SettingsRequest(
+                settings("fixture").chat(), endpoint("anthropic", "https://api.anthropic.com", "claude-fixture", "fixture"), 1536)));
+        assertEquals(before, service.view());
+    }
+
+    @Test void anthropicUsesMessagesAuthenticationStreamingAndRestoresAfterRestart() throws Exception {
+        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        AtomicReference<String> body = new AtomicReference<>();
+        AtomicReference<String> path = new AtomicReference<>();
+        AtomicReference<String> key = new AtomicReference<>();
+        AtomicReference<String> version = new AtomicReference<>();
+        server.createContext("/", exchange -> {
+            path.set(exchange.getRequestURI().getPath());
+            key.set(exchange.getRequestHeaders().getFirst("x-api-key"));
+            version.set(exchange.getRequestHeaders().getFirst("anthropic-version"));
+            body.set(new String(exchange.getRequestBody().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+            boolean stream = JsonMapper.builder().build().readTree(body.get()).path("stream").asBoolean(false);
+            String message = """
+                    {"id":"msg_fixture","type":"message","role":"assistant","model":"claude-fixture","content":[{"type":"text","text":"anthropic-answer"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":5,"output_tokens":3}}
+                    """;
+            String events = """
+                    event: message_start
+                    data: {"type":"message_start","message":{"id":"msg_fixture","type":"message","role":"assistant","model":"claude-fixture","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":5,"output_tokens":0}}}
+
+                    event: content_block_start
+                    data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}
+
+                    event: content_block_delta
+                    data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"anthropic-answer"}}
+
+                    event: content_block_stop
+                    data: {"type":"content_block_stop","index":0}
+
+                    event: message_delta
+                    data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"output_tokens":3}}
+
+                    event: message_stop
+                    data: {"type":"message_stop"}
+
+                    """;
+            byte[] response = (stream ? events : message).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", stream ? "text/event-stream" : "application/json");
+            exchange.sendResponseHeaders(200, response.length);
+            exchange.getResponseBody().write(response); exchange.close();
+        });
+        server.start();
+        try {
+            Path file = directory.resolve("absent.json");
+            var service = new ModelApiSettingsService(env(file), repository);
+            String url = "http://127.0.0.1:" + server.getAddress().getPort();
+            var request = new ModelApiSettingsService.SettingsRequest(
+                    endpoint("anthropic", url, "claude-fixture", "anthropic-secret"), settings("vector-secret").embedding(), 1536);
+            var saved = service.save(request);
+            assertEquals("anthropic", saved.chat().provider());
+            assertFalse(JsonMapper.builder().build().writeValueAsString(saved).contains("anthropic-secret"));
+            assertEquals("anthropic-answer", service.testConnection().reply());
+            assertEquals("/v1/messages", path.get());
+            assertEquals("anthropic-secret", key.get());
+            assertNotNull(version.get());
+            var payload = JsonMapper.builder().build().readTree(body.get());
+            assertEquals("claude-fixture", payload.path("model").asText());
+            assertEquals(4096, payload.path("max_tokens").asInt());
+            assertTrue(payload.has("messages"));
+            String streamed = service.chatModel().stream(new org.springframework.ai.chat.prompt.Prompt("question"))
+                    .map(response -> response.getResult().getOutput().getText())
+                    .reduce("", String::concat).block(java.time.Duration.ofSeconds(10));
+            assertEquals("anthropic-answer", streamed);
+            assertTrue(JsonMapper.builder().build().readTree(body.get()).path("stream").asBoolean());
+            service.save(new ModelApiSettingsService.SettingsRequest(
+                    endpoint("anthropic", url, "claude-fixture", ""), settings("").embedding(), 1536));
+            assertEquals("anthropic-answer", new ModelApiSettingsService(env(file), repository).testConnection().reply());
+            assertEquals("anthropic-secret", key.get());
+            service.save(new ModelApiSettingsService.SettingsRequest(settings("openai-key").chat(), settings("").embedding(), 1536));
+            assertInstanceOf(org.springframework.ai.openai.OpenAiChatModel.class, service.chatModel());
         } finally { server.stop(0); }
     }
 

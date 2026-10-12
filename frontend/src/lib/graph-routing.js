@@ -61,15 +61,15 @@ export function rerouteConnection(source, target, tiles) {
     : { x: s.x + s.width / 2, y: s.y + (sign > 0 ? s.height : 0) };
   const end = horizontal ? { x: t.x + (sign > 0 ? 0 : t.width), y: t.y + t.height / 2 }
     : { x: t.x + t.width / 2, y: t.y + (sign > 0 ? 0 : t.height) };
-  const outside = (p, direction) => ({ x: Math.max(2, p.x + (horizontal ? direction * 16 : 0)),
-    y: Math.max(2, p.y + (horizontal ? 0 : direction * 16)) });
+  const outside = (p, direction) => ({ x: p.x + (horizontal ? direction * 16 : 0),
+    y: p.y + (horizontal ? 0 : direction * 16) });
   const from = outside(start, sign), to = outside(end, -sign);
   const all = tiles.map(box);
   // Bound work on very large, freely edited maps. Initial ELK routes remain
   // available; intersecting/overlapping cards can always use a live curve.
   if (all.length > 100) return fallback;
-  const xs = [...new Set([2, from.x, to.x, ...all.flatMap(n => [Math.max(2, n.x - 16), n.x + n.width + 16])])].sort((a, b) => a - b);
-  const ys = [...new Set([2, from.y, to.y, ...all.flatMap(n => [Math.max(2, n.y - 16), n.y + n.height + 16])])].sort((a, b) => a - b);
+  const xs = [...new Set([from.x, to.x, ...all.flatMap(n => [n.x - 16, n.x + n.width + 16])])].sort((a, b) => a - b);
+  const ys = [...new Set([from.y, to.y, ...all.flatMap(n => [n.y - 16, n.y + n.height + 16])])].sort((a, b) => a - b);
   const clear = (a, b) => !all.some(n => crosses(a, b, n, 12));
   if (!clear(from, from) || !clear(to, to)) return fallback;
   const count = xs.length, startIndex = ys.indexOf(from.y) * count + xs.indexOf(from.x);

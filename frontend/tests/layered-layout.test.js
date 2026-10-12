@@ -86,10 +86,11 @@ test('interleaved labels and cross-group feedback preserve every directed connec
   }
 });
 
-test('region hysteresis prevents flicker and captions do not cover cards near the top boundary', () => {
+test('region hysteresis prevents flicker and captions can extend above the origin', () => {
   const pair = gap => [tile('a', 1, { x: 24, y: 24 }), tile('b', 1, { x: 284 + gap, y: 24 })];
   const initial = labelRegions(pair(150), labels);
-  assert.equal(initial.length, 1); assert.equal(initial[0].captionBelow, true);
+  assert.equal(initial.length, 1); assert.equal(initial[0].captionBelow, false);
+  assert.equal(initial[0].y, -20);
   const near = labelRegions(pair(200), labels, initial);
   assert.equal(near.length, 1);
   const detached = labelRegions(pair(230), labels, near);
@@ -112,5 +113,8 @@ test('manual movement invalidates old paths, including unrelated cards blocking 
   assert.deepEqual(routed.points.at(-1), { x: 900, y: 200 });
   assert.ok(routeIsCurrent({ ...route, sections: [routed.points] }, source, target, [source, target, blocker]));
   assert.deepEqual([source.x, target.x, blocker.x], [100, 900, 500]);
+  const shifted = [source, target, blocker].map(tile => ({ ...tile, x: tile.x - 2000, y: tile.y - 3000 }));
+  const negative = rerouteConnection(shifted[0], shifted[1], shifted);
+  assert.deepEqual(negative.points, routed.points.map(p => ({ x: p.x - 2000, y: p.y - 3000 })), 'routing has no origin boundary');
   assert.ok(!/NaN|Infinity/.test(rerouteConnection(source, { ...target, x: 150 }, [source, { ...target, x: 150 }]).path));
 });

@@ -26,7 +26,7 @@ try {
   const graph = page.locator('.fullscreen-viewer');
   await page.waitForFunction(() => !document.getAnimations().some(animation => animation.effect.target.classList.contains('fullscreen-viewer') && animation.playState === 'running'));
   const node = graph.locator('.graph-node').nth(1);
-  const selectedBefore = await graph.locator('.graph-node.selected .mono').textContent();
+  const selectedBefore = await graph.locator('.graph-node.selected').getAttribute('data-tile-id');
   let before = await point(node);
   let start = await dragStart(node);
   const edgeBefore = await graph.locator('.edges g > path').first().getAttribute('d');
@@ -35,7 +35,7 @@ try {
   assert.notEqual(await graph.locator('.edges g > path').first().getAttribute('d'), edgeBefore, 'arrows update while holding the Tile');
   await page.mouse.up();
   assertPoint(await point(node), { x: before.x + 80, y: before.y + 120 });
-  assert.equal(await graph.locator('.graph-node.selected .mono').textContent(), selectedBefore, 'drag does not select');
+  assert.equal(await graph.locator('.graph-node.selected').getAttribute('data-tile-id'), selectedBefore, 'drag does not select');
 
   // Small motion remains a normal click.
   before = await point(node);
@@ -69,13 +69,16 @@ try {
   await page.keyboard.press('Alt+ArrowDown');
   before.y += 20;
   assertPoint(await point(node), before);
-  await node.locator('.node-bottom button').first().click();
-  assert.match(await node.locator('.node-bottom button').first().textContent(), /已关联/);
+  assert.equal(await node.locator('.node-bottom').count(), 0);
+  assert.equal(await node.locator('.node-main').getAttribute('aria-pressed'), 'true');
   assertPoint(await point(node), before);
 
   await graph.locator('.fullscreen-header .secondary').click();
   await graph.waitFor({ state: 'detached' });
   const normalNode = page.locator('.graph-node').nth(1);
+  await page.locator('.detail-relate').click();
+  assert.equal(await page.locator('.detail-relate').getAttribute('aria-pressed'), 'true');
+  assert.equal(await normalNode.evaluate(element => element.classList.contains('associated')), true);
   assertPoint(await point(normalNode), before);
   await selectView(page, "Tile 列表");
   await selectView(page, "图谱视图");
@@ -90,11 +93,12 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const outer = graph.locator('.graph-viewport');
   const farNode = graph.locator('.graph-node').last();
-  const widthBefore = await graph.locator('.graph-world').evaluate(element => element.offsetWidth);
+  const cameraBefore = await graph.locator('.graph-space').getAttribute('style');
   const bounds = await outer.boundingBox();
   start = await dragStart(farNode);
   await page.mouse.move(bounds.x + bounds.width - 10, start.y, { steps: 12 });
-  await page.waitForFunction(width => document.querySelector('.fullscreen-viewer .graph-world').offsetWidth > width && document.querySelector('.fullscreen-viewer .graph-viewport').scrollLeft > 0, widthBefore);
+  await page.waitForFunction(camera => document.querySelector('.fullscreen-viewer .graph-space').getAttribute('style') !== camera, cameraBefore);
+  assert.equal(await outer.evaluate(element => element.scrollLeft), 0, 'edge dragging moves the camera without finite scrollbars');
   await page.mouse.up();
   assert.equal(await graph.locator('.dragging').count(), 0);
 
@@ -120,5 +124,5 @@ try {
   assert.equal(await touch.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await touch.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: live arrows, click threshold, zoom coordinates, drag cancellation, keyboard/buttons, action buttons, shared views, refresh persistence, canvas expansion, edge scroll, reduced motion and touch');
+  console.log('PASS: live arrows, click threshold, zoom coordinates, drag cancellation, keyboard/buttons, action buttons, shared views, refresh persistence, unbounded edge auto-pan, reduced motion and touch');
 } finally { await browser.close(); }

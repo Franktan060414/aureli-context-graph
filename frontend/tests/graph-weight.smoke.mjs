@@ -22,15 +22,16 @@ async function measurements(graph) {
   return graph.locator('.graph-node').evaluateAll(elements => elements.map(element => {
     const rect = element.getBoundingClientRect();
     const main = element.querySelector('.node-main'), question = main.querySelector('strong'), answer = main.querySelector('.node-answer');
-    const bottom = element.querySelector('.node-bottom').getBoundingClientRect();
+    const mainRect = main.getBoundingClientRect();
     return {
       width: rect.width, height: rect.height,
       x: parseFloat(element.style.left), y: parseFloat(element.style.top),
       questionHeight: question.getBoundingClientRect().height,
       answerHeight: answer.getBoundingClientRect().height,
       questionFont: getComputedStyle(question).fontSize, answerFont: getComputedStyle(answer).fontSize,
-      buttonHeight: element.querySelector('.node-bottom button').getBoundingClientRect().height,
-      bottom: bottom.bottom, cardBottom: rect.bottom,
+      answerLineHeight: parseFloat(getComputedStyle(answer).lineHeight),
+      mainHeight: mainRect.height, mainBottom: mainRect.bottom, cardBottom: rect.bottom,
+      footerCount: element.querySelectorAll('.node-bottom, .node-symbol, .node-top .mono').length,
     };
   }));
 }
@@ -40,7 +41,10 @@ function assertDimensions(measured, scale = 1) {
     assert.ok(Math.abs(measured[index].height - 200 * multiplier * scale) < 0.1);
     assert.equal(measured[index].questionFont, '17px');
     assert.equal(measured[index].answerFont, '14px');
-    assert.ok(measured[index].bottom <= measured[index].cardBottom);
+    assert.ok(measured[index].mainBottom <= measured[index].cardBottom);
+    assert.ok(measured[index].mainHeight > measured[index].height - 8 * scale);
+    assert.equal(measured[index].footerCount, 0);
+    assert.ok(measured[index].answerHeight >= measured[index].answerLineHeight * 4 * scale);
   }
 }
 try {
@@ -52,8 +56,6 @@ try {
   assert.ok(measured[2].questionHeight > measured[1].questionHeight);
   assert.ok(measured[1].answerHeight > measured[0].answerHeight);
   assert.ok(measured[2].answerHeight > measured[1].answerHeight);
-  assert.equal(measured[0].buttonHeight, measured[1].buttonHeight);
-  assert.equal(measured[0].buttonHeight, measured[2].buttonHeight);
   for (let i = 1; i < measured.length; i++)
     assert.equal(measured[i].x - measured[i - 1].x - measured[i - 1].width, 56);
 
@@ -90,5 +92,5 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   }
   assert.deepEqual(errors, []);
-  console.log('PASS: 1/1.5/2.5 size ratios, more visible content, unchanged typography/actions, layout spacing, fullscreen, keyboard movement, live connections, zoom, saved coordinates, sync and mobile containment');
+  console.log('PASS: 1/1.5/2.5 size ratios, more visible content, unchanged typography, content fills cards without icons/IDs/footer, layout spacing, fullscreen, keyboard movement, live connections, zoom, saved coordinates, sync and mobile containment');
 } finally { await browser.close(); }

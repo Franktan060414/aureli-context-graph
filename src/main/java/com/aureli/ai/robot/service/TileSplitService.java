@@ -91,10 +91,11 @@ public class TileSplitService {
         // 模型调用结束后才开启写事务，任何节点、消息或连边保存失败均整体回滚。
         return transactions.execute(status -> {
             requireNewChildren(childIds);
+            TileDO currentSource = tiles.selectOne(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
+                    .eq(TileDO::getTileId, id).last("FOR UPDATE"));
             if (!source.equals(readSource(mapId, id)))
                 throw new IllegalArgumentException("原 Tile 已发生变化，请同步图谱后重新拆分。");
-            Long inheritedLabel = tiles.selectOne(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
-                    .eq(TileDO::getTileId, id).last("FOR UPDATE")).getLabelId();
+            Long inheritedLabel = currentSource.getLabelId();
             LocalDateTime now = LocalDateTime.now();
             List<Child> children = new ArrayList<>();
             List<TileEdgeDO> links = new ArrayList<>();
@@ -114,10 +115,12 @@ public class TileSplitService {
                         .sourceTileId(id).targetTileId(childId).direction("DIRECTED").relationType("DIVIDES")
                         .weight(BigDecimal.ONE).description(requirements.isEmpty() ? "手动拆分" : "手动拆分：" + requirements)
                         .createTime(now).updateTime(now).build();
-                edges.insert(link);
+                if (!request.overwrite()) edges.insert(link);
                 children.add(new Child(tile, item.answer()));
-                links.add(link);
+                if (!request.overwrite()) links.add(link);
             }
+            if (request.overwrite()) links.addAll(TileReplacementSupport.replace(mapId, List.of(id),
+                    children.stream().map(child -> child.tile().getTileId()).toList(), tiles, messages, edges));
             return new Result(List.copyOf(children), List.copyOf(links));
         });
     }

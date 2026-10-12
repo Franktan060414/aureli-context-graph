@@ -14,6 +14,8 @@ npm run dev
 
 打开开发服务显示的地址（默认 http://127.0.0.1:5173）。`/customer-service` 请求代理到 http://localhost:8080。可在「服务设置」中覆盖接口地址；跨域地址需要后端允许 CORS。
 
+「服务设置 → 工作台设置」提供「历史记录导入」，支持本应用导出的 JSON（最大 10 MB）。导入会校验内容、关联、标签和布局，保存为独立新图谱并自动打开；节点和关联 ID 会重新生成，原有图谱不受影响。JSON 不含附件二进制文件，仅恢复文件节点的文字及信息。`tests/graph-import.test.js` 验证格式校验，`tests/graph-import.smoke.mjs` 验证实际导出文件的导入、错误与重试、刷新恢复及手机导航。
+
 ```sh
 npm run build
 npm run preview
@@ -52,6 +54,10 @@ PDF 在浏览器本地生成，无需打印对话框、桌面桥接或新增后�
 `tests/tile-fusion.smoke.mjs` 验证问答筛选、混合选择、两个及更多来源、权重继承、确认/取消/关闭/Esc 与焦点恢复、失败重试、处理中防重复提交、原节点保留、刷新恢复、375/768/1440px 弹窗及示例隔离。后端 `TileFusionControllerTest` 覆盖接口参数、类型过滤、去重、完整回答、模型异常/无效输出、来源变更与问答/关系持久化；`TileFusionPersistenceIntegrationTest` 通过 `-Daureli.fusion.integration=true` 启用真实 PostgreSQL 验证，使用模拟模型，并仅清理测试自建节点。
 
 `tests/tile-split.smoke.mjs` 验证工具栏位置、单问答选择、无价值理由与零节点写入、可选要求、失败重试、处理中保护、画布位置与刷新恢复、375/768/1440px 弹窗及示例隔离。后端 `TileSplitControllerTest` 覆盖先判断后生成、完整来源、拒绝原因、无效输出和来源变更保护；`mvn -Dtest=TileSplitPersistenceIntegrationTest -Daureli.split.integration=true test` 使用真实 PostgreSQL 与模拟模型验证多节点持久化、重复提交、图谱隔离和第二个子节点保存失败后的整体回滚，仅创建及清理自有测试图谱。
+
+融合弹窗提供「融合并覆盖」：请求传入 `overwrite: true`，成功后在同一事务中删除参与操作的原问答 Tile 及其消息，并把外部连边迁移到新 Tile，保留方向、关系类型、权重和说明，删除参与 Tile 之间的内部连边，便签和文件保留。拆分弹窗暂不提供「拆分并覆盖」按钮，前后端覆盖逻辑与接口保留，拆分覆盖时每个子 Tile 继承全部原连边。默认拆分、融合操作继续保留原 Tile。`tests/tile-replacement.smoke.mjs` 验证真实及示例模式均不显示拆分覆盖选项，并覆盖融合覆盖的失败重试、处理中保护、邻居引用即时更新、画布位置及刷新恢复、320～1440px 弹窗和示例隔离；`mvn -Dtest=TileReplacementPersistenceIntegrationTest -Daureli.replacement.integration=true test` 在临时 PostgreSQL schema 中验证关系继承、标签与权重、图谱隔离，以及删除原 Tile 时失败的整体回滚，结束后清理测试 schema。
+
+「融合并覆盖」使用专用接口 `POST /customer-service/tile/fusion/overwrite`，该接口始终执行覆盖；普通融合继续使用 `/customer-service/tile/fusion`。覆盖成功返回实际删除的 `deletedTileIds`，前端确认来源已删除且返回连边不再引用来源后才更新画布。旧后端无法通过忽略参数将其降级成普通融合，前端也不会在删除未经确认时隐藏原 Tile。开发版修改后端后需重新启动服务以加载新逻辑。
 
 左下角工具栏的「一键整理画布」位于「适应画布」右侧。点击后选择「树状排列」或「Layered 排列」，点击「开始整理」应用；取消、关闭或 Esc 保留原布局和视野。树状排列继续按关联从左向右展开分支，父节点居中、共享后代保留全部关系，并兼容不同权重尺寸、乱序、缺失来源及循环。
 
@@ -101,7 +107,7 @@ node tests/ui.smoke.mjs
 
 图谱工具栏可切换全页面图谱；每个 Tile 右上角可打开完整问答阅读视图。通过退出按钮或 Esc 返回原工作区，关联选择和问答状态保持不变。
 
-「服务设置」仅保留 API 配置表单，分别选择对话模型和向量模型的来源（本地 / OpenAI 标准接口），填写各自的 Base URL、API Key 和模型 ID。本地默认采用项目已有的 llama3:latest 与 qwen3-embedding:4b；OpenAI 标准接口填入的示例名称为 gpt-4.1-mini 与 text-embedding-3-small，支持手动更改为服务提供的模型。
+「服务设置」的对话模型可选择 Anthropic 标准接口或 OpenAI 标准接口，填写 Base URL、API Key 和模型 ID。Anthropic 使用 Messages 协议，默认地址为 https://api.anthropic.com；OpenAI 标准接口也支持 Ollama 等兼容服务。旧 local 配置自动归入 openai，保留地址、模型和密钥；本地服务无需鉴权时可留空密钥。Anthropic 不提供向量接口，因此向量模型使用 OpenAI 标准接口。所有模型 ID 均可手动填写。
 
 - `GET /customer-service/model-settings` 读取当前配置，只返回 `keyConfigured`，不会返回密钥。
 - `POST /customer-service/model-settings` 校验、保存并应用配置。密钥留空时，仅在来源与接口地址均未改变时保留原密钥。
@@ -113,6 +119,8 @@ node tests/ui.smoke.mjs
 后端定向测试：`mvn -Dtest=ModelApiSettingsServiceTest test`，无需数据库或真实模型；覆盖持久化恢复、密钥脱敏/保留、地址和维度校验、失败写入回滚，以及文档入库/查询使用新向量模型。
 
 `tests/views.smoke.mjs` 验证全页面图谱/Tile、退出与 Esc、配置来源切换、密钥校验、保存应用及手机布局。
+
+设置页定向验收可设置 `API_SETTINGS_ONLY=true`，覆盖旧本地配置归入 OpenAI、Anthropic 切换与密钥校验、保存和刷新恢复、连接反馈以及 375px 布局；后端 `ModelApiSettingsServiceTest` 验证 Messages 认证、普通与流式回答、密钥保留及重启恢复。更新后需重启后端加载 Anthropic 依赖和配置表升级。
 
 接口语义参考 [OpenAI API 认证说明](https://developers.openai.com/api/reference/overview) 与 [向量模型维度配置](https://developers.openai.com/api/docs/guides/embeddings)。
 
@@ -135,7 +143,9 @@ node tests/ui.smoke.mjs
 
 图谱工作台采用全画布布局：图谱占满 Dock 右侧的完整视口，视图切换、搜索、同步、导出与画布操作集中在画布工具栏中。节点详情 / 添加Tile作为右侧浮动配置面板覆盖在图谱上，不再挤压画布，并可最小化为“节点配置”控制条；手机端自动变为画布底部浮层。节点与关系数量仍在图谱底部显示，示例 / 真实工作区切换移至使用指南，同时保留屏幕阅读器页面标题、明确的展开状态和键盘焦点。
 
-节点配置面板展开时在左上角提供拖动手柄；收起后隐藏手柄，整个“节点配置”小窗口都可按住拖动。展开与最小化会保留位置，面板尺寸或视口变化后自动修正越界。双击拖动区域复位，聚焦拖动手柄或收起态的展开按钮后使用 Alt + 方向键可移动16px，配合 Shift 可移动48px；拖动中按 Esc 或触屏手势取消时恢复起始位置。
+节点配置面板不再提供单独的拖动手柄，整个顶部栏均可按住拖动；顶部按钮轻点仍执行原操作，移动超过5px才进入拖动。收起后整个“节点配置”小窗口仍可拖动。展开时可拖动四条边缘或四角自定义宽高，光标显示对应缩放方向；最小尺寸为320×220px（小视口以可用空间为限），面板始终保留在画布内，正文保持滚动。最小化、展开和页签切换保留自定义尺寸，视口缩小时自动修正越界。双击顶部空白处复位位置与尺寸；聚焦顶部栏后使用 Alt + 方向键可移动16px，聚焦边缘后使用方向键调整尺寸，配合 Shift 每次调整48px；拖动或缩放中按 Esc 或触屏手势取消时恢复起始状态。
+
+`tests/inspector-window.smoke.mjs` 验证顶部与按钮区域拖动、普通点击、八个缩放方向和对侧边缘固定、键盘调整、Esc取消、最小/最大尺寸、最小化恢复、草稿与页签保留、正文滚动、画布交互隔离以及手机/横屏/桌面视口适配。
 
 节点配置面板在展开与最小化之间采用可中断的空间连续过渡：内容在原锚点淡出 / 淡入并轻微缩放，桌面端向右上控制条收合，手机端向底部控制条收合。展开与收起主体均使用280ms强缓出曲线，展开时最小化控制条保持200ms快速退出；动画仅改变透明度与合成层变换，键盘操作和系统“减少动态效果”设置保持即时切换。
 

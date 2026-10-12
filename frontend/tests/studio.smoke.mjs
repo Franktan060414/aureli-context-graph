@@ -20,7 +20,8 @@ try {
     'graph fills the complete workbench area beside the dock',
   );
   assert.equal(await page.locator('.inspector').evaluate(element => getComputedStyle(element).position), 'absolute');
-  const dragHandle = page.getByRole('button', { name: '拖动节点配置面板', exact: true });
+  const dragHandle = page.locator('.inspector-header');
+  assert.equal(await page.locator('.inspector-drag-handle').count(), 0, 'the separate drag handle is removed');
   const inspectorBeforeDrag = await page.locator('.inspector').boundingBox();
   const handleBox = await dragHandle.boundingBox();
   const handleCenter = { x: handleBox.x + handleBox.width / 2, y: handleBox.y + handleBox.height / 2 };
@@ -41,7 +42,7 @@ try {
   await page.waitForFunction(() => document.querySelectorAll('.inspector').length === 1);
   assert.equal(await page.locator('.inspector').getAttribute('class'), 'inspector surface minimized');
   assert.equal(await page.locator('.inspector').evaluate(element => element.style.translate), preservedInspectorOffset);
-  assert.equal(await dragHandle.count(), 0, 'collapsed node configurator hides the drag handle');
+  assert.equal(await page.locator('.inspector-resize-edge').count(), 0, 'collapsed node configurator hides resize areas');
   const minimizedBeforeDrag = await page.locator('.inspector').boundingBox();
   await page.mouse.move(minimizedBeforeDrag.x + minimizedBeforeDrag.width / 2, minimizedBeforeDrag.y + minimizedBeforeDrag.height / 2);
   await page.mouse.down();
@@ -62,8 +63,9 @@ try {
   await page.getByRole('button', { name: '展开节点配置', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.inspector').length === 1);
   assert.equal(await page.locator('.inspector').evaluate(element => element.style.translate), minimizedDraggedOffset);
-  assert.equal(await dragHandle.count(), 1, 'expanded node configurator restores the drag handle');
-  await dragHandle.dblclick();
+  assert.equal(await page.locator('.inspector-resize-edge').count(), 8, 'expanded node configurator restores all resize areas');
+  const resetHeader = await dragHandle.boundingBox();
+  await page.mouse.dblclick(resetHeader.x + resetHeader.width - 65, resetHeader.y + resetHeader.height / 2);
   const inspectorAfterReset = await page.locator('.inspector').boundingBox();
   assert.ok(Math.abs(inspectorAfterReset.x - inspectorBeforeDrag.x) < 2, 'double click resets configurator x position');
   assert.ok(Math.abs(inspectorAfterReset.y - inspectorBeforeDrag.y) < 2, 'double click resets configurator y position');
@@ -98,11 +100,12 @@ try {
   await page.getByRole('button', { name: '节点详情', exact: true }).click();
   await page.waitForFunction(() => !document.getAnimations().some(a => a.playState === 'running'));
   assert.ok(await page.locator('.answer-text').innerText());
-  await page.getByRole('button', { name: '复制 Tile ID', exact: true }).click();
-  await page.locator('.toast').waitFor();
-  assert.ok(await page.locator('.toast').evaluate(e => { const box = e.getBoundingClientRect(); return Math.abs(box.x + box.width / 2 - innerWidth / 2) < 2; }));
-  await page.getByRole('button', { name: '关闭提示', exact: true }).click();
-  await page.locator('.toast').waitFor({ state: 'detached' });
+  const relate = page.locator('.detail-relate');
+  const relatedBefore = await relate.getAttribute('aria-pressed');
+  await relate.click();
+  assert.notEqual(await relate.getAttribute('aria-pressed'), relatedBefore, 'the current detail action can associate a node');
+  await relate.click();
+  assert.equal(await relate.getAttribute('aria-pressed'), relatedBefore);
   await page.evaluate(() => scrollTo(0,0));
   await page.screenshot({ path: 'artifacts/workbench-desktop.png' });
   for (const width of [375, 768, 1024]) {

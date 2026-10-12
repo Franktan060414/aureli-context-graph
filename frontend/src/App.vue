@@ -33,7 +33,6 @@ import {
   Upload,
   Pencil,
   Trash2,
-  Copy,
   Send,
   Link2,
   Database,
@@ -44,7 +43,6 @@ import {
   FlaskConical,
   LoaderCircle,
   Expand,
-  GripVertical,
   PanelRightClose,
   PanelRightOpen,
 } from "@lucide/vue";
@@ -59,6 +57,7 @@ import ContextPicker from "./components/ContextPicker.vue";
 import FullscreenViewer from "./components/FullscreenViewer.vue";
 import MarkdownAnswer from "./components/MarkdownAnswer.vue";
 import ApiSettings from "./components/ApiSettings.vue";
+import WorkbenchSettings from "./components/WorkbenchSettings.vue";
 import { useMotion } from "./composables/useMotion.js";
 import { useCanvasZoom } from "./composables/useCanvasZoom.js";
 import { useViewMode } from "./composables/useViewMode.js";
@@ -66,6 +65,7 @@ const { animateSurface, motionEnabled } = useMotion();
 const canvasZoom = useCanvasZoom();
 import { createApiClient } from "./lib/api.js";
 import { relationTypeForDirection, relationTypeForEdge } from "./lib/tile-relations.js";
+import { replacementEdges } from "./lib/tile-replacement.js";
 import { createMapZoomSaver } from "./lib/map-zoom.js";
 import { readLayouts, positionTiles, tileDimensions } from "./lib/graph-layout.js";
 import { readArrangements } from "./lib/layered-layout.js";
@@ -85,11 +85,15 @@ const subtitles = {
   knowledge: "管理共享知识，为每一个 Tile 提供可靠的回答依据。",
   settings: "统一配置 API，让对话与检索使用合适的模型。",
 };
-const section = ref(
-  ["graph", "knowledge", "settings"].includes(location.hash.slice(1))
-    ? location.hash.slice(1)
-    : "graph",
-);
+const section = ref(location.hash.startsWith('#settings/') ? 'settings'
+  : ["graph", "knowledge", "settings"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "graph");
+const settingsPage = ref(location.hash === '#settings/workbench' ? 'workbench' : 'api');
+const settingsPages = [
+  { id: 'api', label: 'API设置', icon: Settings2 },
+  { id: 'workbench', label: '工作台设置', icon: Network },
+];
+const settingsTitle = computed(() => settingsPages.find(page => page.id === settingsPage.value).label);
+const historyImportBusy = ref(false);
 const isMobile = ref(window.matchMedia("(max-width: 767px)").matches);
 const mobileMedia = window.matchMedia("(max-width: 767px)");
 const demo = ref(localStorage.getItem("aureli-mode") === "demo"),
@@ -116,7 +120,7 @@ const workspaceKey = computed(() => demo.value ? `demo:${demoMapId.value}` : `li
 const workspace = computed(() => mapState(workspaceKey.value));
 const live = computed(() => mapState(`live:${serverKey.value}:${liveMapId.value}`));
 const mapListLoading = ref(false), mapListError = ref(""), mapCreating = ref(false), showMapForm = ref(false), mapName = ref(""), mapNameInput = ref(null);
-const mapSwitchDisabled = computed(() => weightBusy.value || nodeBusy.value || modalBusy.value || mapCreating.value);
+const mapSwitchDisabled = computed(() => weightBusy.value || nodeBusy.value || modalBusy.value || mapCreating.value || historyImportBusy.value);
 let mapListRequest = 0;
 const related = ref([]),
   selected = ref(demo.value ? "tile-003" : null);
@@ -437,9 +441,11 @@ const questionDialogInput = ref(null),
   inspectorRoot = ref(null),
   inspectorToggle = ref(null),
   inspectorDragging = ref(false),
+  inspectorResizing = ref(false),
   dialog = ref(null),
   modal = ref(null),
   modalBusy = ref(false),
+  modalOverwrite = ref(false),
   modalError = ref(""),
   remark = ref("");
 const noteDraft = reactive({ tileId: "", title: "", content: "" });
@@ -469,7 +475,7 @@ async function requestSplit() {
   await openModal("split", { id: splitTile.value.id, message: splitTile.value.message, splitId: uniqueId() });
   dialog.value.querySelector('#split-requirements')?.focus();
 }
-async function splitSelectedTile(source) {
+async function splitSelectedTile(source, overwrite = false) {
   const requirements = splitRequirements.value.trim();
   if (requirements.length > 2000) throw new Error("拆分要求最多 2000 个字符。");
   let result;
@@ -486,17 +492,20 @@ async function splitSelectedTile(source) {
       direction: "DIRECTED", relationType: "DIVIDES", weight: 1,
       description: requirements ? `手动拆分：${requirements}` : "手动拆分",
     })) };
+    if (overwrite) result.edges = replacementEdges(workspace.value.edges, [source.id],
+      tiles.map(tile => tile.id), () => `edge-${uniqueId()}`);
   } else {
-    result = (await api.splitTile({ sourceTileId: source.id, requirements, splitId: source.splitId })).data;
+    result = (await api.splitTile({ sourceTileId: source.id, requirements, splitId: source.splitId, overwrite })).data;
     connection.value = "connected";
   }
   // Preserve the existing graph positions and place the new branch beside its source.
   const positions = positionTiles(workspace.value.tiles, tileLayout.value);
   const origin = positions.find(tile => tile.id === source.id);
   const layout = { ...tileLayout.value, ...Object.fromEntries(positions.map(tile => [tile.id, { x: tile.x, y: tile.y }])) };
+  if (overwrite) positions.splice(positions.findIndex(tile => tile.id === source.id), 1);
   let y = origin.y;
   for (const tile of result.tiles) {
-    const point = { x: origin.x + origin.width + 96, y, ...tileDimensions(tile) };
+    const point = { x: overwrite ? origin.x : origin.x + origin.width + 96, y, ...tileDimensions(tile) };
     let overlap;
     while ((overlap = positions.find(other => point.x < other.x + other.width + 32
       && point.x + point.width + 32 > other.x && point.y < other.y + other.height + 32
@@ -507,8 +516,7 @@ async function splitSelectedTile(source) {
   }
   layouts[layoutKey.value] = layout;
   saveLayout();
-  workspace.value.tiles.push(...result.tiles);
-  workspace.value.edges.push(...result.edges);
+  applyGeneratedTiles(result, overwrite ? [source.id] : []);
   related.value = [];
   select(result.tiles[0].id);
   inspectorMinimized.value = false;
@@ -522,7 +530,7 @@ async function requestFusion() {
     ignoredCount: related.value.length - fusionTiles.value.length,
   });
 }
-async function fuseTiles(selection) {
+async function fuseTiles(selection, overwrite = false) {
   const ids = selection.sources.map(tile => tile.id);
   let result;
   if (demo.value) {
@@ -538,15 +546,35 @@ async function fuseTiles(selection) {
       id: `edge-${uniqueId()}`, sourceTileId, targetTileId: tile.id,
       direction: "DIRECTED", relationType: "FUSES", weight: 1, description: null,
     })) };
+    if (overwrite) result.edges = replacementEdges(workspace.value.edges, ids,
+      [tile.id], () => `edge-${uniqueId()}`);
   } else {
-    result = (await api.fuseTiles({ tileId: selection.tileId, sourceTileIds: ids })).data;
+    result = (await api.fuseTiles({ tileId: selection.tileId, sourceTileIds: ids, overwrite })).data;
     connection.value = "connected";
   }
-  workspace.value.tiles.push(...result.tiles);
-  workspace.value.edges.push(...result.edges);
+  if (overwrite) {
+    const origin = positionTiles(workspace.value.tiles, tileLayout.value).find(tile => ids.includes(tile.id));
+    layouts[layoutKey.value] = { ...tileLayout.value, [result.tiles[0].id]: { x: origin.x, y: origin.y } };
+    saveLayout();
+  }
+  applyGeneratedTiles(result, overwrite ? ids : []);
   related.value = [];
   select(result.tiles[0].id);
   inspectorMinimized.value = false;
+}
+function applyGeneratedTiles(result, removedIds) {
+  for (const id of removedIds) removeTileFromWorkspace(id);
+  workspace.value.tiles.push(...result.tiles);
+  workspace.value.edges.push(...result.edges);
+  if (removedIds.length) {
+    // Existing neighbours must point to the replacements immediately, as after a reload.
+    workspace.value.tiles = workspace.value.tiles.map(tile => {
+      const relatedTileIds = [...new Set(workspace.value.edges
+        .filter(edge => edge.targetTileId === tile.id).map(edge => edge.sourceTileId))];
+      return { ...tile, relatedTileIds,
+        kind: nodeType(tile) === "QA" ? relatedTileIds.length ? "memory" : "root" : tile.kind };
+    });
+  }
 }
 const questionContextTiles = computed(() => workspace.value.tiles.filter(tile => tile.status === "ready"));
 const nodeLabel = tile => ({ QA: "问答", NOTE: "便签", FILE: "文件" })[nodeType(tile)];
@@ -579,9 +607,10 @@ function notify(message, error = false) {
   toast.value = { message, error };
   toastTimer = setTimeout(() => (toast.value = null), 4500);
 }
-async function navigate(id) {
+async function navigate(id, page = 'api') {
   section.value = id;
-  location.hash = id;
+  if (id === 'settings') settingsPage.value = page;
+  location.hash = id === 'settings' && page === 'workbench' ? 'settings/workbench' : id;
   mobileNav.value = false;
   await nextTick();
   heading.value?.focus({ preventScroll: true });
@@ -590,7 +619,13 @@ async function navigate(id) {
 }
 function hashChanged() {
   const id = location.hash.slice(1);
-  if (titles[id]) section.value = id;
+  if (id === 'settings/workbench' || id === 'settings/api') {
+    section.value = 'settings';
+    settingsPage.value = id.endsWith('/workbench') ? 'workbench' : 'api';
+  } else if (titles[id]) {
+    section.value = id;
+    if (id === 'settings') settingsPage.value = 'api';
+  }
 }
 function mediaChanged(event) {
   isMobile.value = event.matches;
@@ -621,6 +656,7 @@ onMounted(() => {
 onUnmounted(() => {
   questionFlow.value?.controller.abort();
   finishInspectorDrag();
+  finishInspectorResize();
   window.removeEventListener("hashchange", hashChanged);
   mobileMedia.removeEventListener("change", mediaChanged);
   window.removeEventListener("resize", scheduleInspectorFit);
@@ -700,6 +736,13 @@ async function openQuestionDialog() {
   await openModal("question");
   questionDialogInput.value?.focus();
 }
+async function extendQuestionFromTile(tile) {
+  if (generating.value || graphLoading.value || modalBusy.value || nodeBusy.value) return;
+  const target = workspace.value.tiles.find(item => item.id === tile?.id);
+  if (!target || target.status !== 'ready') return;
+  related.value = [target.id];
+  await openQuestionDialog();
+}
 async function toggleInspector() {
   inspectorMinimized.value = !inspectorMinimized.value;
   await nextTick();
@@ -707,13 +750,38 @@ async function toggleInspector() {
   inspectorToggle.value?.focus({ preventScroll: true });
 }
 const inspectorOffset = reactive({ x: 0, y: 0 });
-let inspectorDrag, inspectorResizeFrame, inspectorSuppressClick = false;
+const inspectorFrame = ref(null);
+const inspectorResizeEdges = [
+  ['n', '上边缘'], ['e', '右边缘'], ['s', '下边缘'], ['w', '左边缘'],
+  ['nw', '左上角'], ['ne', '右上角'], ['sw', '左下角'], ['se', '右下角'],
+];
+const inspectorStyle = computed(() => ({
+  translate: `${inspectorOffset.x}px ${inspectorOffset.y}px`,
+  ...(inspectorFrame.value ? {
+    top: `${inspectorFrame.value.top}px`, right: `${inspectorFrame.value.right}px`,
+    left: 'auto', bottom: 'auto', maxHeight: 'none',
+    width: `${inspectorMinimized.value ? Math.min(190, inspectorFrame.value.width) : inspectorFrame.value.width}px`,
+    ...(!inspectorMinimized.value ? { height: `${inspectorFrame.value.height}px` } : {}),
+  } : {}),
+}));
+let inspectorDrag, inspectorResize, inspectorResizeFrame, inspectorSuppressClick = false;
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
-function inspectorBounds(element = inspectorRoot.value) {
+function inspectorGeometry(element = inspectorRoot.value) {
   const area = element?.closest('.workspace-grid');
   if (!element || !area) return null;
-  const rect = element.getBoundingClientRect();
   const areaRect = area.getBoundingClientRect();
+  // Layout coordinates exclude the temporary scale/translation used by panel transitions.
+  const left = areaRect.left + area.clientLeft + element.offsetLeft + inspectorOffset.x;
+  const top = areaRect.top + area.clientTop + element.offsetTop + inspectorOffset.y;
+  return { area: areaRect, rect: {
+    left, top, right: left + element.offsetWidth, bottom: top + element.offsetHeight,
+    width: element.offsetWidth, height: element.offsetHeight,
+  } };
+}
+function inspectorBounds(element = inspectorRoot.value) {
+  const geometry = inspectorGeometry(element);
+  if (!geometry) return null;
+  const { rect, area: areaRect } = geometry;
   const margin = 12;
   return {
     minX: inspectorOffset.x + areaRect.left + margin - rect.left,
@@ -727,7 +795,13 @@ function setInspectorOffset(x, y, bounds = inspectorBounds()) {
   inspectorOffset.x = Math.round(clamp(x, bounds.minX, bounds.maxX));
   inspectorOffset.y = Math.round(clamp(y, bounds.minY, bounds.maxY));
 }
-function keepInspectorInBounds() {
+async function keepInspectorInBounds() {
+  const area = inspectorRoot.value?.closest('.workspace-grid')?.getBoundingClientRect();
+  if (area && inspectorFrame.value) {
+    inspectorFrame.value.width = Math.min(inspectorFrame.value.width, Math.max(0, area.width - 24));
+    inspectorFrame.value.height = Math.min(inspectorFrame.value.height, Math.max(0, area.height - 24));
+    await nextTick();
+  }
   setInspectorOffset(inspectorOffset.x, inspectorOffset.y);
 }
 function scheduleInspectorFit() {
@@ -735,7 +809,7 @@ function scheduleInspectorFit() {
   inspectorResizeFrame = requestAnimationFrame(() => nextTick(keepInspectorInBounds));
 }
 function startInspectorDrag(event) {
-  if (event.button !== 0 || !event.isPrimary || inspectorDrag) return;
+  if (event.button !== 0 || !event.isPrimary || inspectorDrag || inspectorResize) return;
   const bounds = inspectorBounds();
   if (!bounds) return;
   inspectorSuppressClick = false;
@@ -784,6 +858,8 @@ function finishInspectorDrag(event, cancel = false) {
   window.removeEventListener('blur', finishInspectorDrag);
   window.removeEventListener('keydown', cancelInspectorDragWithEscape, true);
   if (finished.element.hasPointerCapture(finished.pointerId)) finished.element.releasePointerCapture(finished.pointerId);
+  // The pointer's click follows pointerup; do not swallow a later, unrelated button click.
+  setTimeout(() => { inspectorSuppressClick = false; }, 0);
   if (cancel && finished.active) {
     inspectorOffset.x = finished.originX;
     inspectorOffset.y = finished.originY;
@@ -804,6 +880,83 @@ function captureInspectorClick(event) {
   event.preventDefault();
   event.stopPropagation();
 }
+function inspectorResizeSnapshot() {
+  const geometry = inspectorGeometry();
+  if (!geometry || inspectorMinimized.value) return null;
+  return {
+    ...geometry,
+    offset: { ...inspectorOffset }, frame: inspectorFrame.value ? { ...inspectorFrame.value } : null,
+  };
+}
+function resizeInspector(direction, dx, dy, snapshot = inspectorResizeSnapshot()) {
+  if (!snapshot) return;
+  const { rect, area, offset } = snapshot;
+  const limits = { left: area.left + 12, right: area.right - 12, top: area.top + 12, bottom: area.bottom - 12 };
+  const minWidth = Math.min(320, limits.right - limits.left);
+  const minHeight = Math.min(220, limits.bottom - limits.top);
+  let { left, right, top, bottom } = rect;
+  if (direction.includes('w')) left = clamp(rect.left + dx, limits.left, right - minWidth);
+  if (direction.includes('e')) right = clamp(rect.right + dx, left + minWidth, limits.right);
+  if (direction.includes('n')) top = clamp(rect.top + dy, limits.top, bottom - minHeight);
+  if (direction.includes('s')) bottom = clamp(rect.bottom + dy, top + minHeight, limits.bottom);
+  inspectorFrame.value = {
+    top: top - area.top - offset.y,
+    right: area.right - right + offset.x,
+    width: right - left, height: bottom - top,
+  };
+}
+function startInspectorResize(event, direction) {
+  if (event.button !== 0 || !event.isPrimary || inspectorDrag || inspectorResize) return;
+  const snapshot = inspectorResizeSnapshot();
+  if (!snapshot) return;
+  event.preventDefault();
+  inspectorSuppressClick = false;
+  inspectorResize = {
+    ...snapshot, direction, pointerId: event.pointerId, element: event.currentTarget,
+    startX: event.clientX, startY: event.clientY,
+  };
+  inspectorResizing.value = true;
+  event.currentTarget.setPointerCapture(event.pointerId);
+  window.addEventListener('pointermove', moveInspectorResize, { passive: false });
+  window.addEventListener('pointerup', finishInspectorResize);
+  window.addEventListener('pointercancel', cancelInspectorResize);
+  window.addEventListener('blur', finishInspectorResize);
+  window.addEventListener('keydown', cancelInspectorResizeWithEscape, true);
+}
+function moveInspectorResize(event) {
+  if (!inspectorResize || event.pointerId !== inspectorResize.pointerId) return;
+  event.preventDefault();
+  resizeInspector(inspectorResize.direction, event.clientX - inspectorResize.startX,
+    event.clientY - inspectorResize.startY, inspectorResize);
+}
+function finishInspectorResize(event, cancel = false) {
+  if (!inspectorResize || (event?.pointerId != null && event.pointerId !== inspectorResize.pointerId)) return;
+  const finished = inspectorResize;
+  inspectorResize = null;
+  inspectorResizing.value = false;
+  window.removeEventListener('pointermove', moveInspectorResize);
+  window.removeEventListener('pointerup', finishInspectorResize);
+  window.removeEventListener('pointercancel', cancelInspectorResize);
+  window.removeEventListener('blur', finishInspectorResize);
+  window.removeEventListener('keydown', cancelInspectorResizeWithEscape, true);
+  if (finished.element.hasPointerCapture(finished.pointerId)) finished.element.releasePointerCapture(finished.pointerId);
+  if (cancel) inspectorFrame.value = finished.frame;
+}
+function cancelInspectorResize(event) { finishInspectorResize(event, true); }
+function cancelInspectorResizeWithEscape(event) {
+  if (event.key !== 'Escape') return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  finishInspectorResize(null, true);
+}
+function resizeInspectorWithKeyboard(event, direction) {
+  const delta = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+  if (!delta) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const step = event.shiftKey ? 48 : 16;
+  resizeInspector(direction, delta[0] * step, delta[1] * step);
+}
 function moveInspectorWithKeyboard(event) {
   const direction = {
     ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1],
@@ -818,20 +971,15 @@ function moveInspectorWithKeyboard(event) {
   );
 }
 function resetInspectorPosition() {
+  finishInspectorDrag();
+  finishInspectorResize();
+  inspectorFrame.value = null;
   inspectorOffset.x = 0;
   inspectorOffset.y = 0;
 }
 function select(id) {
   selected.value = id;
   if (!generating.value) panel.value = "detail";
-}
-async function copy(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    notify("已复制到剪贴板");
-  } catch {
-    notify("复制失败，请手动选择并复制内容", true);
-  }
 }
 function questionDraftFingerprint() {
   return JSON.stringify({ form: { ...form }, related: [...related.value], workspace: workspaceKey.value });
@@ -1209,10 +1357,11 @@ async function editNodeNote(tile) {
   expanded.value = null;
   await openModal("editNote", tile);
 }
-async function openLabels() {
+async function openLabels(tile = null) {
   if (fusionBusy.value) return;
+  if (tile && !workspace.value.tiles.some(item => item.id === tile.id)) return;
   const mapId = currentMapId.value;
-  await openModal("labels", { state: workspace.value, tileIds: [...related.value], isDemo: demo.value,
+  await openModal("labels", { state: workspace.value, tileIds: tile ? [tile.id] : [...related.value], isDemo: demo.value,
     client: createApiClient(apiBase.value, () => mapId) });
 }
 async function saveLabel(draft, id) {
@@ -1235,7 +1384,7 @@ async function removeLabel(id) {
 }
 async function assignLabel(labelId) {
   const { state, tileIds, isDemo, client } = modal.value.file;
-  if (!tileIds.length) throw new Error("请先通过“选择关联”选中 Tile");
+  if (!tileIds.length) throw new Error("请先在节点详情中通过“关联节点”选中 Tile");
   if (!tileIds.every(id => state.tiles.some(tile => tile.id === id))) throw new Error("部分 Tile 已不存在，请同步后重试");
   if (!isDemo) await client.assignLabel(tileIds, labelId);
   for (const tile of state.tiles) if (tileIds.includes(tile.id)) tile.labelId = labelId;
@@ -1308,17 +1457,19 @@ async function requestTileDelete(tile) {
   await nextTick();
   openModal("deleteTile", tile);
 }
-async function confirmModal() {
+async function confirmModal(overwrite = false) {
   if (modalBusy.value) return;
+  overwrite = overwrite === true;
+  modalOverwrite.value = overwrite;
   modalBusy.value = true;
   modalError.value = "";
   try {
     const { type, file } = modal.value;
     let splitCount;
     if (type === "fusion") {
-      await fuseTiles(file);
+      await fuseTiles(file, overwrite);
     } else if (type === "split") {
-      splitCount = await splitSelectedTile(file);
+      splitCount = await splitSelectedTile(file, overwrite);
     } else if (type === "note" || type === "editNote") {
       if (!noteDraft.title.trim() || !noteDraft.content.trim()) throw new Error("请填写便签标题和正文。");
       const payload = { ...noteDraft, title: noteDraft.title.trim(), relatedTileIds: [...artifactRelated.value] };
@@ -1380,7 +1531,9 @@ async function confirmModal() {
       await nextTick();
       document.querySelector('.map-item.selected, .map-add')?.focus();
     }
-    notify(type === "deleteMap" ? "图谱已删除" : type === "split" ? `${demo.value ? '示例拆分' : '拆分完成'}，已创建 ${splitCount} 个子 Tile` : type === "fusion" ? demo.value ? "示例融合 Tile 已创建" : "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
+    notify(overwrite && ['split', 'fusion'].includes(type)
+      ? `${type === 'split' ? `拆分并覆盖完成，已创建 ${splitCount} 个子 Tile` : '融合并覆盖完成'}，原 Tile 已删除，连边已继承`
+      : type === "deleteMap" ? "图谱已删除" : type === "split" ? `${demo.value ? '示例拆分' : '拆分完成'}，已创建 ${splitCount} 个子 Tile` : type === "fusion" ? demo.value ? "示例融合 Tile 已创建" : "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
   } catch (error) {
     modalError.value = error.message;
   } finally {
@@ -1388,6 +1541,36 @@ async function confirmModal() {
   }
 }
 const exportDialog = ref(null);
+async function importHistory(data) {
+  if (historyImportBusy.value || generating.value || workspaceLoading.value || nodeBusy.value || modalBusy.value || weightBusy.value)
+    throw new Error('请等待当前操作完成后再导入。');
+  historyImportBusy.value = true;
+  try {
+    const base = apiBase.value;
+    const result = (await createApiClient(base).importHistory(data)).data;
+    // The imported graph is saved by the server before changing the active workspace.
+    stashMapUi();
+    ++mapListRequest;
+    mapListLoading.value = false;
+    demo.value = false;
+    localStorage.setItem('aureli-mode', 'live');
+    maps.value.push(result.map);
+    liveMapId.value = result.map.mapId;
+    const key = `live:${serverKey.value}:${result.map.mapId}`;
+    mapStates[key] = { tiles: result.tiles, edges: result.edges, labels: result.labels,
+      generating: false, loading: false, error: '', ui: null };
+    layouts[key] = result.layout;
+    arrangements[key] = { mode: 'tree', routes: {} };
+    saveLayout();
+    resetMapUi();
+    rememberMap();
+    connection.value = 'connected';
+    tab.value = 'graph';
+    await navigate('graph');
+    notify(`历史记录已导入，已创建图谱“${result.map.name}”（${result.tiles.length} 个节点）`);
+    void loadMaps();
+  } finally { historyImportBusy.value = false; }
+}
 function exportGraph() {
   exportDialog.value.open(JSON.parse(JSON.stringify({
     mode: demo.value ? "demo" : "live", ...workspace.value, layout: tileLayout.value,
@@ -1426,15 +1609,12 @@ function exportGraph() {
           alt="AURELI"
         />
       </a>
-      <button class="workspace-switch" @click="openModal('help')">
-        <span class="workspace-avatar">A</span
-        ><span><strong>知识图谱空间</strong><small>个人工作空间</small></span
-        ><ChevronDown :size="15" />
-      </button>
       <span class="nav-caption">WORKSPACE / 工作空间</span>
       <nav aria-label="工作空间">
         <template v-for="item in nav" :key="item.id">
           <a :href="`#${item.id}`" :class="{ active: section === item.id }"
+            :aria-expanded="item.id === 'settings' ? section === 'settings' : undefined"
+            :aria-controls="item.id === 'settings' && section === 'settings' ? 'settings-navigation' : undefined"
             :aria-current="section === item.id ? 'page' : undefined" @click.prevent="navigate(item.id)">
             <component :is="item.icon" :size="19" aria-hidden="true" /><span>{{ item.label }}</span>
             <span v-if="item.id === 'graph'" class="nav-count">{{ workspace.tiles.length }}</span>
@@ -1470,6 +1650,18 @@ function exportGraph() {
               <button v-if="!showMapForm" type="button" @click="loadMaps">重新加载</button>
             </div>
           </div>
+          <div v-if="item.id === 'settings' && section === 'settings'" id="settings-navigation"
+            class="map-navigation" role="group" aria-label="服务设置子导航">
+            <div class="map-list">
+              <div v-for="page in settingsPages" :key="page.id" class="map-row">
+                <button class="map-item" :class="{ selected: settingsPage === page.id }" type="button"
+                  :aria-current="settingsPage === page.id ? 'page' : undefined" @click="navigate('settings', page.id)">
+                  <component :is="page.icon" :size="15" aria-hidden="true" /><span>{{ page.label }}</span>
+                  <Check v-if="settingsPage === page.id" :size="14" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
         </template>
       </nav>
       <div class="sidebar-bottom">
@@ -1480,14 +1672,6 @@ function exportGraph() {
           <button @click="openModal('help')">
             了解 Tile 工作流<ArrowUpRight :size="15" />
           </button>
-        </div>
-        <button class="help-link" @click="openModal('help')">
-          <CircleHelp :size="18" />使用指南
-        </button>
-        <div class="profile">
-          <span class="profile-avatar">A</span
-          ><span><strong title="songyu.tan@techscience.com">songyu.tan@techscience.com</strong><small>本地会话</small></span
-          ><span class="profile-dot"></span>
         </div>
       </div>
     </aside>
@@ -1507,7 +1691,7 @@ function exportGraph() {
             <Menu :size="20" /></button
           ><span>工作空间</span><ChevronRight :size="14" /><strong>{{
             titles[section]
-          }}</strong><span v-if="section === 'graph' && currentMap" class="current-map-name">{{ currentMap.name }}</span>
+          }}</strong><template v-if="section === 'settings'"><ChevronRight :size="14" /><strong>{{ settingsTitle }}</strong></template><span v-if="section === 'graph' && currentMap" class="current-map-name">{{ currentMap.name }}</span>
         </div>
         <div class="topbar-actions">
           <span class="service-state"
@@ -1544,12 +1728,12 @@ function exportGraph() {
               }}
             </div>
             <h1 ref="heading" tabindex="-1">
-              {{ titles[section]
+              {{ section === 'settings' ? settingsTitle : titles[section]
               }}<span class="preview-tag" v-if="demo && section === 'knowledge'"
                 >示例模式</span
               >
             </h1>
-            <p v-if="section !== 'graph'">{{ subtitles[section] }}</p>
+            <p v-if="section !== 'graph'">{{ section === 'settings' && settingsPage === 'workbench' ? '管理工作台，恢复历史聊天记录。' : subtitles[section] }}</p>
           </div>
         </div>
         <div class="mode-banner" v-if="section === 'knowledge'">
@@ -1598,12 +1782,12 @@ function exportGraph() {
                 </div>
                 <div class="graph-toolbar-actions">
                   <button type="button" class="icon-button graph-fusion-action" aria-label="融合选中的 AI 问答 Tile" aria-haspopup="dialog"
-                    :title="fusionTiles.length < 2 ? '通过“选择关联”选中至少两个已完成的 AI 问答 Tile' : `融合 ${fusionTiles.length} 个 AI 问答 Tile`"
+                    :title="fusionTiles.length < 2 ? '在节点详情中通过“关联节点”选中至少两个已完成的 AI 问答 Tile' : `融合 ${fusionTiles.length} 个 AI 问答 Tile`"
                     :disabled="fusionBusy || fusionTiles.length < 2" @click="requestFusion">
                     <Merge :size="17" aria-hidden="true" />
                   </button>
                   <button type="button" class="icon-button graph-split-action" aria-label="拆分选中的 AI 问答 Tile" aria-haspopup="dialog"
-                    :title="splitTile ? `拆分 ${splitTile.id}` : related.length > 1 ? '拆分仅支持一个 Tile，请取消多选关联' : '通过“选择关联”选中一个已完成的 AI 问答 Tile'"
+                    :title="splitTile ? `拆分 ${splitTile.id}` : related.length > 1 ? '拆分仅支持一个 Tile，请取消多选关联' : '在节点详情中通过“关联节点”选中一个已完成的 AI 问答 Tile'"
                     :disabled="fusionBusy || !splitTile" @click="requestSplit">
                     <Split :size="17" aria-hidden="true" />
                   </button>
@@ -1614,7 +1798,7 @@ function exportGraph() {
                     <button class="icon-button graph-create-action" aria-label="添加文件" title="添加文件" @click="openModal('file')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><Upload :size="17" /></button>
                   </div>
                   <button class="icon-button" aria-label="标签" title="管理标签或为所选 Tile 批量设置标签" aria-haspopup="dialog"
-                    :disabled="fusionBusy" @click="openLabels"><Tag :size="17" aria-hidden="true" /></button>
+                    :disabled="fusionBusy" @click="openLabels()"><Tag :size="17" aria-hidden="true" /></button>
                   <button v-if="!demo" class="icon-button" aria-label="同步图谱" @click="loadWorkspace" :disabled="graphLoading || generating || nodeBusy || modalBusy"><RefreshCw :size="17" :class="{ spinning: graphLoading }" /></button>
                   <button
                     class="icon-button graph-secondary-action"
@@ -1673,13 +1857,13 @@ function exportGraph() {
                 @move-end="saveLayout"
                 @arrange="arrangeCanvas"
                 @expand="expandTile"
-                @delete="requestTileDelete"
                 @toggle="toggle"
-                @extend="compose"
+                @delete="requestTileDelete"
+                @label="openLabels"
+                @create-question="openQuestionDialog"
+                @extend-question="extendQuestionFromTile"
                 @new="compose()"
                 @file="dropNodeFile"
-                @download="downloadNodeFile"
-                @edit-note="editNodeNote"
               />
               <div class="tile-list" v-else-if="tab === 'list'">
                 <div v-if="!filteredTiles.length" class="empty-state">
@@ -1756,30 +1940,25 @@ function exportGraph() {
                 :key="inspectorMinimized ? 'minimized' : 'expanded'"
                 ref="inspectorRoot"
                 class="inspector surface"
-                :class="{ minimized: inspectorMinimized, dragging: inspectorDragging }"
-                :style="{ translate: `${inspectorOffset.x}px ${inspectorOffset.y}px` }"
+                :class="{ minimized: inspectorMinimized, dragging: inspectorDragging, resizing: inspectorResizing }"
+                :style="inspectorStyle"
                 aria-label="节点配置"
                 :title="inspectorMinimized ? '拖动以移动面板；双击复位' : undefined"
                 @pointerdown="inspectorMinimized && startInspectorDrag($event)"
                 @click.capture="captureInspectorClick"
-                @keydown="inspectorMinimized && moveInspectorWithKeyboard($event)"
-                @dblclick="inspectorMinimized && resetInspectorPosition()"
+                @dblclick="inspectorMinimized && !$event.target.closest('button') && resetInspectorPosition()"
               >
-              <div class="inspector-header">
-                <button
-                  v-if="!inspectorMinimized"
-                  class="inspector-drag-handle icon-button"
-                  type="button"
-                  aria-label="拖动节点配置面板"
-                  aria-describedby="inspector-drag-help"
-                  title="拖动面板；双击复位；Alt + 方向键微调"
-                  @pointerdown="startInspectorDrag"
-                  @keydown="moveInspectorWithKeyboard"
-                  @dblclick="resetInspectorPosition"
-                  @dragstart.prevent
-                >
-                  <GripVertical :size="18" />
-                </button>
+              <div
+                class="inspector-header"
+                tabindex="0"
+                aria-label="移动节点配置面板"
+                aria-describedby="inspector-drag-help"
+                title="拖动顶部移动面板；双击空白处复位；Alt + 方向键微调"
+                @pointerdown.stop="startInspectorDrag"
+                @keydown="moveInspectorWithKeyboard"
+                @dblclick.stop="!$event.target.closest('button') && resetInspectorPosition()"
+                @dragstart.prevent
+              >
                 <span id="inspector-drag-help" class="sr-only">按住并拖动；双击复位；Alt 加方向键微调，Shift 加速。</span>
                 <div v-if="inspectorMinimized" class="inspector-minimized-title">
                   <Settings2 :size="18" />
@@ -1815,6 +1994,22 @@ function exportGraph() {
                   <PanelRightClose v-else :size="18" />
                 </button>
               </div>
+              <template v-if="!inspectorMinimized">
+                <div
+                  v-for="[edge, label] in inspectorResizeEdges"
+                  :key="edge"
+                  class="inspector-resize-edge"
+                  :class="`inspector-resize-${edge}`"
+                  :data-edge="edge"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`调整节点配置面板尺寸：${label}`"
+                  aria-describedby="inspector-resize-help"
+                  @pointerdown.stop="startInspectorResize($event, edge)"
+                  @keydown="resizeInspectorWithKeyboard($event, edge)"
+                ></div>
+                <span id="inspector-resize-help" class="sr-only">拖动边缘或四角调整尺寸；方向键微调，Shift 加速；拖动时按 Escape 取消。</span>
+              </template>
               <div
                 class="inspector-body"
                 v-if="!inspectorMinimized && panel === 'detail' && selectedTile"
@@ -1847,11 +2042,15 @@ function exportGraph() {
                     </div>
                   </div>
                   <button
-                    class="icon-button"
-                    aria-label="复制 Tile ID"
-                    @click="copy(selectedTile.id)"
+                    class="secondary detail-relate"
+                    :aria-pressed="related.includes(selectedTile.id)"
+                    :title="related.includes(selectedTile.id) ? '取消关联节点' : '将此节点作为下次提问的上下文'"
+                    :disabled="generating || graphLoading || modalBusy || selectedTile.status !== 'ready'"
+                    @click="toggle(selectedTile.id)"
                   >
-                    <Copy :size="15" />
+                    <Check v-if="related.includes(selectedTile.id)" :size="16" aria-hidden="true" />
+                    <Link2 v-else :size="16" aria-hidden="true" />
+                    {{ related.includes(selectedTile.id) ? '已关联' : '关联节点' }}
                   </button>
                   <button
                     class="icon-button danger-icon"
@@ -2191,12 +2390,15 @@ function exportGraph() {
           </section>
         </template>
         <ApiSettings
-          v-else
+          v-else-if="section === 'settings' && settingsPage === 'api'"
           :api-base="apiBase"
-          :busy="generating || workspaceLoading || uploadBusy"
+          :busy="historyImportBusy || generating || workspaceLoading || uploadBusy"
           @base-change="changeApiBase"
           @notify="notify($event.message, $event.error)"
         />
+        <WorkbenchSettings v-else-if="section === 'settings' && settingsPage === 'workbench'"
+          :busy="historyImportBusy || generating || workspaceLoading || nodeBusy || modalBusy || weightBusy"
+          :import-history="importHistory" />
         <footer class="page-footer">
           <span>AURELI <span> / </span> 请仔细鉴别由AI生成的信息</span
           ><span>Vue · Graph Workspace</span>
@@ -2228,6 +2430,9 @@ function exportGraph() {
       @arrange="arrangeCanvas"
       @toggle="toggle"
       @delete="requestTileDelete"
+      @label="openLabels"
+      @create-question="openQuestionDialog"
+      @extend-question="extendQuestionFromTile"
       @extend="compose"
       @new="compose()"
       @file="dropNodeFile"
@@ -2366,6 +2571,7 @@ function exportGraph() {
           <form v-else-if="modal.type === 'split'" id="split-form" class="node-artifact-form" @submit.prevent="confirmModal">
             <p class="split-source"><strong class="mono">{{ modal.file.id }}</strong><span>{{ modal.file.message }}</span></p>
             <p id="split-help" class="field-help">“拆分”操作会尝试生成 2～4 个可独立阅读的子问答，该操作不一定在所有情况下可用。</p>
+            <p id="split-requirements-help" class="field-help">生成拆分成功后，原 Tile 将保留，并关联到新生成的子 Tile。</p>
             <label for="split-requirements">拆分应该如何进行？（可选）</label>
             <textarea id="split-requirements" v-model="splitRequirements" maxlength="2000" rows="4"
               :disabled="modalBusy" aria-describedby="split-help split-requirements-help"
@@ -2375,6 +2581,7 @@ function exportGraph() {
           </form>
           <template v-else-if="modal.type === 'fusion'">
             <p>“融合”操作将以下 {{ modal.file.sources.length }} 个 AI 问答 Tile 的用户问题和回答融合为一个新的 Tile。原 Tile 将保留，并关联到新 Tile。</p>
+            <p id="fusion-overwrite-help" class="field-help">“融合并覆盖”在生成成功后删除参与融合的原 Tile 及其问答，新 Tile 继承它们与其他节点的连边方向、类型、权重和说明。原 Tile 之间的连边会删除，覆盖后无法撤销。</p>
             <ul class="fusion-source-list">
               <li v-for="tile in modal.file.sources" :key="tile.id"><strong class="mono">{{ tile.id }}</strong><span>{{ tile.message }}</span></li>
             </ul>
@@ -2391,7 +2598,7 @@ function exportGraph() {
               <li>
                 <strong>选择关联</strong>
                 <p>
-                  在画布中选择一个或多个已完成的 Tile 作为下次提问的上下文。
+                  点击画布中的 Tile，在节点详情中点击“关联节点”，可选择多个已完成的 Tile 作为下次提问的上下文。
                 </p>
               </li>
               <li>
@@ -2443,7 +2650,7 @@ function exportGraph() {
             {{ modalError }}
           </p>
         </div>
-        <div class="modal-actions">
+        <div class="modal-actions" :class="{ 'replacement-actions': ['split', 'fusion'].includes(modal.type) }">
           <button class="secondary" @click="closeModal" :disabled="modalBusy">
             {{ modal.type === "help" ? "知道了" : modal.type === "labels" ? "关闭" : "取消" }}</button
           ><template v-if="modal.type === 'questionPlan'">
@@ -2465,8 +2672,8 @@ function exportGraph() {
             @click="!['note', 'editNote', 'file', 'split'].includes(modal.type) && confirmModal()"
             :disabled="modalBusy"
           >
-            <LoaderCircle v-if="modalBusy" :size="16" class="spinning" />{{
-              modalBusy
+            <LoaderCircle v-if="modalBusy && !modalOverwrite" :size="16" class="spinning" />{{
+              modalBusy && !modalOverwrite
                 ? modal.type === "split" ? "正在判断并拆分…" : modal.type === "fusion" ? "正在融合…" : "处理中…"
                 : modal.type === "split" ? "生成拆分"
                 : modal.type === "fusion" ? "确认融合"
@@ -2482,6 +2689,12 @@ function exportGraph() {
                       ? "删除 Tile"
                       : "确认删除"
             }}
+          </button>
+          <button v-if="modal.type === 'fusion'" type="button" class="danger"
+            :disabled="modalBusy" aria-describedby="fusion-overwrite-help"
+            @click="confirmModal(true)">
+            <LoaderCircle v-if="modalBusy && modalOverwrite" :size="16" class="spinning" aria-hidden="true" />
+            {{ modalBusy && modalOverwrite ? '正在融合并覆盖…' : '融合并覆盖' }}
           </button>
         </div></template
       >

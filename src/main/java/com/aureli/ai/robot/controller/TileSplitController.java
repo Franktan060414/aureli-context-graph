@@ -7,7 +7,6 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/customer-service/tile")
@@ -21,8 +20,10 @@ public class TileSplitController {
             var result = splitting.split(request);
             var nodes = result.children().stream().map(child -> {
                 var tile = child.tile();
+                var parents = result.edges().stream().filter(edge -> edge.getTargetTileId().equals(tile.getTileId()))
+                        .map(edge -> edge.getSourceTileId()).distinct().toList();
                 return new TileWorkspaceController.Node(tile.getTileId(), tile.getUserMessage(), child.answer(),
-                        List.of(request.sourceTileId().trim()), "ready", "memory", tile.getWeight(), "QA",
+                        parents, "ready", parents.isEmpty() ? "root" : "memory", tile.getWeight(), "QA",
                         tile.getTitle(), null, null, null, null, tile.getLabelId());
             }).toList();
             var edges = result.edges().stream().map(edge -> new TileWorkspaceController.Edge(edge.getEdgeId(),

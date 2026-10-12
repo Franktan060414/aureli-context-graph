@@ -133,6 +133,10 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
       method: "DELETE", signal: AbortSignal.timeout(30000),
     })),
     createMap: (name) => post("/customer-service/maps", { name }),
+    importHistory: async (data) => checkedResponse(await request(endpoint(base(), "/customer-service/maps/import"), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data), signal: AbortSignal.timeout(120000),
+    })),
     updateMapZoom: async (mapId, zoom) => checkedResponse(await request(endpoint(base(), `/customer-service/maps/${encodeURIComponent(mapId)}/zoom`), {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ zoom }), keepalive: true, signal: AbortSignal.timeout(30000),
@@ -175,10 +179,27 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
     deleteTile: (tileId) => post("/customer-service/tile/delete", scoped({ tileId })),
     updateTileWeight: (tileId, weight) => post("/customer-service/tile/weight", scoped({ tileId, weight })),
     async fuseTiles(data) {
-      return checkedResponse(await request(endpoint(base(), "/customer-service/tile/fusion"), {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
-      }));
+      const path = data.overwrite ? "/customer-service/tile/fusion/overwrite" : "/customer-service/tile/fusion";
+      let result;
+      try {
+        result = await checkedResponse(await request(endpoint(base(), path), {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(scoped(data)), signal: AbortSignal.timeout(180000),
+        }));
+      } catch (error) {
+        if (data.overwrite && error.status === 404)
+          throw new Error("当前后端不支持融合并覆盖，请更新并重启后端后重试。");
+        throw error;
+      }
+      if (data.overwrite) {
+        const deleted = new Set(Array.isArray(result.data?.deletedTileIds) ? result.data.deletedTileIds : []);
+        if (!data.sourceTileIds.every(id => deleted.has(id))
+            || result.data?.tiles?.length !== 1 || result.data.tiles[0].id !== data.tileId
+            || !Array.isArray(result.data.edges)
+            || result.data.edges.some(edge => deleted.has(edge.sourceTileId) || deleted.has(edge.targetTileId)))
+          throw new Error("后端未确认原 Tile 已删除及连边已迁移，请同步图谱并更新后端后重试。");
+      }
+      return result;
     },
     async splitTile(data) {
       return checkedResponse(await request(endpoint(base(), "/customer-service/tile/split"), {

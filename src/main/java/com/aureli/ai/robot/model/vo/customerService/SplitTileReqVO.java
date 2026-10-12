@@ -9,7 +9,14 @@ public record SplitTileReqVO(
         @NotBlank @Size(max = 128) String sourceTileId,
         @Size(max = 2000) String requirements,
         @NotBlank(message = "请先创建或选择图谱") @Size(max = 128) String mapId,
-        @Size(max = 64) @Pattern(regexp = "[A-Za-z0-9-]+") String splitId) {
+        @Size(max = 64) @Pattern(regexp = "[A-Za-z0-9-]+") String splitId,
+        Boolean overwrite) {
+    public SplitTileReqVO {
+        overwrite = Boolean.TRUE.equals(overwrite);
+    }
+    public SplitTileReqVO(String sourceTileId, String requirements, String mapId, String splitId) {
+        this(sourceTileId, requirements, mapId, splitId, false);
+    }
     public SplitTileReqVO(String sourceTileId, String requirements, String mapId) {
         this(sourceTileId, requirements, mapId, UUID.randomUUID().toString());
     }

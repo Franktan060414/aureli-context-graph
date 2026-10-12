@@ -20,8 +20,8 @@ await page.route('**/customer-service/**', async route => {
   return route.fulfill({ json: { success: true, data } });
 });
 const graph = () => page.locator('.graph-workbench .graph-wrap');
-const card = (g, id) => g.locator('.graph-node').filter({ has: page.locator('.node-top .mono', { hasText: new RegExp(`^${id}$`) }) });
-const coords = g => g.locator('.graph-node').evaluateAll(es => Object.fromEntries(es.map(e => [e.querySelector('.node-top .mono').textContent, { x: parseFloat(e.style.left), y: parseFloat(e.style.top) }])));
+const card = (g, id) => g.locator(`.graph-node[data-tile-id="${id}"]`);
+const coords = g => g.locator('.graph-node').evaluateAll(es => Object.fromEntries(es.map(e => [e.dataset.tileId, { x: parseFloat(e.style.left), y: parseFloat(e.style.top) }])));
 async function open(g) { await g.getByRole('button', { name: '一键整理画布', exact: true }).click(); const d = g.getByRole('dialog', { name: '整理画布', exact: true }); await d.waitFor(); return d; }
 async function arrange(g, mode) { const d = await open(g); await d.getByRole('radio', { name: mode, exact: true }).check(); await d.getByRole('button', { name: '开始整理', exact: true }).click(); await d.waitFor({ state: 'hidden' }).catch(async error => { console.log('Layout dialog:', await d.textContent()); console.log('Browser errors:', errors); throw error; }); }
 try {

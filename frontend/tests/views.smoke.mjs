@@ -99,8 +99,14 @@ try {
   await page.getByRole("link", { name: "服务设置", exact: true }).click();
   await page.waitForSelector("#chat-model:not(:disabled)");
   assert.equal(await page.getByText("工作区说明", { exact: true }).count(), 0);
+  assert.equal(await page.locator("#chat-model").inputValue(), "llama3:latest");
+  assert.equal(await page.getByRole("radiogroup", { name: "对话模型来源" }).getByRole("radio", { name: "OpenAI 标准接口", exact: true }).isChecked(), true);
+  await page.getByRole("radio", { name: "Anthropic 标准接口", exact: true }).check();
   await page.locator("[name=chat-provider]").nth(1).check();
-  await page.locator("[name=embedding-provider]").nth(1).check();
+  assert.equal(await page.locator("[name=embedding-provider]").count(), 1);
+  assert.equal(await page.locator("#embedding-model").inputValue(), "qwen3-embedding:4b");
+  await page.locator("#embedding-base-url").fill("https://api.openai.com/v1");
+  await page.locator("#embedding-model").fill("text-embedding-3-small");
   assert.equal(await page.locator("#chat-model").inputValue(), "gpt-4.1-mini");
   assert.equal(
     await page.locator("#embedding-model").inputValue(),
@@ -148,8 +154,26 @@ try {
     ),
     "rgb(180, 35, 47)",
   );
+  await page.getByRole("radio", { name: "Anthropic 标准接口", exact: true }).check();
+  assert.equal(await page.locator("#chat-base-url").inputValue(), "https://api.anthropic.com");
+  assert.match(await page.locator("#chat-model").inputValue(), /^claude-/);
+  await click("保存并应用");
+  assert.equal(writes.length, 1, "Anthropic requires a new key after changing protocols");
+  await page.locator("#chat-api-key").fill("fixture-anthropic-secret");
+  await page.locator("#chat-model").fill("custom-claude");
+  await click("保存并应用");
+  await page.waitForFunction(() => document.querySelector("#chat-api-key").value === "");
+  assert.equal(writes.at(-1).chat.provider, "anthropic");
+  assert.equal(writes.at(-1).chat.model, "custom-claude");
+  assert.equal(writes.at(-1).embedding.provider, "openai");
+  assert.equal(await page.getByText("本地模型", { exact: true }).count(), 0);
   await page.reload();
   await page.waitForSelector("#chat-model:not(:disabled)");
+  assert.equal(await page.getByRole("radio", { name: "Anthropic 标准接口", exact: true }).isChecked(), true);
+  assert.equal(await page.locator("#chat-model").inputValue(), "custom-claude");
+  await page.waitForFunction(
+    () => getComputedStyle(document.querySelector(".test-connection")).backgroundColor === "rgb(255, 190, 0)",
+  );
   assert.equal(
     await page.locator(".test-connection").evaluate((element) =>
       getComputedStyle(element).backgroundColor,
@@ -172,24 +196,29 @@ try {
     path: "artifacts/mobile-api-settings.png",
     fullPage: true,
   });
-  await click("展开导航");
-  await page.getByRole("link", { name: /^图谱工作台/ }).click();
-  await click("全页面查看 tile-001");
-  assert.equal(
-    await page
-      .locator(".fullscreen-viewer")
-      .evaluate((d) => d.clientWidth === innerWidth),
-    true,
-  );
-  await page.locator(".fullscreen-header .secondary").click();
-  await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
-  await click("全页面查看图谱");
-  await page.keyboard.press("Escape");
-  await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
-  assert.deepEqual(errors, []);
-  console.log(
-    "PASS: removed activity, full-page graph, full-page Tile, Escape and exit, responsive settings, provider switching, required keys, save/apply, no browser credential persistence.",
-  );
+  if (process.env.API_SETTINGS_ONLY === "true") {
+    assert.deepEqual(errors, []);
+    console.log("PASS: legacy OpenAI settings, Anthropic switching, required key, save/reload, redaction, connection feedback and mobile layout");
+  } else {
+    await click("展开导航");
+    await page.getByRole("link", { name: /^图谱工作台/ }).click();
+    await click("全页面查看 tile-001");
+    assert.equal(
+      await page
+        .locator(".fullscreen-viewer")
+        .evaluate((d) => d.clientWidth === innerWidth),
+      true,
+    );
+    await page.locator(".fullscreen-header .secondary").click();
+    await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
+    await click("全页面查看图谱");
+    await page.keyboard.press("Escape");
+    await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
+    assert.deepEqual(errors, []);
+    console.log(
+      "PASS: removed activity, full-page graph, full-page Tile, Escape and exit, responsive settings, provider switching, required keys, save/apply, no browser credential persistence.",
+    );
+  }
 } finally {
   await browser.close();
 }

@@ -45,8 +45,11 @@ const emit = defineEmits([
   "toggle",
   "expand",
   "delete",
+  "label",
   "extend",
   "new",
+  "create-question",
+  "extend-question",
   "move",
   "move-end",
   "arrange",
@@ -144,13 +147,13 @@ function extend(id) {
         @move="emit('move', $event)"
         @move-end="emit('move-end')"
         @arrange="emit('arrange', $event)"
-        @toggle="emit('toggle', $event)"
         @expand="emit('expand', $event)"
+        @toggle="emit('toggle', $event)"
         @delete="emit('delete', $event)"
-        @extend="extend"
+        @label="emit('label', $event)"
+        @create-question="emit('create-question')"
+        @extend-question="emit('extend-question', $event)"
         @file="emit('file', $event)"
-        @download="emit('download', $event)"
-        @edit-note="emit('edit-note', $event)"
         @new="
           close();
           emit('new');

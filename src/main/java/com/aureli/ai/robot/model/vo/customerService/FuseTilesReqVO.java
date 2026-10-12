@@ -8,6 +8,13 @@ import java.util.List;
 public record FuseTilesReqVO(
         @NotBlank @Size(max = 128) String tileId,
         @NotNull @Size(min = 2, max = 1000) List<@NotBlank @Size(max = 128) String> sourceTileIds,
-        @NotBlank(message = "请先创建或选择图谱") @Size(max = 128) String mapId) {
+        @NotBlank(message = "请先创建或选择图谱") @Size(max = 128) String mapId,
+        Boolean overwrite) {
+    public FuseTilesReqVO {
+        overwrite = Boolean.TRUE.equals(overwrite);
+    }
+    public FuseTilesReqVO(String tileId, List<String> sourceTileIds, String mapId) {
+        this(tileId, sourceTileIds, mapId, false);
+    }
     public FuseTilesReqVO(String tileId, List<String> sourceTileIds) { this(tileId, sourceTileIds, null); }
 }

@@ -4,7 +4,6 @@ import {
   Settings2,
   MessageSquare,
   Database,
-  Server,
   Globe,
   Eye,
   EyeOff,
@@ -28,23 +27,37 @@ const serviceBase = ref(props.apiBase),
   saved = ref(false);
 const dimensions = ref(1536),
   showKeys = reactive({ chat: false, embedding: false });
-const defaults = (kind, provider = "local") => ({
+const defaults = (kind, provider = "openai") => ({
   provider,
   baseUrl:
-    provider === "local"
-      ? "http://127.0.0.1:11434/v1"
+    provider === "anthropic"
+      ? "https://api.anthropic.com"
       : "https://api.openai.com/v1",
   model:
-    provider === "local"
-      ? kind === "chat"
-        ? "llama3:latest"
-        : "qwen3-embedding:4b"
+    provider === "anthropic"
+      ? "claude-sonnet-4-20250514"
       : kind === "chat"
         ? "gpt-4.1-mini"
         : "text-embedding-3-small",
   apiKey: "",
   keyConfigured: false,
 });
+function normalizeProfile(value) {
+  return {
+    ...value,
+    provider: value.provider === "local" ? "openai" : value.provider,
+  };
+}
+function requiresKey(kind) {
+  const value = config[kind];
+  if (value.provider === "anthropic") return true;
+  try {
+    const host = new URL(value.baseUrl).hostname;
+    return !/^(localhost|127\..*|192\.168\..*|10\..*|172\.(1[6-9]|2\d|3[01])\..*|\[::1\])$/.test(host);
+  } catch {
+    return true;
+  }
+}
 const savedProfiles = reactive({ chat: null, embedding: null });
 function hasStoredKey(kind) {
   const stored = savedProfiles[kind],
@@ -100,9 +113,9 @@ async function load() {
     const base = normalizeUrl(serviceBase.value, true);
     const result = await createApiClient(base).modelSettings();
     for (const kind of ["chat", "embedding"])
-      Object.assign(config[kind], result.data[kind], { apiKey: "" });
+      Object.assign(config[kind], normalizeProfile(result.data[kind]), { apiKey: "" });
     for (const kind of ["chat", "embedding"])
-      savedProfiles[kind] = { ...result.data[kind] };
+      savedProfiles[kind] = normalizeProfile(result.data[kind]);
     dimensions.value = result.data.dimensions;
     saved.value = false;
   } catch {
@@ -133,7 +146,7 @@ async function save() {
         );
       }
       if (
-        value.provider === "openai" &&
+        requiresKey(kind) &&
         !value.apiKey.trim() &&
         !hasStoredKey(kind)
       )
@@ -160,9 +173,9 @@ async function save() {
     localStorage.setItem("aureli-api-base", base);
     emit("base-change", base);
     for (const kind of ["chat", "embedding"])
-      Object.assign(config[kind], result.data[kind], { apiKey: "" });
+      Object.assign(config[kind], normalizeProfile(result.data[kind]), { apiKey: "" });
     for (const kind of ["chat", "embedding"])
-      savedProfiles[kind] = { ...result.data[kind] };
+      savedProfiles[kind] = normalizeProfile(result.data[kind]);
     showKeys.chat = false;
     showKeys.embedding = false;
     loadError.value = "";
@@ -203,7 +216,7 @@ async function testConnection() {
       <span class="metric-icon blue"><Settings2 :size="22" /></span>
       <div>
         <h2>API 配置</h2>
-        <p>配置对话模型与向量模型，连接本地服务或 OpenAI 标准接口。</p>
+        <p>配置对话模型与向量模型，选择 Anthropic 或 OpenAI 标准接口。</p>
       </div>
       <button
         class="secondary"
@@ -258,13 +271,14 @@ async function testConnection() {
               :aria-label="`${group.title}来源`"
             >
               <label
-                :class="{ selected: config[group.id].provider === 'local' }"
+                v-if="group.id === 'chat'"
+                :class="{ selected: config[group.id].provider === 'anthropic' }"
                 ><input
                   type="radio"
                   :name="`${group.id}-provider`"
-                  :checked="config[group.id].provider === 'local'"
-                  @change="useProvider(group.id, 'local')"
-                /><Server :size="16" />本地模型</label
+                  :checked="config[group.id].provider === 'anthropic'"
+                  @change="useProvider(group.id, 'anthropic')"
+                /><Globe :size="16" />Anthropic 标准接口</label
               ><label
                 :class="{ selected: config[group.id].provider === 'openai' }"
                 ><input
@@ -285,16 +299,16 @@ async function testConnection() {
             />
             <p :id="`${group.id}-url-help`" class="field-help">
               {{
-                config[group.id].provider === "local"
-                  ? "支持 Ollama 等提供 /v1 接口的本地服务。"
-                  : "可使用 OpenAI 官方地址或兼容 OpenAI 协议的服务。"
+                config[group.id].provider === "anthropic"
+                  ? "使用 Anthropic 官方地址或兼容 Messages 协议的服务，填写不含 /v1/messages 的服务根地址。"
+                  : "支持 OpenAI 官方服务及 Ollama 等兼容服务，地址通常以 /v1 结尾。"
               }}
             </p>
             <label :for="`${group.id}-api-key`"
               >API Key
               <span
                 class="required"
-                v-if="config[group.id].provider === 'openai'"
+                v-if="requiresKey(group.id)"
                 >*</span
               ><span class="optional" v-else>选填</span
               ><span class="configured-key" v-if="hasStoredKey(group.id)"
@@ -310,7 +324,7 @@ async function testConnection() {
                 :placeholder="
                   hasStoredKey(group.id)
                     ? '留空保留当前密钥'
-                    : config[group.id].provider === 'local'
+                    : !requiresKey(group.id)
                       ? '无需鉴权时可留空'
                       : '输入服务 API Key'
                 "
@@ -339,25 +353,24 @@ async function testConnection() {
               :list="`${group.id}-suggestions`"
               placeholder="输入服务中的模型 ID"
             /><datalist :id="`${group.id}-suggestions`">
-              <template v-if="group.id === 'chat'"
-                ><option
-                  v-if="config[group.id].provider === 'local'"
-                  value="llama3:latest" />
-                <option v-else value="gpt-4.1-mini"
-              /></template>
-              <template v-else
-                ><option
-                  v-if="config[group.id].provider === 'local'"
-                  value="qwen3-embedding:4b" />
-                <template v-else
-                  ><option value="text-embedding-3-small" />
-                  <option value="text-embedding-3-large" /></template
-              ></template>
+              <template v-if="group.id === 'chat'">
+                <option v-if="config[group.id].provider === 'anthropic'" value="claude-sonnet-4-20250514" />
+                <template v-else>
+                  <option value="gpt-4.1-mini" />
+                  <option value="llama3:latest" />
+                </template>
+              </template>
+              <template v-else>
+                <option value="text-embedding-3-small" />
+                <option value="text-embedding-3-large" />
+                <option value="qwen3-embedding:4b" />
+              </template>
             </datalist>
             <p class="field-help">
               支持手动填写自定义模型名称，需与你的服务一致。
             </p>
             <div v-if="group.id === 'embedding'" class="embedding-dimension">
+              <p>Anthropic 不提供向量接口，请使用 OpenAI 标准接口或兼容服务。</p>
               <span>当前向量维度</span
               ><strong class="mono">{{ dimensions }}</strong>
               <p>

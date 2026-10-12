@@ -62,6 +62,46 @@ test("manual split sends scoped source and optional requirements and preserves A
   globalThis.fetch = async () => Response.json({ success: false, errorCode: 'TILE_NOT_SPLITTABLE', message: '拆分失败：内容只是一个简单定义。' }, { status: 422 });
   await assert.rejects(api.splitTile({ sourceTileId: 'source' }), /拆分失败：内容只是一个简单定义/);
 });
+
+test("fusion overwrite uses a dedicated route and requires confirmed source deletion", async (context) => {
+  const calls = [];
+  const payload = { tileId: 'fused', sourceTileIds: ['a', 'b'], overwrite: true };
+  let response = { tiles: [{ id: 'fused' }], edges: [], deletedTileIds: ['a', 'b'] };
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, body: JSON.parse(options.body) });
+    return Response.json({ success: true, data: response });
+  });
+  const api = createApiClient('http://localhost:8080', () => 'fusion-map');
+  await api.fuseTiles(payload);
+  assert.equal(calls[0].url, 'http://localhost:8080/customer-service/tile/fusion/overwrite');
+  assert.deepEqual(calls[0].body, { ...payload, mapId: 'fusion-map' });
+  for (const invalid of [
+    { tiles: [{ id: 'fused' }], edges: [] },
+    { ...response, deletedTileIds: ['a'] },
+    { ...response, deletedTileIds: { a: true, b: true } },
+    { ...response, tiles: [{ id: 'another-tile' }] },
+    { ...response, edges: [{ sourceTileId: 'a', targetTileId: 'fused' }] },
+  ]) {
+    const valid = response;
+    response = invalid;
+    await assert.rejects(api.fuseTiles(payload), /未确认原 Tile 已删除/);
+    response = valid;
+  }
+  await api.fuseTiles({ ...payload, overwrite: false });
+  assert.equal(calls.at(-1).url, 'http://localhost:8080/customer-service/tile/fusion');
+});
+
+test("old backends cannot silently turn overwrite into ordinary fusion", async (context) => {
+  const urls = [];
+  context.mock.method(globalThis, 'fetch', async url => {
+    urls.push(url);
+    return Response.json({ status: 404 }, { status: 404 });
+  });
+  await assert.rejects(createApiClient('http://localhost:8080').fuseTiles({
+    tileId: 'fused', sourceTileIds: ['a', 'b'], overwrite: true,
+  }), /更新并重启后端/);
+  assert.deepEqual(urls, ['http://localhost:8080/customer-service/tile/fusion/overwrite']);
+});
 test("empty streams and incorrect endpoints do not become successful answers", async () => {
   await assert.rejects(
     readSse(stream("data: [DONE]\n\n"), () => {}),

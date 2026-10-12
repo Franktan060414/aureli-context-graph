@@ -95,13 +95,13 @@ data: {"done":true}
 ```json
 {
   "chat": {
-    "provider": "local",
+    "provider": "openai",
     "baseUrl": "http://127.0.0.1:11434/v1",
     "model": "llama3:latest",
     "apiKey": ""
   },
   "embedding": {
-    "provider": "local",
+    "provider": "openai",
     "baseUrl": "http://127.0.0.1:11434/v1",
     "model": "qwen3-embedding:4b",
     "apiKey": ""
@@ -110,7 +110,9 @@ data: {"done":true}
 }
 ```
 
-来源为 `local` 或 `openai`，两种来源均调用 OpenAI 标准协议。本地模型无需实际密钥；OpenAI 标准来源需要有效 Key。密钥留空只在来源与地址都未改变时保留已存密钥。配置保存在后端 PostgreSQL 的 `t_model_api_settings` 表，浏览器不存 Key。保存对话与向量配置是一次原子写入，成功后下一次模型请求立即使用新配置；数据库保存失败返回 HTTP 500 和脱敏错误，原运行配置保持不变。“测试链接”不会提交页面表单，而是让后端使用当前已保存且正在生效的对话模型配置发送固定消息；测试提示词集中维护在后端 `prompt` 包。测试成功返回模型名称和原始回复，供应商异常以脱敏的 HTTP 502 错误返回。服务重启优先恢复数据库配置，空表时迁移旧 JSON 或使用启动参数初始化。模型配置数据库读取或初始化失败时使用 `application.yml` 兜底：`http://192.168.0.106:11434/v1`、对话 `llama3:latest`、向量 `qwen3-embedding:4b`。此时保存仍需要数据库成功写入，否则继续保留当前运行配置。固定向量维度必须与当前数据库一致；换向量模型需重新处理旧文档。
+对话模型来源为 `anthropic` 或 `openai`：前者使用 Anthropic Messages 协议，Base URL 填服务根地址（默认 `https://api.anthropic.com`），后者使用 OpenAI 标准协议（通常以 `/v1` 结尾）。向量模型只支持 `openai`，Anthropic 不提供向量接口。旧 `local` 自动归入 `openai`，保留地址、模型及密钥；本地 OpenAI 兼容服务无需鉴权时可留空 Key，Anthropic 及远程 OpenAI 服务需要 Key。密钥留空只在协议与地址都未改变时保留已存密钥。
+
+配置保存在后端 PostgreSQL 的 `t_model_api_settings` 表，浏览器不存 Key。保存对话与向量配置是一次原子写入，成功后下一次模型请求立即使用新配置；数据库保存失败返回 HTTP 500 和脱敏错误，原运行配置保持不变。“测试链接”不会提交页面表单，而是让后端使用当前已保存且正在生效的对话模型配置发送固定消息；测试提示词集中维护在后端 `prompt` 包。测试成功返回模型名称和原始回复，供应商异常以脱敏的 HTTP 502 错误返回。服务重启优先恢复数据库配置，空表时迁移旧 JSON 或使用启动参数初始化。模型配置数据库读取或初始化失败时使用 `application.yml` 兜底：`http://192.168.0.106:11434/v1`、对话 `llama3:latest`、向量 `qwen3-embedding:4b`。此时保存仍需要数据库成功写入，否则继续保留当前运行配置。固定向量维度必须与当前数据库一致；换向量模型需重新处理旧文档。
 
 ## 已完成的验收
 

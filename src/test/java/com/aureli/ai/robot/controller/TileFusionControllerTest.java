@@ -98,6 +98,61 @@ class TileFusionControllerTest {
         verify(tiles, never()).delete(any());
     }
 
+    @Test void overwriteInheritsExternalEdgesAndDropsInternalEdgesAndExcludedArtifacts() throws Exception {
+        when(edges.selectList(any())).thenReturn(List.of(
+                TileEdgeDO.builder().sourceTileId("parent").targetTileId("a").direction("DIRECTED")
+                        .relationType("EXTENDS").weight(new java.math.BigDecimal("0.8")).description("输入边").build(),
+                TileEdgeDO.builder().sourceTileId("b").targetTileId("note").direction("UNDIRECTED")
+                        .relationType("RELATES").weight(new java.math.BigDecimal("0.3")).description("便签边").build(),
+                TileEdgeDO.builder().sourceTileId("a").targetTileId("b").direction("DIRECTED")
+                        .relationType("FUSES").weight(java.math.BigDecimal.ONE).build()));
+        when(tiles.delete(any())).thenReturn(2);
+        mvc.perform(post("/customer-service/tile/fusion").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"note\",\"b\"],\"overwrite\":true}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.tiles[0].relatedTileIds.length()").value(1))
+                .andExpect(jsonPath("$.data.tiles[0].relatedTileIds[0]").value("parent"))
+                .andExpect(jsonPath("$.data.edges.length()").value(2))
+                .andExpect(jsonPath("$.data.edges[0].targetTileId").value("fused"))
+                .andExpect(jsonPath("$.data.edges[0].weight").value(0.8))
+                .andExpect(jsonPath("$.data.edges[1].sourceTileId").value("fused"))
+                .andExpect(jsonPath("$.data.edges[1].targetTileId").value("note"))
+                .andExpect(jsonPath("$.data.edges[1].direction").value("UNDIRECTED"))
+                .andExpect(jsonPath("$.data.edges[1].description").value("便签边"));
+        verify(tiles).delete(any());
+        verify(messages).delete(any());
+        verify(edges, times(2)).insert(any(TileEdgeDO.class));
+    }
+
+    @Test void overwriteWithoutExternalEdgesStillDeletesSourcesAndCreatesStandaloneTile() {
+        when(tiles.delete(any())).thenReturn(2);
+        var result = service.fuse(new FuseTilesReqVO("fused", List.of("a", "b"), "map-test", true));
+        assertTrue(result.edges().isEmpty());
+        verify(edges, never()).insert(any(TileEdgeDO.class));
+        verify(tiles).delete(any());
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"", ",\"overwrite\":false", ",\"overwrite\":true"})
+    void dedicatedOverwriteRouteAlwaysDeletesSourcesAndAcknowledgesCommittedIds(String flag) throws Exception {
+        when(tiles.delete(any())).thenReturn(2);
+        mvc.perform(post("/customer-service/tile/fusion/overwrite").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\",\"note\",\"b\"]" + flag + "}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.tiles[0].id").value("fused"))
+                .andExpect(jsonPath("$.data.edges.length()").value(0))
+                .andExpect(jsonPath("$.data.deletedTileIds.length()").value(2))
+                .andExpect(jsonPath("$.data.deletedTileIds[0]").value("a"))
+                .andExpect(jsonPath("$.data.deletedTileIds[1]").value("b"));
+        verify(tiles).delete(any());
+        verify(messages).delete(any());
+        verify(edges, never()).insert(any(TileEdgeDO.class));
+    }
+
+    @Test void dedicatedOverwriteRouteValidatesBeforeCallingTheModel() throws Exception {
+        mvc.perform(post("/customer-service/tile/fusion/overwrite").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"mapId\":\"map-test\",\"tileId\":\"fused\",\"sourceTileIds\":[\"a\"]}"))
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(tiles, messages, edges, model);
+    }
+
     @ParameterizedTest @ValueSource(strings = {
         "[\"a\",\"a\"]", "[\"note\",\"file\"]", "[\"a\",\"note\",\"file\"]", "[\"a\",\"missing\"]"
     })

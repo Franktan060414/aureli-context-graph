@@ -101,6 +101,12 @@
             <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
 
+        <!-- Anthropic Messages 协议，由运行时 API 设置创建模型 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-anthropic</artifactId>
+        </dependency>
+
         <!-- Mybatis Plus (Spring Boot 4 专用) -->
         <dependency>
             <groupId>com.baomidou</groupId>

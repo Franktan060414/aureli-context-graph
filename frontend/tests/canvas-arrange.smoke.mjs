@@ -10,7 +10,7 @@ const expected = workspace => Object.fromEntries(arrangeTiles(workspace.tiles, w
   .map(({ id, x, y }) => [id, { x, y }]));
 async function coordinates(graph) {
   return graph.locator('.graph-node').evaluateAll(nodes => Object.fromEntries(nodes.map(node => [
-    node.querySelector('.node-top .mono').textContent,
+    node.dataset.tileId,
     { x: parseFloat(node.style.left), y: parseFloat(node.style.top) },
   ])));
 }
@@ -65,7 +65,7 @@ try {
   const graph = page.locator('.graph-wrap');
   await graph.locator('.graph-node').last().waitFor();
   const arranged = expected(demoGraph());
-  const selected = await graph.locator('.graph-node.selected .node-top .mono').textContent();
+  const selected = await graph.locator('.graph-node.selected').getAttribute('data-tile-id');
   const before = await layoutSnapshot(page, graph);
   for (const dismissal of ['取消', '关闭排列选择', 'Escape']) {
     await graph.getByRole('button', { name: '一键整理画布', exact: true }).click();
@@ -80,7 +80,7 @@ try {
   }
   await confirmArrange(page, graph);
   assert.deepEqual(await coordinates(graph), arranged);
-  assert.equal(await graph.locator('.graph-node.selected .node-top .mono').textContent(), selected);
+  assert.equal(await graph.locator('.graph-node.selected').getAttribute('data-tile-id'), selected);
   let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('aureli-tile-layouts')));
   assert.deepEqual(saved['demo:demo'], arranged);
   assert.equal(saved[`live:${new URL(baseUrl).origin}`]['tile-001'].x, 1300, 'demo layout does not alter live layout');
