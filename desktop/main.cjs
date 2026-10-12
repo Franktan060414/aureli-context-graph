@@ -6,6 +6,10 @@ const { BackendRuntime, findJava } = require("./backend.cjs");
 const { PostgresRuntime } = require("./postgres.cjs");
 const { executableName, developmentResources } = require("./runtime-paths.cjs");
 
+// The bundled UI is served from the same localhost URL across app updates.
+// Always read it from the current backend; persistent HTTP cache can retain an old entry page.
+app.commandLine.appendSwitch("disable-http-cache");
+
 let backend;
 let database;
 let backendUrl;

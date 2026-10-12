@@ -38,7 +38,7 @@ class ModelApiSettingsRepositoryTest {
                     .withProperty("customer-service.model-settings-path", directory.resolve("absent.json").toString());
             var service = new ModelApiSettingsService(env, repository);
             var request = new ModelApiSettingsService.SettingsRequest(
-                    new ModelApiSettingsService.EndpointRequest("openai", "https://chat.example/v1", "saved-chat", "chat-test-key"),
+                    new ModelApiSettingsService.EndpointRequest("anthropic", "https://chat.example", "saved-chat", "chat-test-key"),
                     new ModelApiSettingsService.EndpointRequest("openai", "https://embedding.example/v1", "saved-embedding", "embedding-test-key"), 1536);
             var saved = service.save(request);
             assertEquals(saved, new ModelApiSettingsService(env, new ModelApiSettingsRepository(jdbc)).view());
@@ -50,7 +50,7 @@ class ModelApiSettingsRepositoryTest {
                     stored.embedding(), stored.chat(), 1536))); // Initialization cannot overwrite a saved row.
 
             var invalid = new ModelApiSettingsRepository.StoredSettings(stored.embedding(),
-                    new ModelApiSettingsRepository.StoredEndpoint("local", "http://localhost/v1", "x".repeat(201), "fixture"), 1536);
+                    new ModelApiSettingsRepository.StoredEndpoint("openai", "http://localhost/v1", "x".repeat(201), "fixture"), 1536);
             assertThrows(DataAccessException.class, () -> repository.save(invalid));
             assertEquals(stored, repository.find().orElseThrow()); // Neither endpoint changed.
 
