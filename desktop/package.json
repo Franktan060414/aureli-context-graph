@@ -5,6 +5,7 @@
   "main": "main.cjs",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "dev": "node scripts/dev.cjs",
     "start": "electron .",
     "prepare:desktop": "node scripts/prepare-resources.cjs",
     "prepare:win": "node scripts/prepare-win-resources.cjs",

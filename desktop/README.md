@@ -9,6 +9,28 @@
 3. 从 Applications 打开 Aureli，等待内置数据库和后端启动。
 4. 在“服务设置”中配置对话模型与向量模型。
 
+## 日常桌面开发
+
+在已准备桌面运行环境的源码目录中运行：
+
+```sh
+cd desktop
+npm run dev
+```
+
+第一次使用源码需要在 `frontend` 和 `desktop` 分别执行 `npm ci`，并准备 JDK 21、Maven 和对应平台的桌面 PostgreSQL 资源（见后面的构建说明）。开发启动会编译 Java 源码、生成依赖列表、启动 Vite，并打开标题为“开发版”的 Aureli 窗口。不生成前端发布资源、后端 JAR 或安装包；不要求运行环境中已有发布用 JAR。
+
+- 修改 `frontend/src` 中的界面、样式和交互，保存后直接在应用窗口里查看更新。
+- 修改 Java 后端、桌面入口或开发配置后，关闭开发版窗口，再运行 `npm run dev`，重新编译并启动。
+- 关闭开发版窗口或在启动终端按 Ctrl+C，会先停止后端和数据库，再退出界面服务。
+- 开发版是独立的空工作区，需要在“服务设置”中单独配置模型连接。
+
+开发数据在 Mac 上位于 `~/Library/Application Support/Aureli-dev/`，Windows 上位于 `%APPDATA%\Aureli-dev\`。正式版仍使用 `Aureli` 目录。开发版默认界面端口为 `5174`、后端为 `18081`、数据库为 `54330`，可以和正式版同时运行。可通过 `AURELI_DEV_FRONTEND_PORT`、`AURELI_DESKTOP_PORT`、`AURELI_DATABASE_PORT` 指定其他端口，通过 `AURELI_DATA_DIR` 指定独立开发目录；不要指向正式版数据目录。
+
+`npm start` 仍用于检查已构建的发布资源。只有准备发布给用户时，才运行 `npm run dist:mac` 或 Windows 构建流程。
+
+桌面开发模式已在 Apple Silicon Mac 验证启动、窗口内热更新和正常退出；Windows 开发入口尚待实机验证。
+
 当前安装包适用于 Apple Silicon（M 系列）Mac，要求 macOS 13 或以上。当前采用临时签名，未配置 Apple Developer ID 签名和公证；正式对外分发前需要补充这两项。
 
 AI 模型没有包含在安装包里。可连接自行安装的本地 Ollama，也可配置远程模型 API。选择远程 API 时仍需联网；若要完全离线使用，需要在目标 Mac 上另外准备本地模型。

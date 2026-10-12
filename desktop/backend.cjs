@@ -42,13 +42,14 @@ async function checkPort(port) {
 }
 
 class BackendRuntime {
-  constructor({ projectRoot, port = 18080, jarPath, javaPath, workDir, logPath, profile = "dev", env = {}, onUnexpectedExit = () => {} }) {
+  constructor({ projectRoot, port = 18080, jarPath, classPath, javaPath, workDir, logPath, profile = "dev", env = {}, onUnexpectedExit = () => {} }) {
     if (!Number.isInteger(port) || port < 1024 || port > 65535) {
       throw new Error("AURELI_DESKTOP_PORT 必须是 1024 到 65535 之间的端口。");
     }
     this.projectRoot = projectRoot;
     this.port = port;
     this.jarPath = jarPath;
+    this.classPath = classPath;
     this.javaPath = javaPath;
     this.workDir = workDir || projectRoot;
     this.profile = profile;
@@ -63,14 +64,16 @@ class BackendRuntime {
   }
 
   async start({ timeoutMs = 90000 } = {}) {
-    const jar = this.jarPath || findJar(this.projectRoot);
+    const launchArgs = this.classPath
+      ? ["-cp", this.classPath, "com.aureli.ai.robot.XiaohaAiRobotSpringbootApplication"]
+      : ["-jar", this.jarPath || findJar(this.projectRoot)];
     const java = this.javaPath || findJava();
     await checkPort(this.port);
     if (this.stopping) throw new Error("应用启动已取消。");
     const logFd = fs.openSync(this.logPath, "a", 0o600);
     try {
       this.child = spawn(java, [
-        "-jar", jar,
+        ...launchArgs,
         `--spring.profiles.active=${this.profile}`,
         "--server.address=127.0.0.1",
         `--server.port=${this.port}`,

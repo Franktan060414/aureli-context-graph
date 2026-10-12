@@ -4,6 +4,8 @@
 
 ## 开发与使用
 
+桌面应用的日常开发推荐在 `desktop` 目录运行 `npm run dev`：自动启动后端与独立数据库，直接在 Aureli 窗口查看界面热更新。首次准备见 [`../desktop/README.md`](../desktop/README.md)。以下命令用于单独在浏览器中开发。
+
 ```sh
 cd frontend
 npm ci

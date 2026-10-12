@@ -214,17 +214,17 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--customer-service.md-storage-p
 
 如果数据库已有模型配置，或根目录存在可迁移的旧 `config/model-api-settings.json`，它们会优先于本次环境变量中的模型初始值。页面显示的配置是判断实际调用地址的依据。
 
-### 6. 可选：打开桌面窗口
+### 6. 可选：在桌面窗口中开发
 
-保持后端运行，在另一个终端执行：
+准备对应平台的桌面 PostgreSQL 资源、JDK 21 和 Maven 后执行：
 
 ```bash
 cd desktop
 npm ci
-npm start
+npm run dev
 ```
 
-当前 Electron 入口固定加载 `http://127.0.0.1:8080`；它只负责打开窗口，后端和数据库需要单独启动。
+该入口自动编译 Java 源码、启动独立数据库与后端，并在 Electron 窗口加载支持热更新的 Vue 界面，无需单独启动网页后端或生成安装包。开发数据独立保存在 `Aureli-dev` 目录。首次准备、端口和发布资源验证见 [`desktop/README.md`](desktop/README.md)。
 
 ## 数据库与 SQL 建表语句
 
@@ -567,6 +567,10 @@ data: {"error":"回答生成或保存失败，请检查模型服务连接后重�
 
 ## 开发、测试与打包
 
+### 桌面开发（推荐用于桌面应用）
+
+在已准备运行环境的项目中执行 `cd desktop`、`npm run dev`。界面保存后在 Aureli 开发版窗口实时更新；Java 或 Electron 源码修改后，关闭窗口并重新执行启动命令。开发版关闭窗口即退出所管理的服务，数据库、模型设置和知识文件与正式版分开保存。详细说明见 [`desktop/README.md`](desktop/README.md)。
+
 ### 前后端分开开发
 
 先启动后端，再运行：
@@ -620,7 +624,7 @@ java -jar target/aureli-graph-ai-system-4.1.0.jar \
 
 JAR 名称对应当前继承的 Maven 项目版本。运行前保留前文数据库与模型环境变量配置；页面会由 Spring Boot 同源提供。旧版静态页面目前保留在 `/legacy/index.html`。
 
-`application-prod.yml` 当前仅为配置片段，切换 `prod` 前需要补齐数据库、文件目录和向量库等配置，并以外部配置替换其中的凭据。当前桌面目录提供开发启动入口，尚未配置桌面安装包构建流程。
+`application-prod.yml` 当前仅为配置片段，切换 `prod` 前需要补齐数据库、文件目录和向量库等配置，并以外部配置替换其中的凭据。桌面安装包使用独立的 `desktop` 配置；Mac 与 Windows 安装包构建流程见 [`desktop/README.md`](desktop/README.md)。
 
 ## 常见问题与当前边界
 
