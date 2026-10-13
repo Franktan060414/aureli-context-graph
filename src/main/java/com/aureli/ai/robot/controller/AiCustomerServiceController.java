@@ -6,6 +6,9 @@ import com.google.common.collect.Lists;
 import com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor;
 import com.aureli.ai.robot.advisor.CustomStreamLoggerAndMessage2DBAdvisor;
 import com.aureli.ai.robot.advisor.CustomerServiceAdvisor;
+import com.aureli.ai.robot.advisor.TavilySearchAdvisor;
+import com.aureli.ai.robot.service.search.TavilyMcpSearchService;
+import com.aureli.ai.robot.service.search.TavilySettingsService;
 import com.aureli.ai.robot.aspect.ApiOperationLog;
 import com.aureli.ai.robot.domain.mapper.TileEdgeMapper;
 import com.aureli.ai.robot.domain.mapper.TileMapper;
@@ -59,6 +62,10 @@ public class AiCustomerServiceController {
 
     @Resource
     private ModelApiSettingsService modelApiSettings;
+    @Resource
+    private TavilySettingsService tavilySettings;
+    @Resource
+    private TavilyMcpSearchService tavilySearch;
 
     /**
      * 问答 MD 文件上传
@@ -138,6 +145,7 @@ public class AiCustomerServiceController {
         }
 
         advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
+        advisors.add(new TavilySearchAdvisor(tavilySettings, tavilySearch, chatModel));
         advisors.add(persistenceAdvisor);
 
         chatClientRequestSpec.advisors(advisors);

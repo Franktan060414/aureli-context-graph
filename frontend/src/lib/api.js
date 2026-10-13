@@ -133,6 +133,7 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
       method: "DELETE", signal: AbortSignal.timeout(30000),
     })),
     createMap: (name) => post("/customer-service/maps", { name }),
+    createExampleMap: () => post("/customer-service/maps/example", {}),
     importHistory: async (data) => checkedResponse(await request(endpoint(base(), "/customer-service/maps/import"), {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data), signal: AbortSignal.timeout(120000),
@@ -148,6 +149,11 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
     })),
     assignLabel: (tileIds, labelId) => post("/customer-service/tile/label", scoped({ tileIds, labelId })),
     workspace: () => get(mapPath("/customer-service/tile/workspace")),
+    createWebTile: data => post("/customer-service/tile/web", scoped(data)),
+    refreshWebTile: async tileId => checkedResponse(await request(endpoint(base(), `/customer-service/tile/${encodeURIComponent(tileId)}/web/refresh`), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(scoped({})), signal: AbortSignal.timeout(90000),
+    })),
     createNote: (data) => post("/customer-service/tile/note", scoped(data)),
     updateNote: (data) => post("/customer-service/tile/note/update", scoped(data)),
     async uploadTileFile(file, relatedTileIds = []) {
@@ -173,11 +179,15 @@ export function createApiClient(getBase = () => "", getMap = () => undefined) {
     modelSettings: () => get("/customer-service/model-settings"),
     saveModelSettings: (data) => post("/customer-service/model-settings", data),
     testModelSettings: () => postWithoutBody(base(), "/customer-service/model-settings/test", 60000),
+    tavilySettings: () => get("/customer-service/tavily-settings"),
+    saveTavilySettings: (data) => post("/customer-service/tavily-settings", data),
+    testTavilySettings: () => postWithoutBody(base(), "/customer-service/tavily-settings/test", 60000),
     listMarkdown: (data) => post("/customer-service/md/list", data),
     updateMarkdown: (data) => post("/customer-service/md/update", data),
     deleteMarkdown: (id) => post("/customer-service/md/delete", { id }),
     deleteTile: (tileId) => post("/customer-service/tile/delete", scoped({ tileId })),
     updateTileWeight: (tileId, weight) => post("/customer-service/tile/weight", scoped({ tileId, weight })),
+    updateTileSize: (tileId, width, height) => post("/customer-service/tile/size", scoped({ tileId, width, height })),
     async fuseTiles(data) {
       const path = data.overwrite ? "/customer-service/tile/fusion/overwrite" : "/customer-service/tile/fusion";
       let result;

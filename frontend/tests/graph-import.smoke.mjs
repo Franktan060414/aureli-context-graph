@@ -1,13 +1,14 @@
+import { sampleGraph } from './fixtures/sample-workspace.js';
 import assert from 'node:assert/strict';
 import { readFile, mkdir } from 'node:fs/promises';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 page.setDefaultTimeout(10000);
-const errors = [], imports = [], maps = [], graphs = new Map();
+const errors = [], imports = [], maps = [{ mapId: 'existing', name: '已有图谱', zoom: 1 }], graphs = new Map([['existing', sampleGraph()]]);
 let failImport = false, releaseImport;
 page.on('pageerror', error => errors.push(error.message));
-await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'demo'); });
+await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'live'); });
 await page.route('**/customer-service/**', async route => {
   const request = route.request(), url = new URL(request.url());
   if (url.pathname.endsWith('/maps/import')) {
@@ -65,7 +66,7 @@ try {
   failImport = true;
   await upload(exported);
   await page.getByRole('alert').filter({ hasText: '服务端校验失败' }).waitFor();
-  assert.equal(maps.length, 0);
+  assert.equal(maps.length, 1);
   failImport = false;
   console.log('Validation and server failure verified');
   await upload(exported);
@@ -77,7 +78,7 @@ try {
   await page.locator('.graph-node').first().waitFor();
   assert.equal(await page.locator('.graph-node').count(), source.tiles.length);
   assert.equal(await page.locator('#settings-navigation').count(), 0);
-  assert.equal(await page.evaluate(() => localStorage.getItem('aureli-mode')), 'live');
+  assert.equal(await page.evaluate(() => localStorage.getItem('aureli-mode')), null);
   assert.equal(imports.at(-1).tiles[0].answer, source.tiles[0].answer);
   assert.equal(await page.getByRole('button', { name: '聊天记录（导入）', exact: true }).count(), 1);
   await page.reload();
@@ -98,7 +99,7 @@ try {
   assert.equal(typeof releaseImport, 'function');
   releaseImport();
   await page.locator('.graph-node').first().waitFor();
-  assert.equal(maps.length, 2, 'repeated imports create separate maps');
+  assert.equal(maps.length, 3, 'repeated imports create separate maps alongside the existing map');
   assert.equal(await page.locator('.graph-node').count(), source.tiles.length);
   assert.deepEqual(errors, []);
   console.log('PASS: real exported JSON import, client/server validation, retry, pending state, reload, repeated import and mobile navigation');

@@ -128,22 +128,8 @@ try {
   assert.equal(await page.getByRole("heading", { name: "第二份.pdf" }).isVisible(), true);
   await page.getByRole("button", { name: /退出全页面/ }).click();
   await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
-  // Demo uploads use the in-memory File without calling the backend download API.
-  await page.evaluate(() => localStorage.setItem("aureli-mode", "demo"));
-  // Init scripts restore live mode on reload, so explicitly set demo last.
-  await page.addInitScript(() => localStorage.setItem("aureli-mode", "demo"));
-  await page.reload();
-  await page.getByRole("button", { name: "添加文件", exact: true }).click();
-  await page.locator("#node-file").setInputFiles({ name: "本地示例.pdf", mimeType: "application/pdf", buffer: pdf });
-  await page.getByRole("button", { name: "添加到画布", exact: true }).click();
-  await page.locator(".modal").waitFor({ state: "hidden" });
-  const demoNode = page.locator(".graph-node", { hasText: "本地示例.pdf" });
-  const beforeDemo = requests;
-  await demoNode.locator('button[aria-label^="全页面查看"]').click();
-  await waitRendered();
-  assert.equal(requests, beforeDemo, "demo PDF preview stays local");
   assert.deepEqual(errors, []);
-  console.log(`PASS: PDF text/image rendering, paging, download, iframe/search Escape, failure/retry, mobile layout, late requests, demo isolation and custom backend (${requests} file requests)`);
+  console.log(`PASS: PDF text/image rendering, paging, download, iframe/search Escape, failure/retry, mobile layout, late requests and custom backend (${requests} file requests)`);
 } catch (error) {
   await mkdir("artifacts", { recursive: true });
   await page.screenshot({ path: "artifacts/pdf-preview-failure.png" });

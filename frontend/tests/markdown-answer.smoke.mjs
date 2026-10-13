@@ -73,7 +73,7 @@ await page.route("http://backend.test/customer-service/**", route => {
   return route.fulfill({ json: { success: true, data: path.endsWith("/workspace") ? { tiles, edges: [] } : [] } });
 });
 
-async function checkAnswer(selector) {
+async function checkAnswer(selector, { preview = false } = {}) {
   const content = page.locator(selector);
   await content.locator("h1").waitFor();
   assert.equal(await content.locator("h1").innerText(), "阅读示例");
@@ -82,17 +82,44 @@ async function checkAnswer(selector) {
   assert.equal(await content.locator("ol li").count(), 2);
   assert.equal(await content.locator("table tbody tr").count(), 1);
   assert.equal(await content.locator("blockquote").innerText(), "引用内容");
-  assert.equal(await content.locator('a[href="https://example.com"]').count(), 1);
+  assert.equal(await content.locator(preview ? '.markdown-link' : 'a[href="https://example.com"]').count(), 1);
   assert.equal(await content.locator("script, img, a[href^='javascript:']").count(), 0);
   assert.equal(await page.evaluate(() => !!window.markdownExecuted), false);
   assert.equal(await content.evaluate(el => getComputedStyle(el).whiteSpace), "normal");
-  assert.equal(await content.locator("pre").evaluate(el => getComputedStyle(el).whiteSpace), "pre");
+  assert.equal(await content.locator("pre").evaluate(el => getComputedStyle(el).whiteSpace), preview ? "pre-wrap" : "pre");
   assert.equal(await content.locator("h1").evaluate(el => parseFloat(getComputedStyle(el).fontSize) < 32), true);
-  assert.equal(await content.locator("pre").evaluate(el => el.scrollWidth > el.clientWidth), true);
+  assert.equal(await content.locator("pre").evaluate(el => el.scrollWidth > el.clientWidth), !preview);
+  if (preview) {
+    assert.equal(await content.locator('a, [tabindex]').count(), 0, 'canvas preview has no nested interactive controls');
+    assert.equal(await content.locator('strong').evaluate(el => getComputedStyle(el).display), 'inline', 'inline bold does not inherit the Tile title layout');
+    assert.equal(await content.evaluate(el => getComputedStyle(el).overflow), 'hidden');
+    assert.equal(await content.locator('table').evaluate(el => el.scrollWidth <= el.closest('.markdown-table').clientWidth), true, 'all table columns fit the compact preview');
+    assert.equal(await content.evaluate(el => el.scrollHeight > el.clientHeight), true, 'long Markdown is clipped to the available Tile height');
+  }
 }
 
 try {
   await page.goto(process.env.UI_TEST_URL || "http://127.0.0.1:5173");
+  const canvasAnswer = '.graph-node[data-tile-id="markdown-example"] .node-answer';
+  await checkAnswer(canvasAnswer, { preview: true });
+  assert.equal(await page.locator('.graph-node[data-tile-id="markdown-example"]').evaluate(el => el.style.width), '260px');
+  assert.equal(await page.locator('.graph-node[data-tile-id="plain-note"] .node-answer').innerText(), '**便签保持原文**');
+  const previewTile = page.locator('.graph-node[data-tile-id="markdown-example"]');
+  async function resizePreview(width, height) {
+    const current = await previewTile.evaluate(el => ({ width: parseFloat(el.style.width), height: parseFloat(el.style.height) }));
+    const scale = (await previewTile.boundingBox()).width / current.width;
+    const box = await previewTile.locator('.node-resize-se').boundingBox();
+    const x = box.x + box.width / 2, y = box.y + box.height / 2;
+    await page.mouse.move(x, y); await page.mouse.down();
+    await page.mouse.move(x + (width - current.width) * scale, y + (height - current.height) * scale, { steps: 10 });
+    await page.mouse.up();
+    await page.waitForFunction(() => !document.querySelector('[data-tile-id="markdown-example"] .node-resize-se').disabled);
+  }
+  await resizePreview(520, 680);
+  assert.ok(await page.locator(canvasAnswer).evaluate(el => el.clientHeight > 500), 'enlarging the Tile exposes more formatted content');
+  await mkdir(new URL('../artifacts/', import.meta.url), { recursive: true });
+  await previewTile.screenshot({ path: new URL('../artifacts/canvas-markdown.png', import.meta.url).pathname });
+  await resizePreview(260, 200);
   await page.getByRole("button", { name: /^查看 markdown-example：/ }).click();
   await checkAnswer(".answer-text");
   await page.getByRole("button", { name: "全页面查看 markdown-example", exact: true }).click();
@@ -114,6 +141,7 @@ try {
   assert.equal(await page.locator(".answer-text").innerText(), "**便签保持原文**");
   assert.equal(await page.locator(".answer-text strong").count(), 0);
 
+
   await page.getByRole("button", { name: "添加Tile", exact: true }).click();
   await page.getByLabel("提问内容").fill("测试实时 Markdown");
   await page.getByLabel("当前 Tile ID").fill("markdown-stream");
@@ -122,22 +150,32 @@ try {
   assert.equal(await page.locator(".answer-text").innerText(), "正在思考并生成回答…");
   await page.evaluate(() => window.sendMarkdownEvent({ v: "## 实时回答\n\n**分" }));
   await page.locator(".answer-text h2").waitFor();
+  await page.locator('.graph-node[data-tile-id="markdown-stream"] .node-answer h2').waitFor();
   assert.equal(await page.locator(".answer-text").getAttribute("aria-busy"), "true");
   assert.equal(await page.locator(".answer-text strong").count(), 0);
+  await page.getByRole('button', { name: '适应画布', exact: true }).click();
   await page.getByRole("button", { name: "全页面查看 markdown-stream", exact: true }).click();
   await page.evaluate(() => window.sendMarkdownEvent({ v: "段加粗**\n\n```js\nconst value = 1;" }));
   await page.waitForFunction(() => document.querySelector(".reading-answer strong")?.textContent === "分段加粗");
+  await page.waitForFunction(() => document.querySelector('.graph-node[data-tile-id="markdown-stream"] .node-answer strong')?.textContent === '分段加粗');
   await page.evaluate(() => window.sendMarkdownEvent({ v: "\n```\n\n- 已完成" }));
   await page.locator(".reading-answer li").waitFor();
   await page.evaluate(() => window.finishMarkdownStream());
   await page.waitForFunction(() => document.querySelector(".reading-answer")?.getAttribute("aria-busy") === "false");
+  assert.equal(await page.locator('.graph-node[data-tile-id="markdown-stream"] .node-answer').getAttribute('aria-busy'), 'false');
   assert.equal(await page.locator(".reading-answer pre code").innerText(), "const value = 1;\n");
   await page.keyboard.press("Escape");
   await page.locator(".fullscreen-viewer").waitFor({ state: "detached" });
   assert.equal(await page.locator(".answer-text strong").innerText(), "分段加粗");
   assert.equal(await page.locator(".answer-text li").innerText(), "已完成");
+  await page.getByRole('button', { name: /^查看 markdown-example：/ }).focus();
+  await page.keyboard.press('Enter');
+  await page.locator('.answer-text h1').waitFor();
+  await page.getByRole('button', { name: /^查看 plain-note：/ }).focus();
+  await page.keyboard.press('Space');
+  assert.equal(await page.locator('.answer-text').innerText(), '**便签保持原文**');
   assert.deepEqual(errors, []);
-  console.log("PASS: Markdown in both readers, fragmented streaming, HTML escaping, plain notes and narrow-screen overflow");
+  console.log("PASS: Markdown in canvas and both readers, bounded compact previews, keyboard Tile selection, fragmented streaming, HTML escaping, plain notes and narrow-screen overflow");
 } finally {
   await browser.close();
 }

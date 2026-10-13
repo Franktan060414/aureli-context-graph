@@ -1,3 +1,4 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from "node:assert/strict";
 const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE_PATH || "playwright"
@@ -9,6 +10,7 @@ const browser = await chromium.launch({
     : {}),
 });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await mockSampleWorkspace(page);
 let modelSettings = {
   chat: {
     provider: "local",
@@ -59,7 +61,7 @@ await page.route("**/customer-service/model-settings**", async (route) => {
 });
 const click = async (name) =>
   page.getByRole("button", { name, exact: true }).click();
-await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'demo'); });
+await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'live'); });
 try {
   await page.goto(process.env.UI_TEST_URL || "http://127.0.0.1:4173");
   await page.waitForSelector(".graph-node");

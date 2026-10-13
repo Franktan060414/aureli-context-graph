@@ -1,6 +1,6 @@
 import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -133,19 +133,6 @@ try {
     await page.setViewportSize({ width, height: 900 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `No horizontal overflow at ${width}`);
   }
-  // Demo maps are isolated and never write to API.
-  const beforeDemo = writes.length;
-  const demoPage = await browser.newPage();
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await demoPage.getByRole('button', { name: '新建图谱', exact: true }).click();
-  await demoPage.getByLabel('图谱名称').fill('示例项目');
-  await demoPage.locator('.map-create-form').getByRole('button', { name: '创建', exact: true }).click();
-  await demoPage.locator('.map-item.selected').filter({ hasText: '示例项目' }).waitFor();
-  await demoPage.locator('.map-list').getByRole('button', { name: '示例图谱', exact: true }).click();
-  assert.equal(await demoPage.locator('.nav-count').textContent(), String(demoGraph().tiles.length));
-  assert.equal(writes.length, beforeDemo);
-  await demoPage.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: dock list/create/retry, map ownership, generation during switching, late snapshots, selection persistence, keyboard, responsive layout, demo isolation');
+  console.log('PASS: dock list/create/retry, map ownership, generation during switching, late snapshots, selection persistence, keyboard, responsive layout');
 } finally { await browser.close(); }

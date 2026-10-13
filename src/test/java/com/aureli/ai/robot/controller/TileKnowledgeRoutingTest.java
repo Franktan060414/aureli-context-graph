@@ -61,6 +61,11 @@ class TileKnowledgeRoutingTest {
                 .doInTransaction(new SimpleTransactionStatus()));
         controller = new AiCustomerServiceController();
         ReflectionTestUtils.setField(controller, "modelApiSettings", settings);
+        var tavily = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
+        when(tavily.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(
+                false, com.aureli.ai.robot.service.search.TavilySettingsService.DEFAULT_URL, ""));
+        ReflectionTestUtils.setField(controller, "tavilySettings", tavily);
+        ReflectionTestUtils.setField(controller, "tavilySearch", mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class));
         ReflectionTestUtils.setField(controller, "vectorStore", vectors);
         ReflectionTestUtils.setField(controller, "tileMapper", tiles);
         ReflectionTestUtils.setField(controller, "tileEdgeMapper", edges);
@@ -88,6 +93,129 @@ class TileKnowledgeRoutingTest {
         when(messages.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
                 TileMessageDO.builder().mapId("map-test").tileId("previous").role("user").content(question).build(),
                 TileMessageDO.builder().mapId("map-test").tileId("previous").role("assistant").content(answer).build()));
+    }
+
+    private com.aureli.ai.robot.service.search.TavilyMcpSearchService enableWebSearch() {
+        var settings = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
+        when(settings.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(
+                true, com.aureli.ai.robot.service.search.TavilySettingsService.DEFAULT_URL, "fixture-secret"));
+        var search = mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class);
+        ReflectionTestUtils.setField(controller, "tavilySettings", settings);
+        ReflectionTestUtils.setField(controller, "tavilySearch", search);
+        return search;
+    }
+
+    @Test void webDecisionSeesSelectedMemoryAndKnowledgeAndPersistsOnlyFinalAnswer() {
+        var web = enableWebSearch();
+        memory("我在研究 PostgreSQL", "我们使用的是旧版本。");
+        when(model.call(any(Prompt.class))).thenReturn(response("RAG_REQUIRED"),
+                response("{\"search\":true,\"query\":\"PostgreSQL 最新版本 官方发布\"}"));
+        when(vectors.similaritySearch(any(SearchRequest.class)))
+                .thenReturn(List.of(new Document("项目知识库记录：数据库版本需要更新核实。")));
+        when(web.search(any(), eq("PostgreSQL 最新版本 官方发布")))
+                .thenReturn("官方发布说明 https://example.com/release 版本更新内容");
+        when(model.stream(any(Prompt.class))).thenReturn(Flux.just(response("已核实。[官方发布](https://example.com/release)")));
+
+        var events = run("联网核实它的最新版本", List.of("previous"));
+
+        var decisions = ArgumentCaptor.forClass(Prompt.class);
+        verify(model, times(2)).call(decisions.capture());
+        Prompt routing = decisions.getAllValues().get(1);
+        assertTrue(routing.getContents().contains("我在研究 PostgreSQL"));
+        assertTrue(routing.getContents().contains("数据库版本需要更新核实"));
+        assertEquals("联网核实它的最新版本", routing.getUserMessage().getText());
+        assertEquals(1, routing.getSystemMessages().size());
+        assertFalse(routing.getContents().contains("fixture-secret"));
+        verify(web).search(any(), eq("PostgreSQL 最新版本 官方发布"));
+        Prompt answer = streamedPrompt();
+        assertTrue(answer.getContents().contains("https://example.com/release"));
+        assertTrue(answer.getContents().contains("Markdown 来源链接"));
+        assertEquals("联网核实它的最新版本", answer.getUserMessage().getText());
+        assertFalse(answer.getContents().contains("\"search\":true"));
+        var saved = ArgumentCaptor.forClass(TileMessageDO.class);
+        verify(messages, times(2)).insert(saved.capture());
+        assertEquals(List.of("联网核实它的最新版本", "已核实。[官方发布](https://example.com/release)"),
+                saved.getAllValues().stream().map(TileMessageDO::getContent).toList());
+        assertTrue(events.getLast().getDone());
+    }
+
+    @Test void enabledToolIsNotCalledWhenModelFindsContextSufficient() {
+        var web = enableWebSearch();
+        memory("我在整理便签", "只使用已有材料。");
+        when(model.call(any(Prompt.class))).thenReturn(response("DIRECT"), response("{\"search\":false,\"query\":\"\"}"));
+        var events = run("仅根据所选资料总结，不联网", List.of("previous"));
+        verifyNoInteractions(web);
+        assertTrue(streamedPrompt().getContents().contains("只使用已有材料"));
+        assertTrue(events.getLast().getDone());
+    }
+
+    @Test void enabledWebSearchCanSupplyEvidenceWhenEmbeddingServiceIsUnavailable() {
+        var web = enableWebSearch();
+        when(model.call(any(Prompt.class))).thenReturn(response("RAG_REQUIRED"),
+                response("{\"search\":true,\"query\":\"Tavily MCP 官方文档\"}"));
+        when(vectors.similaritySearch(any(SearchRequest.class)))
+                .thenThrow(new IllegalStateException("private-embedding-connection-error"));
+        when(web.search(any(), any())).thenReturn("官方工具说明 https://example.com/docs");
+        var events = run("请联网查 Tavily 的工具", List.of());
+        verify(web).search(any(), eq("Tavily MCP 官方文档"));
+        Prompt answer = streamedPrompt();
+        assertTrue(answer.getContents().contains("https://example.com/docs"));
+        assertTrue(answer.getContents().contains("不得声称已查阅知识库"));
+        assertFalse(answer.getContents().contains("private-embedding-connection-error"));
+        assertTrue(events.getLast().getDone());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void unavailableKnowledgeDoesNotPreventAnswerOrPersistenceRegardlessOfWebSwitch(boolean webEnabled) {
+        var web = webEnabled ? enableWebSearch()
+                : (com.aureli.ai.robot.service.search.TavilyMcpSearchService)
+                        ReflectionTestUtils.getField(controller, "tavilySearch");
+        memory("请参考我选择的方案", "方案要求支持离线使用。");
+        when(model.call(any(Prompt.class))).thenReturn(response("RAG_REQUIRED"),
+                response("{\"search\":false,\"query\":\"\"}"));
+        when(vectors.similaritySearch(any(SearchRequest.class)))
+                .thenThrow(new IllegalStateException("private-embedding-connection-error"));
+
+        var events = run("结合已有方案说明相关技术原理", List.of("previous"));
+
+        assertEquals("最终回答", events.getFirst().getV());
+        assertTrue(events.getLast().getDone());
+        assertTrue(events.stream().noneMatch(event -> event.getError() != null));
+        verifyNoInteractions(web);
+        verify(model, times(webEnabled ? 2 : 1)).call(any(Prompt.class));
+        Prompt answer = streamedPrompt();
+        assertEquals("结合已有方案说明相关技术原理", answer.getUserMessage().getText());
+        assertTrue(answer.getContents().contains("方案要求支持离线使用"));
+        assertTrue(answer.getContents().contains("不得声称已查阅知识库"));
+        assertFalse(answer.getContents().contains("private-embedding-connection-error"));
+        var saved = ArgumentCaptor.forClass(TileMessageDO.class);
+        verify(messages, times(2)).insert(saved.capture());
+        assertEquals(List.of("结合已有方案说明相关技术原理", "最终回答"),
+                saved.getAllValues().stream().map(TileMessageDO::getContent).toList());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"不是 JSON", "{\"search\":\"true\",\"query\":\"x\"}", "{\"search\":true,\"query\":\"\"}"})
+    void invalidWebDecisionDoesNotCallToolAndDoesNotLeakRouting(String decision) {
+        var web = enableWebSearch();
+        when(model.call(any(Prompt.class))).thenReturn(response("DIRECT"), response(decision));
+        var events = run("请联网核实版本", List.of());
+        verifyNoInteractions(web);
+        assertTrue(streamedPrompt().getContents().contains("本次联网检索未成功完成"));
+        assertEquals("最终回答", events.getFirst().getV());
+        assertTrue(events.getLast().getDone());
+    }
+
+    @Test void failedMcpSearchFallsBackWithoutExposingCredentialsOrPretendingToVerify() {
+        var web = enableWebSearch();
+        when(model.call(any(Prompt.class))).thenReturn(response("DIRECT"), response("{\"search\":true,\"query\":\"最新版本\"}"));
+        when(web.search(any(), any())).thenThrow(new IllegalStateException("fixture-secret upstream error"));
+        var events = run("联网查最新版本", List.of());
+        Prompt answer = streamedPrompt();
+        assertTrue(answer.getContents().contains("不得声称已联网查证"));
+        assertFalse(answer.getContents().contains("fixture-secret"));
+        assertTrue(events.getLast().getDone());
     }
 
     @Test

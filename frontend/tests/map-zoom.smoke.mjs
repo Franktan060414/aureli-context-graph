@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -9,7 +9,7 @@ const maps = [{ mapId: 'default', name: 'A', zoom: 0.6 }, { mapId: 'map-b', name
 let holdA = true, releaseA, fail = false;
 await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
 await page.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: maps } }));
-await page.route('**/customer-service/tile/workspace?*', route => route.fulfill({ json: { success: true, data: demoGraph() } }));
+await page.route('**/customer-service/tile/workspace?*', route => route.fulfill({ json: { success: true, data: sampleGraph() } }));
 await page.route('**/customer-service/maps/*/zoom', async route => {
   const mapId = new URL(route.request().url()).pathname.split('/').at(-2), zoom = route.request().postDataJSON().zoom;
   writes.push({ mapId, zoom });
@@ -67,17 +67,6 @@ try {
   await mapButton('B').click(); await zoom(1.1);
   await mapButton('A').click(); await zoom(0.9);
   assert.equal(writes.length, beforeRestore);
-  // Demo maps retain their own ratio without database writes.
-  const demoPage = await browser.newPage();
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.goto((process.env.UI_TEST_URL || 'http://127.0.0.1:5173') + '/?zoom=0.7');
-  await demoPage.getByRole('button', { name: '新建图谱', exact: true }).click();
-  await demoPage.getByLabel('图谱名称').fill('示例 B');
-  await demoPage.locator('.map-create-form').getByRole('button', { name: '创建', exact: true }).click();
-  assert.equal(Number(new URL(demoPage.url()).searchParams.get('zoom')), 1);
-  await demoPage.locator('.map-list').getByRole('button', { name: '示例图谱', exact: true }).click();
-  assert.equal(Number(new URL(demoPage.url()).searchParams.get('zoom')), 0.7);
-  await demoPage.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: per-map saved zoom, initial restore, switching during queued saves, late responses, refresh, fullscreen, failure/retry, no restore writes and demo isolation');
+  console.log('PASS: per-map saved zoom, initial restore, switching during queued saves, late responses, refresh, fullscreen, failure/retry, no restore writes');
 } finally { await browser.close(); }

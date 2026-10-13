@@ -9,6 +9,7 @@ import {
   onUnmounted,
 } from "vue";
 import {
+  Globe,
   Tag,
   Network,
   BookOpen,
@@ -40,13 +41,13 @@ import {
   RefreshCw,
   AlertCircle,
   CheckCircle2,
-  FlaskConical,
   LoaderCircle,
   Expand,
   PanelRightClose,
   PanelRightOpen,
 } from "@lucide/vue";
 import LabelPanel from "./components/LabelPanel.vue";
+import BrandLogo from "./components/BrandLogo.vue";
 import { labelForTile, labelStyle } from "./lib/labels.js";
 import GraphCanvas from "./components/GraphCanvas.vue";
 import ViewSelect from "./components/ViewSelect.vue";
@@ -55,6 +56,8 @@ import GraphExportDialog from "./components/GraphExportDialog.vue";
 import QuestionForm from "./components/QuestionForm.vue";
 import ContextPicker from "./components/ContextPicker.vue";
 import FullscreenViewer from "./components/FullscreenViewer.vue";
+import WebPageContent from "./components/WebPageContent.vue";
+import { webSourceUrl } from "./lib/web-tiles.js";
 import MarkdownAnswer from "./components/MarkdownAnswer.vue";
 import ApiSettings from "./components/ApiSettings.vue";
 import WorkbenchSettings from "./components/WorkbenchSettings.vue";
@@ -65,11 +68,9 @@ const { animateSurface, motionEnabled } = useMotion();
 const canvasZoom = useCanvasZoom();
 import { createApiClient } from "./lib/api.js";
 import { relationTypeForDirection, relationTypeForEdge } from "./lib/tile-relations.js";
-import { replacementEdges } from "./lib/tile-replacement.js";
 import { createMapZoomSaver } from "./lib/map-zoom.js";
 import { readLayouts, positionTiles, tileDimensions } from "./lib/graph-layout.js";
 import { readArrangements } from "./lib/layered-layout.js";
-import { demoGraph, demoFiles } from "./lib/demo.js";
 const nav = [
   { id: "graph", label: "图谱工作台", icon: Network },
   { id: "knowledge", label: "知识库管理", icon: BookOpen },
@@ -96,8 +97,8 @@ const settingsTitle = computed(() => settingsPages.find(page => page.id === sett
 const historyImportBusy = ref(false);
 const isMobile = ref(window.matchMedia("(max-width: 767px)").matches);
 const mobileMedia = window.matchMedia("(max-width: 767px)");
-const demo = ref(localStorage.getItem("aureli-mode") === "demo"),
-  mobileNav = ref(false),
+localStorage.removeItem("aureli-mode");
+const mobileNav = ref(false),
   tab = useViewMode(),
   panel = ref("detail"),
   inspectorMinimized = ref(false),
@@ -105,25 +106,21 @@ const demo = ref(localStorage.getItem("aureli-mode") === "demo"),
   filter = ref("all");
 const apiBase = ref(localStorage.getItem("aureli-api-base") || "");
 const serverKey = computed(() => apiBase.value.trim().replace(/\/+$/, "") || location.origin);
-const maps = ref([]), demoMaps = ref([{ mapId: "demo", name: "示例图谱", zoom: canvasZoom.value }]);
-const liveMapId = ref(new URL(location.href).searchParams.get("map") || localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null);
-const demoMapId = ref("demo");
-const currentMapId = computed(() => demo.value ? demoMapId.value : liveMapId.value);
-const visibleMaps = computed(() => demo.value ? demoMaps.value : maps.value);
-const currentMap = computed(() => visibleMaps.value.find(map => map.mapId === currentMapId.value));
+const maps = ref([]);
+const currentMapId = ref(new URL(location.href).searchParams.get("map") || localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null);
+const currentMap = computed(() => maps.value.find(map => map.mapId === currentMapId.value));
 const mapStates = reactive({});
 function mapState(key, graph = { tiles: [], edges: [] }) {
   return mapStates[key] ||= { labels: [], ...graph, generating: false, loading: false, error: "", ui: null };
 }
-mapState("demo:demo", demoGraph());
-const workspaceKey = computed(() => demo.value ? `demo:${demoMapId.value}` : `live:${serverKey.value}:${liveMapId.value}`);
+const workspaceKey = computed(() => `live:${serverKey.value}:${currentMapId.value}`);
 const workspace = computed(() => mapState(workspaceKey.value));
-const live = computed(() => mapState(`live:${serverKey.value}:${liveMapId.value}`));
 const mapListLoading = ref(false), mapListError = ref(""), mapCreating = ref(false), showMapForm = ref(false), mapName = ref(""), mapNameInput = ref(null);
-const mapSwitchDisabled = computed(() => weightBusy.value || nodeBusy.value || modalBusy.value || mapCreating.value || historyImportBusy.value);
+const exampleCreating = ref(false);
+const mapSwitchDisabled = computed(() => weightBusy.value || sizeBusy.value || nodeBusy.value || modalBusy.value || mapCreating.value || historyImportBusy.value);
 let mapListRequest = 0;
 const related = ref([]),
-  selected = ref(demo.value ? "tile-003" : null);
+  selected = ref(null);
 const branchCollapsed = ref([]);
 const selectedTile = computed(() =>
   workspace.value.tiles.find((t) => t.id === selected.value),
@@ -135,6 +132,7 @@ const selectedTileWeightLabel = computed(() => {
   return { 1: "普通", 2: "重要", 3: "非常重要" }[weight] || "未知";
 });
 const weightBusy = ref(false);
+const sizeBusy = ref(false);
 const weightOptions = [
   { value: 1, label: "普通" },
   { value: 2, label: "重要" },
@@ -146,12 +144,11 @@ async function changeTileWeight(event) {
   // Keep the saved value visible until the request succeeds, including on failure.
   event.target.value = String(tile?.weight ?? 1);
   if (!tile || weightBusy.value || !weightOptions.some(option => option.value === weight) || tile.weight === weight) return;
-  const isDemo = demo.value;
   weightBusy.value = true;
   try {
-    if (!isDemo) await api.updateTileWeight(tile.id, weight);
+    await api.updateTileWeight(tile.id, weight);
     tile.weight = weight;
-    notify(`${isDemo ? "示例 " : ""}Tile 权重已设为${weightOptions.find(option => option.value === weight).label}`);
+    notify(`Tile 权重已设为${weightOptions.find(option => option.value === weight).label}`);
   } catch (error) {
     notify(`权重保存失败：${error.message}`, true);
   } finally {
@@ -168,7 +165,7 @@ const filteredTiles = computed(() =>
   workspace.value.tiles.filter(
     (t) =>
       (!query.value ||
-        `${t.id} ${t.message} ${t.answer}`
+        `${t.id} ${t.message} ${t.answer} ${t.sourceUrl || ""}`
           .toLowerCase()
           .includes(query.value.toLowerCase())) &&
       (filter.value === "all" ||
@@ -187,22 +184,15 @@ const page = ref(1),
   fileInput = ref(null),
   chosenFile = ref(null),
   fileSearch = ref("");
-const exampleFiles = ref(demoFiles());
 const displayedFiles = computed(() =>
-  (demo.value
-    ? exampleFiles.value.slice(
-        (page.value - 1) * size.value,
-        page.value * size.value,
-      )
-    : files.value
-  ).filter((f) =>
+  files.value.filter((f) =>
     `${f.originalFileName} ${f.remark || ""}`
       .toLowerCase()
       .includes(fileSearch.value.toLowerCase()),
   ),
 );
 const fileTotal = computed(() =>
-  demo.value ? exampleFiles.value.length : total.value,
+  total.value,
 );
 const pages = computed(() =>
   Math.max(1, Math.ceil(fileTotal.value / size.value)),
@@ -217,7 +207,7 @@ const toast = ref(null),
   generating = computed(() => workspace.value.generating),
   formError = ref(""),
   connection = ref("unknown");
-const api = createApiClient(() => apiBase.value, () => liveMapId.value);
+const api = createApiClient(() => apiBase.value, () => currentMapId.value);
 const questionFlow = ref(null);
 let restoringMapZoom = false;
 const zoomSaves = createMapZoomSaver(error => notify(`缩放比例保存失败：${error.message}。调整比例后可重试。`, true));
@@ -231,15 +221,12 @@ watch(canvasZoom, zoom => {
   const map = currentMap.value;
   if (restoringMapZoom || !map) return;
   map.zoom = zoom;
-  if (demo.value) return;
   const mapId = map.mapId, client = createApiClient(apiBase.value);
   zoomSaves.save(workspaceKey.value, zoom, value => client.updateMapZoom(mapId, value));
 }, { flush: "sync" });
 const layouts = reactive(readLayouts());
 const arrangements = reactive(readArrangements());
 const layoutKey = computed(() => workspaceKey.value);
-// Carry existing demo positions into its map once.
-if (layouts.demo && !layouts["demo:demo"]) layouts["demo:demo"] = { ...layouts.demo };
 const tileLayout = computed(() => layouts[layoutKey.value] || {});
 const tileArrangement = computed(() => arrangements[layoutKey.value] || { mode: 'tree', routes: {} });
 function moveTile({ id, x, y, reset }) {
@@ -253,6 +240,27 @@ function saveLayout() {
   try { localStorage.setItem('aureli-canvas-arrangements', JSON.stringify(arrangements)); }
   catch { /* The current arrangement remains available in memory. */ }
 }
+async function saveTileSize({ id, width, height, x, y }) {
+  if (sizeBusy.value || graphLoading.value || nodeBusy.value || modalBusy.value) return;
+  const tile = workspace.value.tiles.find(tile => tile.id === id);
+  if (!tile) return;
+  const key = layoutKey.value, previous = { width: tile.width, height: tile.height, position: layouts[key]?.[id] };
+  const mapId = currentMapId.value, client = createApiClient(apiBase.value, () => mapId);
+  sizeBusy.value = true;
+  tile.width = width;
+  tile.height = height;
+  (layouts[key] ||= {})[id] = { x, y };
+  try {
+    await client.updateTileSize(id, width, height);
+    saveLayout();
+  } catch (error) {
+    tile.width = previous.width;
+    tile.height = previous.height;
+    if (previous.position) layouts[key][id] = previous.position;
+    else delete layouts[key][id];
+    notify(`尺寸保存失败：${error.message}`, true);
+  } finally { sizeBusy.value = false; }
+}
 function arrangeCanvas({ positions, mode, routes }) {
   layouts[layoutKey.value] = Object.fromEntries(positions.map(({ id, x, y }) => [id, { x, y }]));
   arrangements[layoutKey.value] = { mode, routes };
@@ -265,9 +273,9 @@ function changeApiBase(base) {
   apiBase.value = base;
   connection.value = 'unknown';
   maps.value = [];
-  liveMapId.value = localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null;
+  currentMapId.value = localStorage.getItem(`aureli-active-map:${serverKey.value}`) || null;
   resetMapUi();
-  if (!demo.value) loadMaps();
+  loadMaps();
 }
 const expanded = ref(null);
 let fullscreenOrigin;
@@ -277,14 +285,15 @@ watch(expanded, (value, previous) => {
 function restoreFullscreenFocus() {
   if (!expanded.value && fullscreenOrigin?.isConnected) fullscreenOrigin.focus({ preventScroll: true });
 }
-const workspaceLoading = computed(() => workspace.value.loading || (!demo.value && mapListLoading.value));
-// Graph actions need a selected map; service settings and mode switching do not.
+const workspaceLoading = computed(() => workspace.value.loading || mapListLoading.value);
+// Graph actions need a selected map; service settings do not.
 const graphLoading = computed(() => workspaceLoading.value || !currentMap.value);
+const exampleDisabled = computed(() => exampleCreating.value || mapSwitchDisabled.value || workspaceLoading.value || generating.value || uploadBusy.value || fileLoading.value);
 const graphError = computed(() => workspace.value.error);
 async function loadWorkspace() {
-  if (!liveMapId.value) return;
-  const state = live.value, key = workspaceKey.value;
-  if (state.loading || state.generating || weightBusy.value || nodeBusy.value || modalBusy.value) return;
+  if (!currentMapId.value) return;
+  const state = workspace.value, key = workspaceKey.value;
+  if (state.loading || state.generating || weightBusy.value || sizeBusy.value || nodeBusy.value || modalBusy.value || state.tiles.some(tile => webFetches.has(tile.id))) return;
   state.loading = true;
   state.error = "";
   try {
@@ -310,27 +319,26 @@ async function loadMaps() {
     const result = await api.listMaps();
     if (requestId !== mapListRequest) return;
     maps.value = result.data.map(map => ({ ...map,
-      zoom: zoomSaves.pending(`live:${serverKey.value}:${map.mapId}`) ?? map.zoom ?? canvasZoom.value,
+      zoom: zoomSaves.pending`live:${serverKey.value}:${map.mapId}` ?? map.zoom ?? canvasZoom.value,
     }));
-    if (!maps.value.some(map => map.mapId === liveMapId.value)) {
-      liveMapId.value = maps.value[0]?.mapId || null;
+    if (!maps.value.some(map => map.mapId === currentMapId.value)) {
+      currentMapId.value = maps.value[0]?.mapId || null;
       resetMapUi();
     }
     rememberMap();
-    if (!demo.value) restoreMapZoom();
+    restoreMapZoom();
     mapListLoading.value = false;
-    if (!demo.value) await loadWorkspace();
+    await loadWorkspace();
   } catch (error) {
     if (requestId === mapListRequest) { mapListError.value = error.message; connection.value = "error"; }
   } finally { if (requestId === mapListRequest) mapListLoading.value = false; }
 }
 function rememberMap() {
-  if (demo.value) return;
   const key = `aureli-active-map:${serverKey.value}`;
-  if (liveMapId.value) localStorage.setItem(key, liveMapId.value);
+  if (currentMapId.value) localStorage.setItem(key, currentMapId.value);
   else localStorage.removeItem(key);
   const url = new URL(location.href);
-  if (liveMapId.value) url.searchParams.set("map", liveMapId.value);
+  if (currentMapId.value) url.searchParams.set("map", currentMapId.value);
   else url.searchParams.delete("map");
   history.replaceState(null, "", url);
 }
@@ -354,14 +362,13 @@ function resetMapUi() {
   restoreMapZoom();
 }
 async function switchMap(mapId) {
-  if (mapSwitchDisabled.value || !visibleMaps.value.some(map => map.mapId === mapId)) return;
+  if (mapSwitchDisabled.value || !maps.value.some(map => map.mapId === mapId)) return;
   if (mapId !== currentMapId.value) {
     stashMapUi();
-    if (demo.value) demoMapId.value = mapId;
-    else liveMapId.value = mapId;
+    currentMapId.value = mapId;
     resetMapUi();
     rememberMap();
-    if (!demo.value && !workspace.value.generating) loadWorkspace();
+    if (!workspace.value.generating) loadWorkspace();
   }
   await navigate("graph");
 }
@@ -378,45 +385,59 @@ async function createMap() {
   mapCreating.value = true;
   mapListError.value = "";
   try {
-    const map = demo.value ? { mapId: `demo-${uniqueId()}`, name: mapName.value.trim(), zoom: 1 }
-      : (await api.createMap(mapName.value.trim())).data;
-    (demo.value ? demoMaps.value : maps.value).push(map);
+    const map = (await api.createMap(mapName.value.trim())).data;
+    maps.value.push(map);
     mapName.value = "";
     showMapForm.value = false;
     mapCreating.value = false;
     await switchMap(map.mapId);
-    notify(demo.value ? "示例图谱已创建" : "图谱已创建");
+    notify("图谱已创建");
   } catch (error) { mapListError.value = error.message; }
   finally { mapCreating.value = false; }
 }
 function mapDeleteDisabled(map) {
-  const key = demo.value ? `demo:${map.mapId}` : `live:${serverKey.value}:${map.mapId}`;
+  const key = `live:${serverKey.value}:${map.mapId}`;
   return mapSwitchDisabled.value || mapListLoading.value || !!mapStates[key]?.generating;
+}
+async function showExample() {
+  if (exampleDisabled.value) return;
+  exampleCreating.value = true;
+  mapCreating.value = true;
+  try {
+    const map = (await api.createExampleMap()).data;
+    maps.value.push(map);
+    mapCreating.value = false;
+    closeModal();
+    await switchMap(map.mapId);
+    notify("示例图谱已创建并保存");
+  } catch (error) {
+    notify(`示例图谱创建失败：${error.message}`, true);
+  } finally {
+    mapCreating.value = false;
+    exampleCreating.value = false;
+  }
 }
 async function requestMapDelete(map) {
   if (mapDeleteDisabled(map)) return;
   await openModal("deleteMap", map);
 }
 async function deleteMap(map) {
-  if (!demo.value) await api.deleteMap(map.mapId);
+  await api.deleteMap(map.mapId);
   // Invalidate any map list already in flight so it cannot restore the deleted row.
   ++mapListRequest;
   mapListLoading.value = false;
-  const index = visibleMaps.value.findIndex(item => item.mapId === map.mapId);
-  const remaining = visibleMaps.value.filter(item => item.mapId !== map.mapId);
-  const key = demo.value ? `demo:${map.mapId}` : `live:${serverKey.value}:${map.mapId}`;
+  const index = maps.value.findIndex(item => item.mapId === map.mapId);
+  const remaining = maps.value.filter(item => item.mapId !== map.mapId);
+  const key = `live:${serverKey.value}:${map.mapId}`;
   zoomSaves.discard(key);
   delete layouts[key];
   delete arrangements[key];
-  if (demo.value && map.mapId === "demo") delete layouts.demo;
   saveLayout();
   delete mapStates[key];
-  if (demo.value) demoMaps.value = remaining;
-  else maps.value = remaining;
+  maps.value = remaining;
   if (currentMapId.value === map.mapId) {
     const nextId = (remaining[index] || remaining[index - 1])?.mapId || null;
-    if (demo.value) demoMapId.value = nextId;
-    else liveMapId.value = nextId;
+    currentMapId.value = nextId;
     resetMapUi();
     rememberMap();
   }
@@ -448,6 +469,8 @@ const questionDialogInput = ref(null),
   modalOverwrite = ref(false),
   modalError = ref(""),
   remark = ref("");
+const webDraft = reactive({ url: "" });
+const webFetches = reactive(new Set());
 const noteDraft = reactive({ tileId: "", title: "", content: "" });
 const searchDraft = reactive({ query: "", filter: "all" });
 const artifactRelated = ref([]);
@@ -478,26 +501,8 @@ async function requestSplit() {
 async function splitSelectedTile(source, overwrite = false) {
   const requirements = splitRequirements.value.trim();
   if (requirements.length > 2000) throw new Error("拆分要求最多 2000 个字符。");
-  let result;
-  if (demo.value) {
-    const original = workspace.value.tiles.find(tile => tile.id === source.id);
-    const tiles = ["核心要点", "条件与应用"].map(topic => ({
-      id: newId(), tileType: "QA", kind: "memory", status: "ready", weight: original.weight ?? 1, labelId: original.labelId ?? null,
-      message: `${original.message}：${topic}`,
-      answer: `这是拆分示例，用于演示子 Tile 的关联与阅读。真实工作区会先由 AI 判断拆分价值，再细分回答。${requirements ? `\n\n本次要求：${requirements}` : ""}\n\n来源问答：\n${original.answer}`,
-      relatedTileIds: [source.id],
-    }));
-    result = { tiles, edges: tiles.map(tile => ({
-      id: `edge-${uniqueId()}`, sourceTileId: source.id, targetTileId: tile.id,
-      direction: "DIRECTED", relationType: "DIVIDES", weight: 1,
-      description: requirements ? `手动拆分：${requirements}` : "手动拆分",
-    })) };
-    if (overwrite) result.edges = replacementEdges(workspace.value.edges, [source.id],
-      tiles.map(tile => tile.id), () => `edge-${uniqueId()}`);
-  } else {
-    result = (await api.splitTile({ sourceTileId: source.id, requirements, splitId: source.splitId, overwrite })).data;
-    connection.value = "connected";
-  }
+  const result = (await api.splitTile({ sourceTileId: source.id, requirements, splitId: source.splitId, overwrite })).data;
+  connection.value = "connected";
   // Preserve the existing graph positions and place the new branch beside its source.
   const positions = positionTiles(workspace.value.tiles, tileLayout.value);
   const origin = positions.find(tile => tile.id === source.id);
@@ -532,26 +537,8 @@ async function requestFusion() {
 }
 async function fuseTiles(selection, overwrite = false) {
   const ids = selection.sources.map(tile => tile.id);
-  let result;
-  if (demo.value) {
-    const sources = ids.map(id => workspace.value.tiles.find(tile => tile.id === id));
-    const tile = {
-      id: selection.tileId, tileType: "QA", kind: "memory", status: "ready",
-      message: `综合讨论：${sources.map(tile => tile.message).join("；")}`,
-      answer: `这是融合示例。真实工作区会由 AI 重组问题和回答。\n\n${sources.map(tile => tile.answer).join("\n\n")}`,
-      labelId: sources.every(source => (source.labelId ?? null) === (sources[0].labelId ?? null)) ? sources[0].labelId ?? null : null,
-      relatedTileIds: ids, weight: Math.max(...sources.map(tile => tile.weight ?? 1)),
-    };
-    result = { tiles: [tile], edges: ids.map(sourceTileId => ({
-      id: `edge-${uniqueId()}`, sourceTileId, targetTileId: tile.id,
-      direction: "DIRECTED", relationType: "FUSES", weight: 1, description: null,
-    })) };
-    if (overwrite) result.edges = replacementEdges(workspace.value.edges, ids,
-      [tile.id], () => `edge-${uniqueId()}`);
-  } else {
-    result = (await api.fuseTiles({ tileId: selection.tileId, sourceTileIds: ids, overwrite })).data;
-    connection.value = "connected";
-  }
+  const result = (await api.fuseTiles({ tileId: selection.tileId, sourceTileIds: ids, overwrite })).data;
+  connection.value = "connected";
   if (overwrite) {
     const origin = positionTiles(workspace.value.tiles, tileLayout.value).find(tile => ids.includes(tile.id));
     layouts[layoutKey.value] = { ...tileLayout.value, [result.tiles[0].id]: { x: origin.x, y: origin.y } };
@@ -577,7 +564,7 @@ function applyGeneratedTiles(result, removedIds) {
   }
 }
 const questionContextTiles = computed(() => workspace.value.tiles.filter(tile => tile.status === "ready"));
-const nodeLabel = tile => ({ QA: "问答", NOTE: "便签", FILE: "文件" })[nodeType(tile)];
+const nodeLabel = tile => ({ QA: "问答", NOTE: "便签", FILE: "文件", WEB: "网页" })[nodeType(tile)];
 const fileSizeLabel = size => size < 1024 ? `${size} B` : size < 1048576 ? `${(size / 1024).toFixed(1)} KB` : `${(size / 1048576).toFixed(1)} MB`;
 const form = reactive({
   message: "",
@@ -588,7 +575,7 @@ const form = reactive({
 let toastTimer, filePollTimer;
 function scheduleFileRefresh() {
   clearTimeout(filePollTimer);
-  if (!demo.value && section.value === 'knowledge' && document.visibilityState === 'visible' && files.value.some(file => file.status === 0 || file.status === 1)) {
+  if (section.value === 'knowledge' && document.visibilityState === 'visible' && files.value.some(file => file.status === 0 || file.status === 1)) {
     filePollTimer = setTimeout(loadFiles, 2000);
   }
 }
@@ -645,7 +632,7 @@ watch(mobileNav, async (open) => {
   }
 });
 onMounted(() => {
-  if (!demo.value) loadMaps();
+  loadMaps();
   if (section.value === "knowledge") loadFiles();
   document.addEventListener("visibilitychange", scheduleFileRefresh);
   window.addEventListener("hashchange", hashChanged);
@@ -671,35 +658,7 @@ watch(section, (id) => {
   query.value = "";
   if (id === "knowledge") loadFiles();
 });
-async function switchMode() {
-  if (
-    generating.value ||
-    workspaceLoading.value ||
-    uploadBusy.value ||
-    modalBusy.value ||
-    fileLoading.value ||
-    weightBusy.value ||
-    nodeBusy.value
-  )
-    return;
-  stashMapUi();
-  demo.value = !demo.value;
-  resetMapUi();
-  localStorage.setItem("aureli-mode", demo.value ? "demo" : "live");
-  related.value = [];
-  selected.value = workspace.value.tiles[0]?.id || null;
-  form.tileId = newId();
-  form.message = "";
-  formError.value = "";
-  panel.value = "detail";
-  page.value = 1;
-  fileError.value = "";
-  if (!demo.value) await loadMaps();
-  if (section.value === "knowledge") await loadFiles();
-  notify(
-    demo.value ? "已切换到示例模式，操作仅影响示例数据" : "已切换到真实工作区",
-  );
-}
+
 function toggle(id) {
   if (generating.value || graphLoading.value) return;
   related.value = related.value.includes(id)
@@ -997,11 +956,7 @@ function finishQuestionDraft(origin, originKey, tileId, startedInBranch) {
     origin.ui.related = nextRelated;
   }
 }
-function demoQuestionPlan(message) {
-  const questions = message.split(/[；;\n]+/).map(value => value.trim()).filter(Boolean);
-  const suggested = questions.length >= 2 && questions.length <= 4 && questions.every(value => value.length >= 4);
-  return { suggested, questions: suggested ? questions : [], reason: "本地示例：这些部分可以分别展开。", planId: uniqueId() };
-}
+
 function releaseQuestionFlow(flow) {
   if (questionFlow.value !== flow) return;
   questionFlow.value = null;
@@ -1020,7 +975,7 @@ async function cancelQuestionFlow() {
   const temporaryIds = new Set(flow.temporaryIds);
   flow.origin.tiles = flow.origin.tiles.filter(tile => !temporaryIds.has(tile.id));
   flow.origin.edges = flow.origin.edges.filter(edge => !temporaryIds.has(edge.sourceTileId) && !temporaryIds.has(edge.targetTileId));
-  if (!flow.isDemo && flow.proposal?.planId)
+  if (flow.proposal?.planId)
     api.decideQuestion({ mapId: flow.payload.mapId, planId: flow.proposal.planId, action: "CANCEL" }).catch(() => {});
   releaseQuestionFlow(flow);
   if (flow.originKey === workspaceKey.value) {
@@ -1047,12 +1002,12 @@ async function sendTile(retryTile) {
     return;
   }
   const flow = reactive({
-    origin: workspace.value, originKey: workspaceKey.value, isDemo: demo.value,
+    origin: workspace.value, originKey: workspaceKey.value,
     draft: { ...form }, fingerprint: questionDraftFingerprint(), previousSelection: selected.value,
     startedInBranch: tab.value === "branch",
     fromDialog: modal.value?.type === "question", controller: new AbortController(),
     cancelled: false, phase: "planning", proposal: null, temporaryIds: [],
-    payload: { mapId: liveMapId.value, message: form.message.trim(), tileId: form.tileId.trim(),
+    payload: { mapId: currentMapId.value, message: form.message.trim(), tileId: form.tileId.trim(),
       relatedTileIds: [...related.value], memoryDepth: 3, edgeWeight: 1,
       edgeDirection: form.edgeDirection, relationType: relationTypeForDirection(form.edgeDirection),
       edgeDescription: form.edgeDescription.trim() || undefined },
@@ -1063,10 +1018,9 @@ async function sendTile(retryTile) {
   panel.value = "compose";
   inspectorMinimized.value = false;
   try {
-    const proposal = flow.isDemo ? demoQuestionPlan(flow.payload.message)
-      : (await api.planQuestion(flow.payload, flow.controller.signal)).data;
+    const proposal = (await api.planQuestion(flow.payload, flow.controller.signal)).data;
     if (flow.cancelled || questionFlow.value !== flow) {
-      if (!flow.isDemo && proposal?.planId)
+      if (proposal?.planId)
         api.decideQuestion({ mapId: flow.payload.mapId, planId: proposal.planId, action: "CANCEL" }).catch(() => {});
       return;
     }
@@ -1102,18 +1056,7 @@ async function decideQuestionFlow(action) {
   modalBusy.value = true;
   modalError.value = "";
   try {
-    const result = flow.isDemo ? action === "EXECUTE" ? {
-      tiles: [{ id: flow.payload.tileId, message: flow.payload.message, answer: "这是原问题的完整示例回答。",
-        relatedTileIds: flow.payload.relatedTileIds, tileType: "QA", weight: 1, status: "ready" },
-      ...flow.proposal.questions.map((message, index) => ({ id: `tile-divides-${flow.proposal.planId}-${index}`,
-        message, answer: `这是“${message}”的独立示例回答。`, relatedTileIds: [flow.payload.tileId], tileType: "QA", weight: 1, status: "ready" }))],
-      edges: [...flow.payload.relatedTileIds.map(id => ({ id: `edge-${uniqueId()}`, sourceTileId: id,
-        targetTileId: flow.payload.tileId, direction: flow.payload.edgeDirection, relationType: flow.payload.relationType,
-        weight: 1, description: flow.payload.edgeDescription })),
-      ...flow.proposal.questions.map((_, index) => ({ id: `edge-${uniqueId()}`, sourceTileId: flow.payload.tileId,
-        targetTileId: `tile-divides-${flow.proposal.planId}-${index}`, direction: "DIRECTED", relationType: "DIVIDES",
-        weight: 1, description: "AI 建议拆分" }))],
-    } : null : (await api.decideQuestion({ mapId: flow.payload.mapId, planId: flow.proposal.planId, action })).data;
+    const result = (await api.decideQuestion({ mapId: flow.payload.mapId, planId: flow.proposal.planId, action })).data;
     if (action === "DECLINE") {
       modalBusy.value = false;
       if (flow.fingerprint !== questionDraftFingerprint()) { await cancelQuestionFlow(); return; }
@@ -1131,7 +1074,7 @@ async function decideQuestionFlow(action) {
     if (flow.originKey === workspaceKey.value) {
       selected.value = flow.payload.tileId;
       panel.value = "detail";
-      connection.value = flow.isDemo ? connection.value : "connected";
+      connection.value = "connected";
     }
     notify(`已生成原问答及 ${flow.proposal.questions.length} 个子 Tile`);
   } catch (error) {
@@ -1154,7 +1097,7 @@ async function generateSingleTile(retryTile, plannedPayload, startedInBranch = t
     formError.value = "Tile ID 已存在，请使用一个新的 ID。";
     return;
   }
-  const origin = workspace.value, originKey = workspaceKey.value, isDemo = demo.value;
+  const origin = workspace.value, originKey = workspaceKey.value;
   const payload = retryTile?.payload || plannedPayload || {
     message: form.message.trim(),
     tileId: form.tileId.trim(),
@@ -1204,21 +1147,12 @@ async function generateSingleTile(retryTile, plannedPayload, startedInBranch = t
   tile.answer = "";
   tile.error = "";
   try {
-    if (isDemo)
-      tile.answer =
-        "这是一条示例回答，用于演示 Tile 创建与上下文关联。\n\n在真实工作区中，系统会结合共享 RAG 知识库" +
-        (payload.relatedTileIds.length
-          ? `与 ${payload.relatedTileIds.length} 个关联 Tile 的工作记忆`
-          : "") +
-        "，流式生成问题的回答。";
-    else {
-      await api.completeTile(payload, (answer) => (tile.answer = answer));
-      if (originKey === workspaceKey.value) connection.value = "connected";
-    }
+    await api.completeTile(payload, (answer) => (tile.answer = answer));
+    if (originKey === workspaceKey.value) connection.value = "connected";
     tile.status = "ready";
     finishQuestionDraft(origin, originKey, tile.id, startedInBranch);
     if (originKey === workspaceKey.value) {
-      notify(isDemo ? "示例 Tile 已创建" : "Tile 已生成");
+      notify("Tile 已生成");
     } else {
       notify("另一张图谱的 Tile 已生成");
     }
@@ -1234,7 +1168,6 @@ async function generateSingleTile(retryTile, plannedPayload, startedInBranch = t
 async function loadFiles() {
   if (fileLoading.value) return;
   fileError.value = "";
-  if (demo.value) return;
   clearTimeout(filePollTimer);
   fileLoading.value = true;
   try {
@@ -1268,20 +1201,7 @@ async function upload() {
     return notify("仅支持 .md 或 .markdown 文件", true);
   uploadBusy.value = true;
   try {
-    if (demo.value)
-      exampleFiles.value.unshift({
-        id: Date.now(),
-        originalFileName: chosenFile.value.name,
-        fileSize: `${(chosenFile.value.size / 1024).toFixed(1)} KB`,
-        status: 0,
-        remark: "示例上传，文件未发送到服务",
-        createTime: new Date()
-          .toLocaleString("sv-SE", { timeZone: "Asia/Shanghai" })
-          .replace(" ", "T"),
-      });
-    else {
-      await api.uploadMarkdown(chosenFile.value);
-    }
+    await api.uploadMarkdown(chosenFile.value);
     chosenFile.value = null;
     fileInput.value.value = "";
     page.value = 1;
@@ -1294,20 +1214,13 @@ async function upload() {
   }
 }
 async function loadNodeFile(tile) {
-  const blob = demo.value ? tile.demoFile : await api.downloadTileFile(tile.id);
-  if (!blob) throw new Error("示例文件已失效，请重新添加。");
-  return blob;
+  return api.downloadTileFile(tile.id);
 }
-// A new loader identity prevents image previews crossing backend/demo boundaries.
+// Capture the backend and map so delayed previews stay in their workspace.
 const loadPreviewFile = computed(() => {
-  const isDemo = demo.value;
   const mapId = currentMapId.value;
   const client = createApiClient(apiBase.value, () => mapId);
-  return async tile => {
-    const blob = isDemo ? tile.demoFile : await client.downloadTileFile(tile.id);
-    if (!blob) throw new Error("示例文件已失效，请重新添加。");
-    return blob;
-  };
+  return tile => client.downloadTileFile(tile.id);
 });
 async function downloadNodeFile(tile) {
   if (nodeBusy.value) return;
@@ -1331,16 +1244,50 @@ function syncArtifactEdges(tile) {
       workspace.value.edges.push({ id: `edge-${crypto.randomUUID()}`, sourceTileId, targetTileId: tile.id, direction: "DIRECTED", relationType: "EXTENDS", weight: 1, description: null });
   }
 }
+async function refreshWebTile(tile) {
+  if (webFetches.has(tile.id)) return;
+  const state = workspace.value, key = workspaceKey.value;
+  const mapId = currentMapId.value;
+  const client = createApiClient(apiBase.value, () => mapId);
+  webFetches.add(tile.id);
+  tile.fetchStatus = 'FETCHING';
+  tile.fetchError = null;
+  try {
+    const refreshed = (await client.refreshWebTile(tile.id)).data;
+    const current = state.tiles.find(item => item.id === tile.id);
+    if (current) for (const field of ['title', 'message', 'answer', 'content', 'sourceUrl', 'resolvedUrl', 'fetchedAt', 'fetchStatus', 'fetchError']) current[field] = refreshed[field];
+    if (workspaceKey.value === key && current) notify(refreshed.fetchStatus === 'FAILED' ? refreshed.fetchError : '网页正文已保存', refreshed.fetchStatus === 'FAILED');
+  } catch (error) {
+    const current = state.tiles.find(item => item.id === tile.id);
+    if (current) { current.fetchStatus = 'FAILED'; current.fetchError = error.message; }
+    if (workspaceKey.value === key && current) notify(error.message, true);
+  } finally { webFetches.delete(tile.id); }
+}
+async function openWebDialog(url = '') {
+  if (generating.value || graphLoading.value || modalBusy.value || nodeBusy.value) return;
+  expanded.value = null;
+  await nextTick();
+  await openModal('web');
+  webDraft.url = url;
+  await nextTick();
+  dialog.value.querySelector('#web-url')?.focus();
+}
+async function addWebTile() {
+  const url = webSourceUrl(webDraft.url.trim());
+  if (!url || url.length > 2048) throw new Error('请填写有效的 HTTP / HTTPS 网页地址。');
+  const tile = (await api.createWebTile({ url, relatedTileIds: [...artifactRelated.value] })).data;
+  workspace.value.tiles.push(tile);
+  syncArtifactEdges(tile);
+  select(tile.id);
+  inspectorMinimized.value = false;
+  // Capture the active workspace before allowing map changes; keep the canvas usable during extraction.
+  void refreshWebTile(tile);
+}
 async function addNodeFile(file, relatedTileIds = []) {
   if (!file) throw new Error("请选择文件。");
   if (!file.size) throw new Error("请选择非空文件。");
   if (file.size > 10 * 1024 * 1024) throw new Error("文件大小不能超过 10 MB。");
-  const tile = demo.value ? {
-    id: newId(), tileType: "FILE", kind: "file", title: file.name,
-    message: file.name, answer: file.name, fileName: file.name,
-    fileSize: file.size, fileContentType: file.type, demoFile: file,
-    relatedTileIds: [...relatedTileIds], status: "ready", weight: 1,
-  } : (await api.uploadTileFile(file, relatedTileIds)).data;
+  const tile = (await api.uploadTileFile(file, relatedTileIds)).data;
   workspace.value.tiles.push(tile);
   syncArtifactEdges(tile);
   select(tile.id);
@@ -1349,7 +1296,7 @@ async function addNodeFile(file, relatedTileIds = []) {
 async function dropNodeFile(file) {
   if (nodeBusy.value || generating.value || graphLoading.value || modalBusy.value) return;
   nodeBusy.value = true;
-  try { await addNodeFile(file); notify(demo.value ? "示例文件已添加" : "文件已添加到画布"); }
+  try { await addNodeFile(file); notify("文件已添加到画布"); }
   catch (error) { notify(error.message, true); }
   finally { nodeBusy.value = false; }
 }
@@ -1361,32 +1308,31 @@ async function openLabels(tile = null) {
   if (fusionBusy.value) return;
   if (tile && !workspace.value.tiles.some(item => item.id === tile.id)) return;
   const mapId = currentMapId.value;
-  await openModal("labels", { state: workspace.value, tileIds: tile ? [tile.id] : [...related.value], isDemo: demo.value,
+  await openModal("labels", { state: workspace.value, tileIds: tile ? [tile.id] : [...related.value],
     client: createApiClient(apiBase.value, () => mapId) });
 }
 async function saveLabel(draft, id) {
-  const { state, isDemo, client } = modal.value.file;
+  const { state, client } = modal.value.file;
   const name = draft.name.trim(), colorHex = draft.colorHex.toUpperCase();
   if (state.labels.some(label => label.id !== id && label.name === name)) throw new Error("当前图谱已有同名标签");
-  const label = isDemo ? { id: id ?? `label-${uniqueId()}`, mapId: currentMapId.value, name, colorHex }
-    : (await (id == null ? client.createLabel({ name, colorHex }) : client.updateLabel(id, { name, colorHex }))).data;
+  const label = (await (id == null ? client.createLabel({ name, colorHex }) : client.updateLabel(id, { name, colorHex }))).data;
   const index = state.labels.findIndex(item => item.id === id);
   if (index < 0) state.labels.push(label); else state.labels.splice(index, 1, label);
   notify(id == null ? "标签已创建" : "标签已更新");
   return label;
 }
 async function removeLabel(id) {
-  const { state, isDemo, client } = modal.value.file;
-  if (!isDemo) await client.deleteLabel(id);
+  const { state, client } = modal.value.file;
+  await client.deleteLabel(id);
   state.labels = state.labels.filter(label => label.id !== id);
   for (const tile of state.tiles) if (String(tile.labelId) === String(id)) tile.labelId = null;
   notify("标签已删除，Tile 已保留");
 }
 async function assignLabel(labelId) {
-  const { state, tileIds, isDemo, client } = modal.value.file;
+  const { state, tileIds, client } = modal.value.file;
   if (!tileIds.length) throw new Error("请先在节点详情中通过“关联节点”选中 Tile");
   if (!tileIds.every(id => state.tiles.some(tile => tile.id === id))) throw new Error("部分 Tile 已不存在，请同步后重试");
-  if (!isDemo) await client.assignLabel(tileIds, labelId);
+  await client.assignLabel(tileIds, labelId);
   for (const tile of state.tiles) if (tileIds.includes(tile.id)) tile.labelId = labelId;
   notify(`已${labelId == null ? "清除" : "设置"} ${tileIds.length} 个 Tile 的标签`);
 }
@@ -1398,11 +1344,12 @@ async function openModal(type, file) {
     noteDraft.title = file?.title || "";
     noteDraft.content = file?.content || "";
   }
-  if (["note", "editNote", "file"].includes(type)) {
+  if (["note", "editNote", "file", "web"].includes(type)) {
     const candidates = new Set(artifactContextTiles.value.map(tile => tile.id));
     artifactRelated.value = [...new Set(type === "editNote" ? file?.relatedTileIds || [] : related.value)].filter(id => candidates.has(id));
   }
   if (type === "file") attachment.value = null;
+  if (type === "web") webDraft.url = "";
   if (type === "search") Object.assign(searchDraft, { query: query.value, filter: filter.value });
   modalError.value = "";
   await nextTick();
@@ -1473,13 +1420,7 @@ async function confirmModal(overwrite = false) {
     } else if (type === "note" || type === "editNote") {
       if (!noteDraft.title.trim() || !noteDraft.content.trim()) throw new Error("请填写便签标题和正文。");
       const payload = { ...noteDraft, title: noteDraft.title.trim(), relatedTileIds: [...artifactRelated.value] };
-      let tile;
-      if (demo.value) {
-        const original = type === "editNote" ? workspace.value.tiles.find(t => t.id === payload.tileId) : null;
-        tile = { ...original, id: payload.tileId, title: payload.title, message: payload.title,
-          content: payload.content, answer: payload.content, tileType: "NOTE", kind: "note",
-          relatedTileIds: payload.relatedTileIds, status: "ready", weight: original?.weight || 1, labelId: original?.labelId ?? null };
-      } else tile = (await (type === "editNote" ? api.updateNote(payload) : api.createNote(payload))).data;
+      const tile = (await (type === "editNote" ? api.updateNote(payload) : api.createNote(payload))).data;
       if (type === "editNote") {
         const index = workspace.value.tiles.findIndex(t => t.id === tile.id);
         if (index >= 0) workspace.value.tiles[index] = tile;
@@ -1488,14 +1429,14 @@ async function confirmModal(overwrite = false) {
       syncArtifactEdges(tile);
       select(tile.id);
       inspectorMinimized.value = false;
+    } else if (type === "web") {
+      await addWebTile();
     } else if (type === "file") {
       await addNodeFile(attachment.value, artifactRelated.value);
     } else if (type === "reset") {
-      if (!demo.value)
-        await api.resetWorkspace();
+      await api.resetWorkspace();
       delete layouts[layoutKey.value];
       delete arrangements[layoutKey.value];
-      if (demo.value && demoMapId.value === "demo") delete layouts.demo;
       saveLayout();
       workspace.value.tiles = [];
       workspace.value.edges = [];
@@ -1503,37 +1444,32 @@ async function confirmModal(overwrite = false) {
       related.value = [];
       form.tileId = newId();
     } else if (type === "delete") {
-      if (demo.value)
-        exampleFiles.value = exampleFiles.value.filter((f) => f.id !== file.id);
-      else
-        await api.deleteMarkdown(file.id);
+      await api.deleteMarkdown(file.id);
       if (page.value > 1 && displayedFiles.value.length === 1) page.value--;
       await loadFiles();
     } else if (type === "deleteMap") {
       await deleteMap(file);
     } else if (type === "deleteTile") {
       const tile = modal.value.tile;
-      if (!demo.value) await api.deleteTile(tile.id);
+      await api.deleteTile(tile.id);
       removeTileFromWorkspace(tile.id);
     } else if (type === "edit") {
-      if (demo.value) file.remark = remark.value.trim();
-      else
-        await api.updateMarkdown({
-          id: file.id,
-          remark: remark.value.trim(),
-        });
+      await api.updateMarkdown({
+        id: file.id,
+        remark: remark.value.trim(),
+      });
       await loadFiles();
     }
     modalBusy.value = false;
     closeModal();
     if (type === "deleteMap") {
-      if (!demo.value) await loadWorkspace();
+      await loadWorkspace();
       await nextTick();
       document.querySelector('.map-item.selected, .map-add')?.focus();
     }
     notify(overwrite && ['split', 'fusion'].includes(type)
       ? `${type === 'split' ? `拆分并覆盖完成，已创建 ${splitCount} 个子 Tile` : '融合并覆盖完成'}，原 Tile 已删除，连边已继承`
-      : type === "deleteMap" ? "图谱已删除" : type === "split" ? `${demo.value ? '示例拆分' : '拆分完成'}，已创建 ${splitCount} 个子 Tile` : type === "fusion" ? demo.value ? "示例融合 Tile 已创建" : "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
+      : type === "deleteMap" ? "图谱已删除" : type === "split" ? `拆分完成，已创建 ${splitCount} 个子 Tile` : type === "fusion" ? "融合 Tile 已生成" : type === "deleteTile" ? "Tile 已删除" : "操作已完成");
   } catch (error) {
     modalError.value = error.message;
   } finally {
@@ -1542,7 +1478,7 @@ async function confirmModal(overwrite = false) {
 }
 const exportDialog = ref(null);
 async function importHistory(data) {
-  if (historyImportBusy.value || generating.value || workspaceLoading.value || nodeBusy.value || modalBusy.value || weightBusy.value)
+  if (historyImportBusy.value || generating.value || workspaceLoading.value || nodeBusy.value || modalBusy.value || weightBusy.value || sizeBusy.value)
     throw new Error('请等待当前操作完成后再导入。');
   historyImportBusy.value = true;
   try {
@@ -1552,10 +1488,8 @@ async function importHistory(data) {
     stashMapUi();
     ++mapListRequest;
     mapListLoading.value = false;
-    demo.value = false;
-    localStorage.setItem('aureli-mode', 'live');
     maps.value.push(result.map);
-    liveMapId.value = result.map.mapId;
+    currentMapId.value = result.map.mapId;
     const key = `live:${serverKey.value}:${result.map.mapId}`;
     mapStates[key] = { tiles: result.tiles, edges: result.edges, labels: result.labels,
       generating: false, loading: false, error: '', ui: null };
@@ -1573,7 +1507,7 @@ async function importHistory(data) {
 }
 function exportGraph() {
   exportDialog.value.open(JSON.parse(JSON.stringify({
-    mode: demo.value ? "demo" : "live", ...workspace.value, layout: tileLayout.value,
+    ...workspace.value, layout: tileLayout.value,
     name: currentMap.value?.name || "aureli-graph", arrangementMode: tileArrangement.value.mode,
   })));
 }
@@ -1603,11 +1537,7 @@ function exportGraph() {
         aria-label="AURELI 首页"
         @click.prevent="navigate('graph')"
       >
-        <img
-          class="brand-logo"
-          src="/branding/aureli-logo.png"
-          alt="AURELI"
-        />
+        <BrandLogo class="brand-logo" decorative />
       </a>
       <span class="nav-caption">WORKSPACE / 工作空间</span>
       <nav aria-label="工作空间">
@@ -1621,7 +1551,7 @@ function exportGraph() {
           </a>
           <div v-if="item.id === 'graph'" class="map-navigation" aria-label="图谱列表">
             <div class="map-list">
-              <div v-for="map in visibleMaps" :key="map.mapId" class="map-row">
+              <div v-for="map in maps" :key="map.mapId" class="map-row">
                 <button class="map-item" type="button"
                   :class="{ selected: currentMapId === map.mapId }" :aria-pressed="currentMapId === map.mapId"
                   :disabled="mapSwitchDisabled" :title="map.name" @click="switchMap(map.mapId)">
@@ -1667,7 +1597,7 @@ function exportGraph() {
       <div class="sidebar-bottom">
         <div class="context-note">
           <span class="mini-label">CONNECTED KNOWLEDGE</span
-          ><GitBranch :size="24" /><strong>独立思考，自由连接。</strong>
+          ><BrandLogo class="sidebar-brand-icon" icon decorative /><strong>独立思考，自由连接。</strong>
           <p title="songyu.tan@techscience.com">songyu.tan@techscience.com</p>
           <button @click="openModal('help')">
             了解 Tile 工作流<ArrowUpRight :size="15" />
@@ -1695,11 +1625,9 @@ function exportGraph() {
         </div>
         <div class="topbar-actions">
           <span class="service-state"
-            ><i :class="{ connected: !demo && connection === 'connected' }"></i
+            ><i :class="{ connected: connection === 'connected' }"></i
             >{{
-              demo
-                ? "示例预览"
-                : connection === "connected"
+              connection === "connected"
                   ? "服务已连接"
                   : connection === "error"
                     ? "连接异常"
@@ -1712,7 +1640,7 @@ function exportGraph() {
             @click="openModal('help')"
           >
             <CircleHelp :size="20" /></button
-          ><span class="user-avatar">A</span>
+          ><span class="header-brand" title="Aureli"><BrandLogo icon /></span>
         </div>
       </header>
       <main id="main" class="main-content" :class="{ 'graph-workbench': section === 'graph' }">
@@ -1729,28 +1657,13 @@ function exportGraph() {
             </div>
             <h1 ref="heading" tabindex="-1">
               {{ section === 'settings' ? settingsTitle : titles[section]
-              }}<span class="preview-tag" v-if="demo && section === 'knowledge'"
-                >示例模式</span
-              >
+              }}
             </h1>
             <p v-if="section !== 'graph'">{{ section === 'settings' && settingsPage === 'workbench' ? '管理工作台，恢复历史聊天记录。' : subtitles[section] }}</p>
           </div>
-        </div>
-        <div class="mode-banner" v-if="section === 'knowledge'">
-          <span
-            ><FlaskConical :size="16" v-if="demo" /><Database
-              :size="16"
-              v-else
-            />{{
-              demo
-                ? "正在浏览示例图谱，所有操作仅用于本地演示。"
-                : "真实工作区 · Tile 与关系保存在服务端，可同步恢复。"
-            }}</span
-          ><button
-            @click="switchMode"
-            :disabled="generating || workspace.loading || mapListLoading || uploadBusy || modalBusy || fileLoading"
-          >
-            {{ demo ? "进入工作区" : "查看示例" }}<ArrowRight :size="14" />
+          <button v-if="section === 'knowledge'" class="secondary" @click="showExample" :disabled="exampleDisabled">
+            <LoaderCircle v-if="exampleCreating" :size="16" class="spinning" aria-hidden="true" />
+            {{ exampleCreating ? "正在创建…" : "显示示例" }}<ArrowRight v-if="!exampleCreating" :size="14" aria-hidden="true" />
           </button>
         </div>
 
@@ -1759,7 +1672,7 @@ function exportGraph() {
           <div v-if="!currentMap && !mapListLoading && !mapListError" class="surface empty-state no-map-state">
             <Network :size="32" aria-hidden="true" />
             <h2>创建你的第一张图谱</h2>
-            <p>从左侧新建图谱，再添加问答、便签和文件。</p>
+            <p>从左侧新建图谱，再添加问答、便签、文件和网页。</p>
             <button class="primary" :disabled="mapCreating" @click="mobileNav = isMobile; openMapForm()"><Plus :size="18" aria-hidden="true" />新建图谱</button>
           </div>
           <div v-else
@@ -1796,10 +1709,11 @@ function exportGraph() {
                     <button class="icon-button graph-create-action ai-accent-button" aria-label="打开添加Tile弹窗" title="添加问答" @click="openQuestionDialog" :disabled="generating || graphLoading || modalBusy || nodeBusy"><span class="ai-accent-fill" aria-hidden="true"><span class="ai-accent-colors"></span></span><span class="graph-create-ai" aria-hidden="true">AI</span></button>
                     <button class="icon-button graph-create-action" aria-label="添加便签" title="添加便签" @click="openModal('note')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><StickyNote :size="17" /></button>
                     <button class="icon-button graph-create-action" aria-label="添加文件" title="添加文件" @click="openModal('file')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><Upload :size="17" /></button>
+                    <button class="icon-button graph-create-action" aria-label="添加网页" title="添加网页" @click="openWebDialog()" :disabled="generating || graphLoading || modalBusy || nodeBusy"><Globe :size="17" /></button>
                   </div>
                   <button class="icon-button" aria-label="标签" title="管理标签或为所选 Tile 批量设置标签" aria-haspopup="dialog"
                     :disabled="fusionBusy" @click="openLabels()"><Tag :size="17" aria-hidden="true" /></button>
-                  <button v-if="!demo" class="icon-button" aria-label="同步图谱" @click="loadWorkspace" :disabled="graphLoading || generating || nodeBusy || modalBusy"><RefreshCw :size="17" :class="{ spinning: graphLoading }" /></button>
+                  <button class="icon-button" aria-label="同步图谱" @click="loadWorkspace" :disabled="graphLoading || generating || nodeBusy || modalBusy"><RefreshCw :size="17" :class="{ spinning: graphLoading }" /></button>
                   <button
                     class="icon-button graph-secondary-action"
                     aria-label="导出图谱"
@@ -1850,17 +1764,20 @@ function exportGraph() {
                 :related="related"
                 :query="query"
                 :filter="filter"
-                :busy="generating || graphLoading || nodeBusy || modalBusy"
+                :busy="generating || graphLoading || nodeBusy || modalBusy || sizeBusy"
+                :size-saving="sizeBusy"
                 :load-file="loadPreviewFile"
                 @select="select"
                 @move="moveTile"
                 @move-end="saveLayout"
+                @resize="saveTileSize"
                 @arrange="arrangeCanvas"
                 @expand="expandTile"
                 @toggle="toggle"
                 @delete="requestTileDelete"
                 @label="openLabels"
                 @create-question="openQuestionDialog"
+      @create-web="openWebDialog"
                 @extend-question="extendQuestionFromTile"
                 @new="compose()"
                 @file="dropNodeFile"
@@ -2068,11 +1985,7 @@ function exportGraph() {
                 </div>
                 <div class="detail-section">
                   <h2>
-                    <span class="section-icon ai">{{ nodeType(selectedTile) === "QA" ? "AI" : nodeType(selectedTile) === "NOTE" ? "N" : "F" }}</span>{{ nodeType(selectedTile) === "QA" ? "AI 回答" : nodeType(selectedTile) === "NOTE" ? "便签正文" : "文件附件" }}<span
-                      class="small-tag"
-                      v-if="demo"
-                      >示例</span
-                    >
+                    <span class="section-icon ai">{{ nodeType(selectedTile) === "QA" ? "AI" : nodeType(selectedTile) === "NOTE" ? "N" : nodeType(selectedTile) === "WEB" ? "W" : "F" }}</span>{{ nodeType(selectedTile) === "QA" ? "AI 回答" : nodeType(selectedTile) === "NOTE" ? "便签正文" : nodeType(selectedTile) === "WEB" ? "网页正文" : "文件附件" }}
                   </h2>
                   <MarkdownAnswer
                     v-if="nodeType(selectedTile) === 'QA'"
@@ -2080,6 +1993,7 @@ function exportGraph() {
                     :content="selectedTile.answer"
                     :loading="selectedTile.status === 'loading'"
                   />
+                  <WebPageContent v-else-if="nodeType(selectedTile) === 'WEB'" :tile="selectedTile" :busy="webFetches.has(selectedTile.id)" @refresh="refreshWebTile" />
                   <p v-else class="answer-text">
                     {{
                       selectedTile.answer ||
@@ -2204,7 +2118,7 @@ function exportGraph() {
                 class="inspector-body"
                 :form="form" :related="related" :generating="generating"
                 :planning="questionFlow?.phase === 'planning'"
-                :loading="graphLoading" :demo="demo" :error="formError"
+                :loading="graphLoading" :error="formError"
                 @change="Object.assign(form, $event)" @toggle="toggle"
                 @clear-related="related = []" @submit="sendTile()" @blank="compose()"
                 @cancel="cancelQuestionFlow()"
@@ -2400,13 +2314,14 @@ function exportGraph() {
           :busy="historyImportBusy || generating || workspaceLoading || nodeBusy || modalBusy || weightBusy"
           :import-history="importHistory" />
         <footer class="page-footer">
-          <span>AURELI <span> / </span> 请仔细鉴别由AI生成的信息</span
-          ><span>Vue · Graph Workspace</span>
+          <span class="footer-brand"><BrandLogo icon decorative />
+            <span>Aureli / 请仔细鉴别由AI生成的信息</span>
+          </span><span>Vue · Graph Workspace</span>
         </footer>
       </main>
     </div>
     <Transition name="viewer" :css="motionEnabled" @after-leave="restoreFullscreenFocus">
-    <FullscreenViewer
+    <FullscreenViewer :web-busy="webFetches.has(expanded?.tileId)"
       v-if="expanded"
       v-model:zoom="canvasZoom"
       :mode="expanded.mode"
@@ -2419,25 +2334,28 @@ function exportGraph() {
       :edges="workspace.edges"
       :selected="selected"
       :related="related"
-      :busy="generating || graphLoading || nodeBusy || modalBusy"
-      :demo="demo"
+      :busy="generating || graphLoading || nodeBusy || modalBusy || sizeBusy"
+      :size-saving="sizeBusy"
       :load-file="loadPreviewFile"
       @close="expanded = null"
       @expand="expandTile"
       @select="select"
       @move="moveTile"
       @move-end="saveLayout"
+      @resize="saveTileSize"
       @arrange="arrangeCanvas"
       @toggle="toggle"
       @delete="requestTileDelete"
       @label="openLabels"
       @create-question="openQuestionDialog"
+      @create-web="openWebDialog"
       @extend-question="extendQuestionFromTile"
       @extend="compose"
       @new="compose()"
       @file="dropNodeFile"
       @download="downloadNodeFile"
       @edit-note="editNodeNote"
+      @refresh-web="refreshWebTile"
     />
     </Transition>
     <GraphExportDialog ref="exportDialog" :workspace-id="workspaceKey" @notify="notify($event)" />
@@ -2478,6 +2396,7 @@ function exportGraph() {
                 : modal.type === "note" ? "添加便签"
                 : modal.type === "editNote" ? "编辑便签"
                 : modal.type === "file" ? "添加文件"
+                : modal.type === "web" ? "添加网页"
                 : modal.type === "reset"
                 ? "重置整个画布？"
                 : modal.type === "deleteMap"
@@ -2507,7 +2426,7 @@ function exportGraph() {
           <QuestionForm v-else-if="modal.type === 'question'"
             ref="questionDialogInput" form-id="dialog-question-form"
             :form="form" :related="related" :context-tiles="questionContextTiles"
-            :generating="generating" :loading="graphLoading" :demo="demo" :error="formError"
+            :generating="generating" :loading="graphLoading" :error="formError"
             :show-actions="false"
             @change="Object.assign(form, $event)" @toggle="toggle" @clear-related="related = []"
             @submit="sendTile()"
@@ -2546,6 +2465,7 @@ function exportGraph() {
               <option value="QA">问答</option>
               <option value="NOTE">便签</option>
               <option value="FILE">文件</option>
+              <option value="WEB">网页</option>
               <option value="root">独立节点</option>
               <option value="related">关联节点</option>
             </select>
@@ -2559,6 +2479,13 @@ function exportGraph() {
             <ContextPicker :related="artifactRelated" :context-tiles="artifactContextTiles" :disabled="modalBusy"
               @toggle="toggleArtifactRelated" @clear="artifactRelated = []" />
             <p class="field-help">保存到画布；便签可作为提问的上下文。</p>
+          </form>
+          <form v-else-if="modal.type === 'web'" id="node-form" class="node-artifact-form" @submit.prevent="confirmModal">
+            <label for="web-url">网页地址 *</label>
+            <input id="web-url" type="url" v-model="webDraft.url" required maxlength="2048" :disabled="modalBusy" placeholder="https://example.com/article" autocomplete="url" aria-describedby="web-url-help" />
+            <p id="web-url-help" class="field-help">通过 Tavily 提取公开网页正文并保存到当前 Map。请先在服务设置中保存 Tavily API Key。</p>
+            <ContextPicker :related="artifactRelated" :context-tiles="artifactContextTiles" :disabled="modalBusy"
+              @toggle="toggleArtifactRelated" @clear="artifactRelated = []" />
           </form>
           <form v-else-if="modal.type === 'file'" id="node-form" class="node-artifact-form" @submit.prevent="confirmModal">
             <label for="node-file">选择文件 *</label>
@@ -2576,7 +2503,6 @@ function exportGraph() {
             <textarea id="split-requirements" v-model="splitRequirements" maxlength="2000" rows="4"
               :disabled="modalBusy" aria-describedby="split-help split-requirements-help"
               placeholder="例如：按实施步骤拆分、重点展开技术方案、面向初学者解释"></textarea>
-            <p v-if="demo" class="field-help">当前为示例模式，仅演示拆分效果；真实工作区会进行 AI 价值判断。</p>
             <p v-if="modalBusy" role="status" class="field-help">请稍候…</p>
           </form>
           <template v-else-if="modal.type === 'fusion'">
@@ -2585,8 +2511,7 @@ function exportGraph() {
             <ul class="fusion-source-list">
               <li v-for="tile in modal.file.sources" :key="tile.id"><strong class="mono">{{ tile.id }}</strong><span>{{ tile.message }}</span></li>
             </ul>
-            <p class="field-help">便签和文件不会参与融合{{ modal.file.ignoredCount ? `，本次已排除 ${modal.file.ignoredCount} 个选中节点` : '' }}。</p>
-            <p v-if="demo" class="field-help">当前为示例模式，仅演示融合效果。</p>
+            <p class="field-help">便签、文件和网页不会参与融合{{ modal.file.ignoredCount ? `，本次已排除 ${modal.file.ignoredCount} 个选中节点` : '' }}。</p>
           </template>
           <template v-else-if="modal.type === 'help'"
             ><p>把每次提问变成一个独立的知识节点。</p>
@@ -2609,23 +2534,22 @@ function exportGraph() {
               </li>
             </ol>
             <p class="field-help">
-              示例数据仅用于演示。真实工作区不会携带示例节点；页面刷新后从数据库恢复真实图谱。
+              点击“显示示例”，创建一张“示例图谱 · 功能导览”，体验问答、便签、附件、标签和不同关联关系。示例图谱保存在数据库中，可编辑或删除，刷新后保留修改。
             </p>
-            <button class="secondary" @click="switchMode(); closeModal()" :disabled="generating || workspace.loading || mapListLoading || uploadBusy || modalBusy || fileLoading">
-              {{ demo ? "进入工作区" : "查看示例" }}<ArrowRight :size="16" />
+            <button class="secondary" @click="showExample" :disabled="exampleDisabled">
+              <LoaderCircle v-if="exampleCreating" :size="16" class="spinning" aria-hidden="true" />
+              {{ exampleCreating ? "正在创建…" : "显示示例" }}<ArrowRight v-if="!exampleCreating" :size="16" aria-hidden="true" />
             </button></template
           >
           <p v-else-if="modal.type === 'reset'">
             {{
-              demo
-                ? "将清空当前示例图谱。"
-                : "将清空当前图谱的所有 Tile 节点、消息和关系边，保留标签，此操作不可撤销。"
+              "将清空当前图谱的所有 Tile 节点、消息和关系边，保留标签，此操作不可撤销。"
             }}
             RAG 知识库将保留。
           </p>
           <p v-else-if="modal.type === 'delete'">
             将删除「{{ modal.file.originalFileName }}」{{
-              demo ? "的示例记录。" : "及其关联向量数据，此操作不可撤销。"
+              "及其关联向量数据，此操作不可撤销。"
             }}
           </p>
           <p v-else-if="modal.type === 'deleteMap'">
@@ -2663,13 +2587,13 @@ function exportGraph() {
           </template><button v-else-if="modal.type === 'question'" class="primary"
             type="submit" form="dialog-question-form" :disabled="generating || graphLoading">
             <LoaderCircle v-if="generating" :size="16" class="spinning" /><Send v-else :size="16" />
-            {{ generating ? "正在生成…" : demo ? "生成示例 Tile" : "发送并生成 Tile" }}
+            {{ generating ? "正在生成…" : "发送并生成 Tile" }}
           </button><button v-else-if="modal.type === 'search'" class="primary" type="submit" form="graph-search-form">应用筛选</button><button
             v-else-if="!['help', 'labels'].includes(modal.type)"
-            :class="['edit', 'note', 'editNote', 'file', 'fusion', 'split'].includes(modal.type) ? 'primary' : 'danger'"
-            :type="['note', 'editNote', 'file', 'split'].includes(modal.type) ? 'submit' : 'button'"
-            :form="modal.type === 'split' ? 'split-form' : ['note', 'editNote', 'file'].includes(modal.type) ? 'node-form' : undefined"
-            @click="!['note', 'editNote', 'file', 'split'].includes(modal.type) && confirmModal()"
+            :class="['edit', 'note', 'editNote', 'file', 'web', 'fusion', 'split'].includes(modal.type) ? 'primary' : 'danger'"
+            :type="['note', 'editNote', 'file', 'web', 'split'].includes(modal.type) ? 'submit' : 'button'"
+            :form="modal.type === 'split' ? 'split-form' : ['note', 'editNote', 'file', 'web'].includes(modal.type) ? 'node-form' : undefined"
+            @click="!['note', 'editNote', 'file', 'web', 'split'].includes(modal.type) && confirmModal()"
             :disabled="modalBusy"
           >
             <LoaderCircle v-if="modalBusy && !modalOverwrite" :size="16" class="spinning" />{{
@@ -2678,7 +2602,7 @@ function exportGraph() {
                 : modal.type === "split" ? "生成拆分"
                 : modal.type === "fusion" ? "确认融合"
                 : modal.type === "note" || modal.type === "editNote" ? "保存便签"
-                : modal.type === "file" ? "添加到画布"
+                : modal.type === "file" || modal.type === "web" ? "添加到画布"
                 : modal.type === "edit"
                   ? "保存备注"
                   : modal.type === "reset"

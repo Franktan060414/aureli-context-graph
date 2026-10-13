@@ -4,7 +4,7 @@ import workerUrl from 'elkjs/lib/elk-worker.min.js?url';
 
 export function layoutSignature(tiles, edges, labels) {
   return JSON.stringify([
-    tiles.map(tile => [tile.id, tile.labelId ?? null, tile.weight ?? 1,
+    tiles.map(tile => [tile.id, tile.labelId ?? null, tileDimensions(tile).width, tileDimensions(tile).height,
       [...tile.relatedTileIds || []].sort()]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))),
     edges.map(edge => [edge.id, edge.sourceTileId, edge.targetTileId]).sort(),
     labels.map(label => String(label.id)).sort(),

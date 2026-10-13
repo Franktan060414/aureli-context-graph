@@ -1,11 +1,13 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH});
 const page = await browser.newPage({viewport: {width: 1920, height: 1080}});
+await mockSampleWorkspace(page);
 const artifact = name => new URL(`../artifacts/${name}`, import.meta.url).pathname;
 await mkdir(new URL('../artifacts', import.meta.url), {recursive:true});
-await page.addInitScript(()=>localStorage.setItem('aureli-mode','demo'));
+await page.addInitScript(()=>localStorage.setItem('aureli-mode','live'));
 await page.emulateMedia({reducedMotion:'reduce'});
 const errors=[]; page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/customer-service/model-settings',route=>route.fulfill({json:{success:true,data:{chat:{provider:'local',baseUrl:'http://127.0.0.1:11434/v1',model:'llama3:latest',keyConfigured:true},embedding:{provider:'local',baseUrl:'http://127.0.0.1:11434/v1',model:'qwen3-embedding:4b',keyConfigured:true},dimensions:1536}}}));

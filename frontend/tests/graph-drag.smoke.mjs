@@ -1,12 +1,14 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
+await mockSampleWorkspace(page);
 page.setDefaultTimeout(8000);
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
-await page.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
 const point = node => node.evaluate(element => ({ x: parseFloat(element.style.left), y: parseFloat(element.style.top) }));
 const assertPoint = (actual, expected) => {
   assert.ok(Math.abs(actual.x - expected.x) < 1, `x: ${JSON.stringify({ actual, expected })}`);
@@ -103,8 +105,9 @@ try {
   assert.equal(await graph.locator('.dragging').count(), 0);
 
   const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true });
+  await mockSampleWorkspace(touch);
   touch.on('pageerror', error => errors.push(error.message));
-  await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+  await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   await touch.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
   // The floating details panel otherwise covers the touch drag's starting point.
   await touch.getByRole('button', { name: '最小化节点配置', exact: true }).click();

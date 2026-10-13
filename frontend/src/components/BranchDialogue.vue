@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
-import { Check, FileText, GitBranch, LoaderCircle, Menu, PanelLeftClose, PanelLeftOpen, Send, StickyNote, Upload, X } from "@lucide/vue";
+import { Check, Globe, FileText, GitBranch, LoaderCircle, Menu, PanelLeftClose, PanelLeftOpen, Send, StickyNote, Upload, X } from "@lucide/vue";
 import MarkdownAnswer from "./MarkdownAnswer.vue";
 import ViewSelect from "./ViewSelect.vue";
 import { branchRowPresentation, branchRows } from "../lib/branch-layout.js";
@@ -232,8 +232,8 @@ defineExpose({ focus: () => input.value?.focus() });
               <span class="branch-tile-frame" aria-hidden="true"><span class="branch-tile-frame-fill"></span></span>
               <div v-show="!row.collapsedIds.includes(tile.id)" :id="`branch-content-${tile.id}`" class="branch-tile-content">
                 <div class="branch-tile-meta">
-                  <component :is="type(tile) === 'NOTE' ? StickyNote : type(tile) === 'FILE' ? FileText : GitBranch" :size="14" aria-hidden="true" />
-                  <span>{{ type(tile) === 'NOTE' ? '便签' : type(tile) === 'FILE' ? '文件' : row.depth === 0 ? '起始对话' : `第 ${row.depth} 层分支` }}</span>
+                  <component :is="type(tile) === 'NOTE' ? StickyNote : type(tile) === 'FILE' ? FileText : type(tile) === 'WEB' ? Globe : GitBranch" :size="14" aria-hidden="true" />
+                  <span>{{ type(tile) === 'NOTE' ? '便签' : type(tile) === 'FILE' ? '文件' : type(tile) === 'WEB' ? '网页' : row.depth === 0 ? '起始对话' : `第 ${row.depth} 层分支` }}</span>
                   <Check v-if="related.includes(tile.id)" :size="14" aria-hidden="true" />
                   <span v-if="related.includes(tile.id)">已关联</span>
                 </div>
@@ -251,14 +251,15 @@ defineExpose({ focus: () => input.value?.focus() });
                 </div>
                 <template v-else>
                   <h3 class="branch-question">{{ title(tile) }}</h3>
-                  <p class="branch-artifact">{{ tile.content || tile.answer || tile.fileName || '暂无正文，可关联后继续提问。' }}</p>
+                  <MarkdownAnswer v-if="type(tile) === 'WEB'" class="branch-artifact" :content="tile.content || tile.sourceUrl || ''" />
+                  <p v-else class="branch-artifact">{{ tile.content || tile.answer || tile.fileName || '暂无正文，可关联后继续提问。' }}</p>
                   <p v-if="tile.status === 'error'" class="branch-tile-error">{{ tile.error || '保存失败，请重试。' }}</p>
                 </template>
               </div>
               <div v-if="row.collapsedIds.includes(tile.id)" class="branch-collapsed-summary" :title="title(tile)">
                 <Check v-if="related.includes(tile.id)" :size="18" aria-label="已关联" />
                 <LoaderCircle v-else-if="tile.status === 'loading'" :size="18" class="spinning" aria-label="生成中" />
-                <component v-else :is="type(tile) === 'NOTE' ? StickyNote : type(tile) === 'FILE' ? FileText : GitBranch" :size="18" aria-hidden="true" />
+                <component v-else :is="type(tile) === 'NOTE' ? StickyNote : type(tile) === 'FILE' ? FileText : type(tile) === 'WEB' ? Globe : GitBranch" :size="18" aria-hidden="true" />
                 <h3>{{ title(tile) }}</h3>
                 <span class="branch-collapsed-label">已折叠</span>
               </div>

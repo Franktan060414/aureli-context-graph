@@ -1,3 +1,4 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { selectView } from './helpers/view-select.js';
@@ -77,7 +78,8 @@ try {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await page.screenshot({ path: `${output}weighted-mobile.png` });
   const touch = await browser.newPage({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
-  await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+  await mockSampleWorkspace(touch);
+  await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   await touch.goto(url); await selectView(touch, '分支对话');
   const touchTile = touch.locator('.branch-tile').first();
   await touchTile.tap({ position: { x: 12, y: 12 } }); await touchTile.tap({ position: { x: 12, y: 12 } });

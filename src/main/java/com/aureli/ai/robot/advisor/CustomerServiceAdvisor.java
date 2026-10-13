@@ -24,7 +24,6 @@ public class CustomerServiceAdvisor implements StreamAdvisor {
 
     private final VectorStore vectorStore;
     private final ChatModel chatModel;
-
     public CustomerServiceAdvisor(VectorStore vectorStore, ChatModel chatModel) {
         this.vectorStore = vectorStore;
         this.chatModel = chatModel;
@@ -41,11 +40,18 @@ public class CustomerServiceAdvisor implements StreamAdvisor {
     private ChatClientRequest augment(ChatClientRequest request) {
         Prompt prompt = request.prompt();
         String context = "";
+        boolean knowledgeUnavailable = false;
         if (requiresKnowledge(prompt)) {
-            List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder()
-                    .query(prompt.getUserMessage().getText())
-                    .topK(3)
-                    .build());
+            List<Document> documents;
+            try {
+                documents = vectorStore.similaritySearch(SearchRequest.builder()
+                        .query(prompt.getUserMessage().getText()).topK(3).build());
+            } catch (RuntimeException error) {
+                // Knowledge retrieval is optional; its availability must not depend on the web-search switch.
+                log.warn("知识库暂时不可用，继续依据已有上下文回答。");
+                documents = List.of();
+                knowledgeUnavailable = true;
+            }
             if (documents != null) {
                 StringBuilder content = new StringBuilder();
                 for (Document document : documents) {
@@ -56,9 +62,9 @@ public class CustomerServiceAdvisor implements StreamAdvisor {
                 context = content.toString();
             }
         }
-        return request.mutate()
-                .prompt(CustomerServicePrompts.ragAnswer(prompt, context))
-                .build();
+        Prompt answer = CustomerServicePrompts.ragAnswer(prompt, context);
+        if (knowledgeUnavailable) answer = CustomerServicePrompts.knowledgeUnavailable(answer);
+        return request.mutate().prompt(answer).build();
     }
 
     private boolean requiresKnowledge(Prompt prompt) {

@@ -2,7 +2,7 @@
 
 所有地址相对于项目后端，默认同源。Vite 开发环境把 `/customer-service` 代理到 `http://localhost:8080`。「服务设置」中的项目服务地址覆盖这个默认值；模型 Base URL 是后端调用模型的地址，两者独立。
 
-统一请求入口：`src/lib/api.js` 的 `createApiClient`。首页默认读取真实数据库；示例模式由用户显式选择，示例数据操作只发生在浏览器内存中。连接失败显示错误和重试按钮，不自动填入示例数据。
+统一请求入口：`src/lib/api.js` 的 `createApiClient`。首页从数据库读取所有图谱，包括点击「显示示例」后创建的「示例图谱 · 功能导览」。示例图谱使用相同接口读写，不存在独立的示例模式。连接失败显示错误和重试按钮，不自动填入示例数据。
 
 ## 路由与页面行为
 
@@ -15,7 +15,7 @@
 | 下载画布附件 | GET `/customer-service/tile/{tileId}/file` | 无 | 二进制下载，`Content-Disposition: attachment`；不存在时 404 |
 | 生成 Tile | POST `/customer-service/chat/tile/completion` | JSON，见下方 | SSE 流，确认保存后才显示完成 |
 | 删除 Tile | POST `/customer-service/tile/delete` | `{ tileId }` | 在同一事务中删除节点、消息及以该节点为端点的全部关系边；页面需要用户确认 |
-| 调整 Tile 权重 | POST `/customer-service/tile/weight` | `{ tileId, weight }` | `weight` 仅接受 1、2、3；更新指定节点的权重及修改时间，成功后同步详情和图谱尺寸 |
+| 调整 Tile 权重 | POST `/customer-service/tile/weight` | `{ tileId, weight }` | `weight` 仅接受 1、2、3；更新指定节点的权重及修改时间，成功后同步重要程度，保持 Tile 尺寸 |
 | 拆分 AI 问答 Tile | POST `/customer-service/tile/split` | `{ mapId, sourceTileId, requirements?, splitId? }` | 先判断价值，通过后原子保存 2～4 个子问答，返回 `data: { tiles, edges }`；无价值返回 422 和具体理由 |
 | 知识文件分页 | POST `/customer-service/md/list` | `{ current: 1, size: 10 }` | `data` 为文件数组；`total/current/size/pages` 与 `data` 同级 |
 | 上传 Markdown | POST `/customer-service/md/upload` | FormData，字段 `file` | 上传成功后刷新列表；向量化异步执行 |
@@ -25,6 +25,9 @@
 | 读取模型配置 | GET `/customer-service/model-settings` | 无 | `data: { chat, embedding, dimensions }`，密钥仅返回 `keyConfigured` |
 | 保存模型配置 | POST `/customer-service/model-settings` | JSON，见下方 | 持久化并应用，返回脱敏配置 |
 | 测试模型连接 | POST `/customer-service/model-settings/test` | 无 | 使用后端已保存的对话模型配置，返回 `data: { model, reply }` |
+| 读取联网配置 | GET `/customer-service/tavily-settings` | 无 | `data: { enabled, mcpUrl, keyConfigured }`，读取不缓存、不返回密钥 |
+| 保存联网配置 | POST `/customer-service/tavily-settings` | `{ enabled, mcpUrl, apiKey }` | 单独持久化并立即应用；默认关闭；原地址下空密钥保留原值，更换地址不复用密钥 |
+| 测试联网连接 | POST `/customer-service/tavily-settings/test` | 无 | 使用已保存的配置执行 MCP 初始化、发现 Tavily 搜索工具，不执行搜索；失败返回 502 与安全错误信息 |
 
 除附件下载外，非 SSE 响应统一为 `{ success: boolean, message?, data? }`。前端同时检查 HTTP 状态与 `success`，HTTP 200 的业务失败也显示为失败。GET/JSON 请求超时 30 秒、上传 60 秒、流式回答 180 秒；连接中断、超时和错误响应均有提示。
 
@@ -34,9 +37,9 @@
 
 工作区的 `tiles[].weight` 直接读取 `t_tile.weight`，表示 Tile 自身的重要程度：1 普通、2 重要、3 非常重要。节点详情在回答状态下方以小字仅显示对应文案，不带“权重：”前缀；“非常重要”使用红色，其余保持灰色。缺失时显示“未设置”，其他值显示“未知”。此字段与关系边的 `edges[].weight` / `edgeWeight` 独立。
 
-图谱 Tile 按自身权重调整长宽：1 为 260×200，2 为 390×300（1.5 倍），3 为 650×500（2.5 倍）；缺失或其他值沿用普通尺寸。较大的卡片显示更多问题与回答，字号、按钮和原有操作保持一致。自动排列与连线使用实际尺寸，已保存的手动坐标继续保留。
+图谱 Tile 尺寸与权重独立。`t_tile.width` / `height` 为可空整数，分别为空时使用默认宽 260 / 高 200。工作区与 JSON 导出包含这两个字段；导入旧版 JSON 时，缺少的字段按 NULL 保存。POST `/customer-service/tile/size` 接收 `{ mapId, tileId, width, height }`，宽度范围 200–4000，高度范围 160–4000；NULL 恢复默认。四边与四角支持拖动缩放，按 Esc 取消；边缘按钮支持方向键微调。拖动预览实时更新连线与标签框，释放后保存到数据库，失败恢复尺寸与坐标。字体与重要程度无关，显示内容随实际尺寸调整；树状和 Layered 排列都使用实际尺寸。
 
-节点详情在 AI 完整回答下方、上下文来源上方提供权重下拉控件：普通 / 重要 / 非常重要分别对应 1 / 2 / 3，常态始终白底，文字为绿 / 橙 / 红；悬停时对应颜色从左向右铺满背景，三档均为白字。沿用项目原生下拉选择、蓝黄焦点环及统一 320ms 强调色扫入动画；键盘、触屏和减少动态效果沿用全局行为。真实模式保存到数据库，失败保留原值并提示；示例模式仅修改内存数据。保存期间禁止重复提交，同步成功后图谱卡片尺寸立即随权重变化。
+节点详情在 AI 完整回答下方、上下文来源上方提供权重下拉控件：普通 / 重要 / 非常重要分别对应 1 / 2 / 3，常态始终白底，文字为绿 / 橙 / 红；悬停时对应颜色从左向右铺满背景，三档均为白字。沿用项目原生下拉选择、蓝黄焦点环及统一 320ms 强调色扫入动画；键盘、触屏和减少动态效果沿用全局行为。保存到数据库，失败保留原值并提示。保存期间禁止重复提交，改变权重不会改变卡片尺寸。
 
 文件 `status`：0 待处理、1 向量化中、2 已完成、3 处理失败。当前知识库页存在状态 0/1 的文件时每 2 秒刷新；页面隐藏、离开知识库、全部处理完成或请求失败时停止。返回页面或手动重试可重新刷新。
 
@@ -137,7 +140,7 @@ data: {"done":true}
 
 `POST /customer-service/tile/question/decision` 接受 `{ "mapId": "...", "planId": "...", "action": "CANCEL|DECLINE|EXECUTE" }`。取消或否决使方案不可再执行，无节点写入；否决后前端仅调用原单 Tile SSE 接口。执行只使用服务端保存的原问题、关联快照和已展示的子问题，客户端不提交替代问题。原问答和子问答使用现有按需 RAG 规则，子问答保留原问题的范围、约束和完整原回答，生成完成后在同一事务保存所有 Tile、完整消息、上下文关系及 `DIVIDES` 连线，返回普通工作区结构 `{tiles, edges}`。保存成功前不显示部分完成节点。
 
-同一方案重复执行返回原结果，不重复调用模型或创建节点；生成/保存失败可在同一弹窗重试，不重新规划。执行前及保存前均验证图谱、目标 ID 与上下文未变化。方案仅保留在服务端内存30分钟（容量上限1000），重启、过期或淘汰后需重新提交问题。过期、已处理或上下文变化返回409与相应 `QUESTION_PLAN_*` / `QUESTION_CONTEXT_CHANGED` 错误码。连接中断时可能已提交成功，应同步图谱确认或按同一方案重试。服务端记录规划、用户选择、提交完成和规划失败日志，避免打印问题全文及模型凭据。示例模式全部在本地演示。
+同一方案重复执行返回原结果，不重复调用模型或创建节点；生成/保存失败可在同一弹窗重试，不重新规划。执行前及保存前均验证图谱、目标 ID 与上下文未变化。方案仅保留在服务端内存30分钟（容量上限1000），重启、过期或淘汰后需重新提交问题。过期、已处理或上下文变化返回409与相应 `QUESTION_PLAN_*` / `QUESTION_CONTEXT_CHANGED` 错误码。连接中断时可能已提交成功，应同步图谱确认或按同一方案重试。服务端记录规划、用户选择、提交完成和规划失败日志，避免打印问题全文及模型凭据。
 
 添加便签、编辑便签、添加文件弹窗与添加Tile共用 `ContextPicker`，提供已选关联标签、逐项移除、清空与折叠的已有节点复选列表。便签/文件的关联草稿独立于提问草稿，可选择已完成的问答、便签及文件；编辑便签排除自身。保存关联到 `t_tile_edge`，默认从所选节点指向新节点，方向 `DIRECTED`、关系 `EXTENDS`、权重 1。更新便签仅调整来源关系，保留仍被选中的边设置及所有出边。关联 ID 去重，缺失节点和自身关联会拒绝保存。文件节点可建立图谱连线；已提取的正文按关联范围加入问答记忆，没有正文的附件仅建立关系。
 
@@ -150,3 +153,16 @@ PDF 使用同一个读取入口，通过 Apache PDFBox 3.0.8 提取新上传 `.p
 ### 删除图谱
 
 `DELETE /customer-service/maps/{mapId}`：成功返回 `{ "success": true }`；图谱不存在返回业务错误。数据库级联删除该图谱的全部 Tile、附件、消息和关系，其他图谱保留。前端确认后调用，失败保留原列表并允许重试。
+
+## 网页快照 Tile
+
+- `POST /customer-service/tile/web`：JSON `{ mapId, url, relatedTileIds?: [] }`，返回 `Node`。先在所属 Map 持久化 `WEB` 节点，状态为 `PENDING`，创建过程不执行网络抓取。
+- `POST /customer-service/tile/{tileId}/web/refresh`：JSON `{ mapId }`，读取该节点已保存的网址，返回更新后的 `Node`。客户端异步调用，允许其他 Map 操作；服务端网络调用不占用数据库事务。
+- `Node` 新字段：`sourceUrl`、`resolvedUrl`、`fetchedAt`（本地 ISO 日期时间）、`fetchStatus`（`PENDING / FETCHING / READY / FAILED`）、`fetchError`。`status` 仍为节点生命周期的 `ready`，网页读取进度单独由 `fetchStatus` 表示。
+- 抓取失败仍返回成功响应的 `Node`，其 `fetchStatus=FAILED` 和 `fetchError` 用于 UI 展示，并保留原来的 `content/resolvedUrl/fetchedAt`。无效网址、Map/节点不存在、跨 Map 关联或新鲜的并发刷新返回业务失败响应。
+- 基础提取返回无结果或空正文时，若 MCP 工具支持 `extract_depth`，自动回退一次 `advanced`；普通成功结果、超大正文、工具调用错误不重复抓取。网页提取的单次 MCP 请求超时为 45 秒，客户端刷新等待 90 秒。诊断日志只记录来源主机和本地失败分类，不记录 API Key、网页正文或服务原始错误。
+- 抓取工具仅发现 `tavily-extract` / `tavily_extract`，必须检查指定 URL 的结果正文。正文保存上限 500000 字符；不会用搜索结果冒充该网页的全文。
+- 并发刷新使用数据库令牌；两分钟内的进行中请求不重复执行，过期请求可重试，旧请求不能覆盖新快照或恢复已删除的节点。明确添加/刷新只要求保存 Tavily Key，不要求开启回答时的自动搜索。
+- Workspace、JSON 导入导出和图谱 PDF 导出支持 `WEB`。JSON 导入保留正文/来源/时间，将有正文的节点恢复为 `READY`，无正文恢复为 `PENDING`，不会联网抓取。
+
+「显示示例」调用 `POST /customer-service/maps/example`（空 JSON 请求），返回 `{ success: true, data: MapDO }`。每次请求以新 ID 原子创建完整示例图谱，前端把返回的 map 加入列表并切换加载工作区。启动／刷新不创建示例图谱，读写、清空和删除继续使用普通 Map 接口。

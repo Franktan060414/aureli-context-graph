@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { arrangeTiles, ARRANGE_HORIZONTAL_GAP, ARRANGE_VERTICAL_GAP, connectionGeometry, positionTiles, readLayouts } from '../src/lib/graph-layout.js';
+import { arrangeTiles, ARRANGE_HORIZONTAL_GAP, ARRANGE_VERTICAL_GAP, connectionGeometry, positionTiles, readLayouts, tileDimensions, resizeTile } from '../src/lib/graph-layout.js';
 
 test('saved layouts preserve finite coordinates in every quadrant and discard malformed points', () => {
   const original = globalThis.localStorage;
@@ -61,7 +61,7 @@ test('ordinary Tiles retain their original layout and manually saved coordinates
   assert.equal(moved[1].y, 920);
 });
 
-test('mixed weights reserve enough space in rows and columns without moving saved Tiles', () => {
+test('weights share default dimensions and saved positions are preserved', () => {
   const tiles = [
     { id: 'ordinary', relatedTileIds: [], weight: 1 },
     { id: 'important', relatedTileIds: [], weight: 2 },
@@ -69,23 +69,23 @@ test('mixed weights reserve enough space in rows and columns without moving save
     { id: 'child', relatedTileIds: ['highest'], weight: 2 },
   ];
   const points = positionTiles(tiles);
-  assert.deepEqual(points.map(({ width, height }) => [width, height]), [[260, 200], [390, 300], [650, 500], [390, 300]]);
+  assert.deepEqual(points.map(({ width, height }) => [width, height]), [[260, 200], [260, 200], [260, 200], [260, 200]]);
   assert.equal(points[1].y - points[0].y - points[0].height, 32);
   assert.equal(points[2].y - points[1].y - points[1].height, 32);
   assert.equal(points[3].x - points[2].x - points[2].width, 56);
   const moved = positionTiles(tiles, { highest: { x: 1200, y: 600 } });
   assert.equal(moved[2].x, 1200);
   assert.equal(moved[2].y, 600);
-  assert.equal(moved[2].width, 650);
+  assert.equal(moved[2].width, 260);
 });
 
 test('connections meet the actual boundaries of different-sized Tiles in all directions', () => {
-  const source = { x: 800, y: 800, weight: 3 };
+  const source = { x: 800, y: 800, weight: 3, width: 650, height: 500 };
   const cases = [
     [{ x: 1800, y: 950, weight: 1 }, [1450, 1050], [1800, 1050]],
     [{ x: 0, y: 950, weight: 1 }, [800, 1050], [260, 1050]],
-    [{ x: 930, y: 1800, weight: 2 }, [1125, 1300], [1125, 1800]],
-    [{ x: 930, y: 0, weight: 2 }, [1125, 800], [1125, 300]],
+    [{ x: 930, y: 1800, weight: 2, width: 390, height: 300 }, [1125, 1300], [1125, 1800]],
+    [{ x: 930, y: 0, weight: 2, width: 390, height: 300 }, [1125, 800], [1125, 300]],
   ];
   for (const [target, start, end] of cases) {
     const numbers = connectionGeometry(source, target).path.match(/-?\d+(?:\.\d+)?/g).map(Number);
@@ -124,13 +124,13 @@ test('arranging computes dependency depth from unsorted Tiles and edge-only rela
   ]);
 });
 
-test('arranging reserves minimum gaps for mixed weights and disconnected trees', () => {
+test('arranging reserves minimum gaps for custom sizes and mixed weights and disconnected trees', () => {
   const tiles = [
-    { id: 'root', relatedTileIds: [], weight: 3 },
+    { id: 'root', relatedTileIds: [], weight: 3, width: 650, height: 500 },
     { id: 'child', relatedTileIds: ['root'], weight: 2 },
     { id: 'leaf', relatedTileIds: ['child'] },
     { id: 'other', relatedTileIds: [] },
-    { id: 'other-child', relatedTileIds: ['other'], weight: 3 },
+    { id: 'other-child', relatedTileIds: ['other'], weight: 3, width: 650, height: 500 },
     { id: 'isolated', relatedTileIds: [] },
   ];
   const points = arrangeTiles(tiles);
@@ -177,4 +177,26 @@ test('empty, isolated, self-linked and cyclic graphs always produce finite nonov
         || a.y + a.height <= b.y || b.y + b.height <= a.y);
     }
   }
+});
+
+
+test('dimensions default independently and custom sizes are independent of importance', () => {
+  for (const weight of [1, 2, 3, null]) {
+    assert.deepEqual(tileDimensions({ weight }), { width: 260, height: 200 });
+    assert.deepEqual(tileDimensions({ weight, width: 440, height: 320 }), { width: 440, height: 320 });
+  }
+  assert.deepEqual(tileDimensions({ width: null, height: 280 }), { width: 260, height: 280 });
+  assert.deepEqual(tileDimensions({ width: 420, height: null }), { width: 420, height: 200 });
+  assert.deepEqual(tileDimensions({ width: '400', height: -1 }), { width: 260, height: 200 });
+  const [point] = positionTiles([{ id: 'a', relatedTileIds: [], width: 420, height: 280 }],
+    { a: { x: 10, y: 20, width: 999, height: 999 } });
+  assert.deepEqual([point.x, point.y, point.width, point.height], [10, 20, 420, 280]);
+});
+
+test('resize keeps opposite edges fixed and clamps dimensions without moving the anchor', () => {
+  const tile = { id: 'a', x: -50, y: 20, width: 300, height: 240 };
+  assert.deepEqual(resizeTile(tile, 'se', 60, 40), { id: 'a', x: -50, y: 20, width: 360, height: 280 });
+  assert.deepEqual(resizeTile(tile, 'nw', -60, -40), { id: 'a', x: -110, y: -20, width: 360, height: 280 });
+  assert.deepEqual(resizeTile(tile, 'nw', 1000, 1000), { id: 'a', x: 50, y: 100, width: 200, height: 160 });
+  assert.deepEqual(resizeTile(tile, 'e', 9999, 9999), { id: 'a', x: -50, y: 20, width: 4000, height: 240 });
 });

@@ -47,11 +47,28 @@ class GraphImportPersistenceIntegrationTest {
             var transactions = new DataSourceTransactionManager(ds);
             var imports = transactional(new GraphImportService(maps,tiles,messages,edges,labels), transactions);
             var source = JsonMapper.builder().build().readTree(GraphImportControllerTest.FIXTURE);
-            var first = imports.importGraph(source); var second = imports.importGraph(source);
+            var first = imports.importGraph(JsonMapper.builder().build().readTree(GraphImportControllerTest.FIXTURE
+                    .replace("\"weight\":3", "\"weight\":3,\"width\":440,\"height\":320")));
+            var second = imports.importGraph(source);
             assertNotEquals(first.map().getMapId(), second.map().getMapId());
             var workspace = new TileWorkspaceController(tiles,edges,messages,mock(TileFileContentReader.class),labels);
             var restored = workspace.workspace(first.map().getMapId()).getBody().getData();
             assertEquals(first.tiles(), restored.tiles());
+            assertEquals(440, restored.tiles().getFirst().width());
+            assertEquals(320, restored.tiles().getFirst().height());
+            assertNull(workspace.workspace(second.map().getMapId()).getBody().getData().tiles().getFirst().width());
+            assertTrue(workspace.updateSize(new com.aureli.ai.robot.model.vo.customerService.UpdateTileSizeReqVO(
+                    first.map().getMapId(), first.tiles().getFirst().id(), 520, 360)).isSuccess());
+            var resized = workspace.workspace(first.map().getMapId()).getBody().getData().tiles().getFirst();
+            assertEquals(520, resized.width()); assertEquals(360, resized.height()); assertEquals(3, resized.weight());
+            workspace.updateSize(new com.aureli.ai.robot.model.vo.customerService.UpdateTileSizeReqVO(
+                    first.map().getMapId(), resized.id(), null, null));
+            assertNull(workspace.workspace(first.map().getMapId()).getBody().getData().tiles().getFirst().height());
+            // Simulate upgrading an existing database and rerunning startup initialization.
+            jdbc.execute("ALTER TABLE t_tile DROP COLUMN width, DROP COLUMN height");
+            new ResourceDatabasePopulator(new ClassPathResource("schema.sql")).execute(ds);
+            new ResourceDatabasePopulator(new ClassPathResource("schema.sql")).execute(ds);
+            assertEquals(6, jdbc.queryForObject("SELECT COUNT(*) FROM t_tile WHERE width IS NULL AND height IS NULL", Integer.class));
             assertEquals(first.edges().getFirst().id(), restored.edges().getFirst().id());
             assertEquals(first.edges().getFirst().sourceTileId(), restored.edges().getFirst().sourceTileId());
             assertEquals(first.edges().getFirst().targetTileId(), restored.edges().getFirst().targetTileId());

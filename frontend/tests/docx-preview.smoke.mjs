@@ -118,17 +118,8 @@ try {
   await open("docx-b"); await rendered();
   assert.equal(await page.getByRole("heading", { name:"第二份.docx" }).isVisible(), true);
   await close();
-  await page.addInitScript(() => localStorage.setItem("aureli-mode", "demo"));
-  await page.reload();
-  await page.getByRole("button", { name:"添加文件", exact:true }).click();
-  await page.locator("#node-file").setInputFiles({ name:"示例.docx", mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document", buffer:docx });
-  await page.getByRole("button", { name:"添加到画布", exact:true }).click();
-  await page.locator(".modal").waitFor({ state:"hidden" });
-  const beforeDemo = requests;
-  await page.locator(".graph-node", { hasText:"示例.docx" }).locator('button[aria-label^="全页面查看"]').click();
-  await rendered(); assert.equal(requests, beforeDemo, "demo document stays local");
   assert.deepEqual(errors, []);
-  console.log("PASS: DOCX text/images/tables/pages/header/footer, style isolation, zoom, download, iframe Escape, retry/corrupt file, mobile fit, late request, custom backend and demo isolation");
+  console.log("PASS: DOCX text/images/tables/pages/header/footer, style isolation, zoom, download, iframe Escape, retry/corrupt file, mobile fit, late request, custom backend");
 } catch (error) {
   await mkdir("artifacts", { recursive:true });
   await page.screenshot({ path:"artifacts/docx-preview-failure.png" });

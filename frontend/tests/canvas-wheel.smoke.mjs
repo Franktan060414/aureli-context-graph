@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -12,7 +12,7 @@ page.on('pageerror', error => errors.push(error.message));
 await page.route('**/customer-service/**', route => {
   const request = route.request(), url = new URL(request.url());
   if (url.pathname.endsWith('/maps')) return route.fulfill({ json: { success: true, data: maps } });
-  if (url.pathname.endsWith('/tile/workspace')) return route.fulfill({ json: { success: true, data: url.searchParams.get('mapId') === 'empty' ? { tiles: [], edges: [] } : demoGraph() } });
+  if (url.pathname.endsWith('/tile/workspace')) return route.fulfill({ json: { success: true, data: url.searchParams.get('mapId') === 'empty' ? { tiles: [], edges: [] } : sampleGraph() } });
   if (url.pathname.endsWith('/zoom')) {
     const { zoom } = request.postDataJSON(); maps[0].zoom = zoom; savedZooms.push(zoom);
   } else if (request.method() !== 'GET') writes.push(url.pathname);

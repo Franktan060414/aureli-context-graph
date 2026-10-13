@@ -14,8 +14,8 @@ function nonoverlapping(tiles) {
 }
 
 test('ELK groups labels, preserves card sizes, and routes nested and cross-label edges in world coordinates', async () => {
-  const tiles = [tile('a'), tile('b', '1', { relatedTileIds: ['a'], weight: 3 }),
-    tile('c', 2, { weight: 2 }), tile('d', 2, { relatedTileIds: ['c'] }), tile('unlabelled', null)];
+  const tiles = [tile('a'), tile('b', '1', { relatedTileIds: ['a'], weight: 3, width: 650, height: 500 }),
+    tile('c', 2, { weight: 2, width: 390, height: 300 }), tile('d', 2, { relatedTileIds: ['c'] }), tile('unlabelled', null)];
   const edges = [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('uc', 'unlabelled', 'c')];
   const before = JSON.stringify({ tiles, edges, labels });
   const { positions, routes } = await arrangeLayeredTiles(tiles, edges, labels);

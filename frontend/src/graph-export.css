@@ -8,11 +8,6 @@
 .graph-export-brand {
   position: absolute; left: 32px; top: 32px; width: 260px; line-height: 0; background: var(--canvas);
 }
-.graph-export-brand img {
-  display: block; width: 100%; height: auto;
-  /* Blend the original white-backed logo into the PDF canvas without a white box. */
-  mix-blend-mode: multiply;
-}
 .graph-export-card {
   --text: var(--tile-label-fg, #172033); --muted: var(--tile-label-fg, #536076);
   --primary: var(--tile-label-fg, #075ec8);

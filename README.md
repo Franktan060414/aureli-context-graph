@@ -35,10 +35,11 @@ Aureli（界面名称：Aureli Context Graph）是一个基于 Spring Boot、Spr
 | 节点重要程度 | 普通、重要、非常重要三档；影响画布尺寸，并在上下文中提示模型关注程度 |
 | 共享知识库 | Markdown 上传、异步向量化、处理状态、分页、备注编辑和删除 |
 | 按需 RAG | 对话模型先判断是否需要专业资料，再通过 PGVector 检索最多 3 个文档片段 |
+| 按需联网搜索 | API 设置中启用 Tavily MCP 后，AI 结合当前问题、所选节点与知识库资料判断是否联网，搜索结果作为回答依据并引用来源 |
 | 图谱操作 | 自由拖动、平移、缩放、适应画布、搜索、筛选、列表、全页面图谱与节点阅读 |
 | 数据恢复与导出 | 从数据库同步节点和关系，导出包含画布布局的 JSON |
 | 运行时模型配置 | 分别设置对话与向量模型，持久化配置、立即应用，并测试已保存的对话模型连接 |
-| 示例模式 | 通过示例图谱体验操作；示例节点和知识库操作仅在浏览器内存中执行 |
+| 示例图谱 | 点击「显示示例」在数据库中创建问答、便签、附件、标签与关联；可正常编辑、清空和删除 |
 | 桌面入口 | Electron 加载本地后端页面，复用网页工作台 |
 
 ## 上下文与知识检索
@@ -68,8 +69,11 @@ flowchart TD
     B --> C{对话模型判断是否需要知识库}
     C -- 需要 --> D[向量模型编码问题]
     D --> E[PGVector 检索 Top 3 片段]
-    E --> F[对话模型生成回答]
-    C -- 不需要或判定失败 --> F
+    E --> W{Tavily 已启用且 AI 判断需要联网?}
+    C -- 不需要或判定失败 --> W
+    W -- 是 --> X[Tavily Remote MCP 搜索并补充来源]
+    W -- 否 --> F[对话模型生成回答]
+    X --> F
     F --> G[SSE 推送文本分片]
     G --> H[事务保存节点、关系与完整消息]
     H --> I[发送 done 完成信号]
@@ -106,7 +110,7 @@ Git 跟踪前后端源码、测试、必要静态资源、依赖清单、构建�
 │   │   ├── App.vue                     # 工作台、知识库与页面状态
 │   │   ├── components/                 # 图谱、提问、配置与阅读组件
 │   │   ├── composables/                # 动效与画布交互
-│   │   └── lib/                        # API 客户端、布局与示例数据
+│   │   └── lib/                        # API 客户端与布局
 │   ├── tests/                          # 协议测试与浏览器验收脚本
 │   └── vite.config.js                  # 开发代理和后端静态资源输出
 ├── desktop/                            # Electron 本地桌面入口
@@ -238,6 +242,7 @@ npm run dev
 | `t_tile_edge` | 节点关系、方向、类型、强度与说明 |
 | `t_ai_customer_service_md_storage` | 知识库 Markdown 的文件路径、大小、处理状态与备注 |
 | `t_model_api_settings` | 唯一一条对话／向量模型配置，固定 `id = 1` |
+| `t_tavily_mcp_settings` | 共享 Tavily 联网搜索开关、MCP 地址与密钥，默认关闭 |
 | `t_vector_store` | 知识文档片段、来源元数据与 1536 维向量 |
 
 三张 Tile 表均通过 `map_id` 归属图谱；消息和关系使用 `(map_id, tile_id)` 复合外键关联节点，禁止跨图谱连边和保存消息。Tile ID 保持全局唯一。后端启动不创建图谱，三张 Tile 表的 `map_id` 必须显式赋值；旧版未分配归属的数据需先指定图谱再升级。节点删除后，相应消息和关系通过外键级联删除。向量与知识文件通过 `metadata.mdStorageId` 在业务层关联，不使用数据库外键。
@@ -406,6 +411,17 @@ CREATE TABLE IF NOT EXISTS t_model_api_settings (
 );
 
 -- 3. 初始化共享知识库向量表。
+-- 共享联网搜索配置；默认关闭。
+CREATE TABLE IF NOT EXISTS t_tavily_mcp_settings (
+    id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    mcp_url TEXT NOT NULL DEFAULT 'https://mcp.tavily.com/mcp/',
+    api_key VARCHAR(4096) NOT NULL DEFAULT '',
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 初始化共享知识库向量表。
 CREATE TABLE IF NOT EXISTS public.t_vector_store (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     content TEXT,
@@ -475,6 +491,16 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 
 「测试链接」使用后端**已保存的对话模型配置**发送固定测试消息，返回模型名称和回复。它不会保存页面中的草稿，也不会验证向量模型；向量模型需要通过文档上传与实际检索验证。
 
+### Tavily MCP 联网搜索
+
+在「服务设置 → API设置」中的「联网搜索 · Tavily MCP」填写 Tavily API Key，默认 MCP 地址为 `https://mcp.tavily.com/mcp/`。打开「启用联网搜索」并点击「保存联网配置」后，后续问答立即应用；配置单独保存到 `t_tavily_mcp_settings`，刷新或重启后恢复，默认关闭。留空密钥会在地址未改变时保留已保存的密钥；更换服务地址后需重新填写。密钥通过 Authorization 请求头发送，配置读取接口不返回原文。
+
+「测试联网连接」使用已保存的配置完成 MCP 初始化与工具发现，不执行搜索；即使开关关闭，也可测试已配置的服务。实际回答先读取所选 Tile 和按需知识库资料，再由当前对话模型判断是否需要联网、生成结合上下文的搜索词。每次回答最多执行一次 Tavily 搜索，最多取 5 条结果；关闭时不执行联网判定或连接 Tavily。普通问答与拆分生成的问答使用相同规则。此实现不要求对话模型支持原生 function calling，但需要模型按提示词返回有效 JSON。
+
+联网判定、查询词生成、来源引用与失败降级规则集中在 `prompt/TavilySearchPrompts.java`。判定失败或 MCP 不可用时继续使用已有上下文，并提示模型明确无法联网核实，不编造实时信息或引用。知识库检索不可用时，无论联网开关状态如何，都继续使用所选 Tile 与通用知识，并标注未取得知识库依据；仅在联网已开启时才继续进入联网判定。不能核实的私有知识库内容必须明确说明，不能猜测内部制度或个人历史。内部判定及搜索资料不单独保存为对话消息；最终回答与其中的来源链接按原有流程保存。搜索词会发送给 Tavily，提示词要求只提供检索所需信息。
+
+开发版修改后端后需重新运行 `desktop` 下的 `npm run dev`，以加载新依赖并初始化联网配置表。
+
 ## 使用流程
 
 1. 打开工作台，在左侧「图谱工作台」下点选图谱；点击「新建图谱」创建独立工作空间。原有数据位于「默认图谱」。
@@ -485,7 +511,7 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 6. 需要共享知识时，在知识库页面上传 `.md` 文件，等待状态变成「已完成」。
 7. 刷新或同步恢复持久化内容，导出 JSON 留存图谱和当前布局。
 
-节点手动位置保存在当前浏览器，按示例／真实模式、服务地址和图谱 ID 区分。生成回答时可以切换图谱，回答继续保存到原图谱；最近使用的图谱通过浏览器和 URL 的 `map` 参数恢复。各图谱的缩放比例自动保存到 `t_map.zoom`，切换和刷新时恢复，默认 100%；普通画布和全页面图谱共用该比例。真实图谱以数据库中保存的比例为准，覆盖 URL 中过期的 `zoom` 值。内容和关系由后端保存，位置不在不同浏览器或设备之间同步。示例模式下的节点与知识库操作不提交后端，但服务设置仍操作真实后端配置。
+节点手动位置保存在当前浏览器，按服务地址和图谱 ID 区分。生成回答时可以切换图谱，回答继续保存到原图谱；最近使用的图谱通过浏览器和 URL 的 `map` 参数恢复。各图谱的缩放比例自动保存到 `t_map.zoom`，切换和刷新时恢复，默认 100%；普通画布和全页面图谱共用该比例。真实图谱以数据库中保存的比例为准，覆盖 URL 中过期的 `zoom` 值。内容和关系由后端保存，位置不在不同浏览器或设备之间同步。「示例图谱 · 功能导览」是普通数据库图谱，预设 6 个问答、3 个便签、1 个文本附件、4 个标签和 10 条关系。点击使用指南或知识库页的「显示示例」会新建并打开一张示例图谱，每次创建使用独立 ID，完整内容原子保存；启动／刷新不自动添加，后续操作正常保存到数据库。
 
 ## 接口与流式协议
 
@@ -496,6 +522,7 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 | `POST` | `/chat/tile/completion` | 发起 Tile 问答，返回 SSE |
 | `GET` | `/maps` | 列出已有图谱 |
 | `POST` | `/maps` | 新建图谱，请求体为 `{"name":"图谱名称"}` |
+| `POST` | `/maps/example` | 创建独立的「示例图谱 · 功能导览」，返回新 Map |
 | `DELETE` | `/maps/{mapId}` | 删除图谱及其全部 Tile、消息、附件和关系，前端需要确认 |
 | `POST` | `/maps/{mapId}/zoom` | 保存图谱缩放比例，请求体为 `{"zoom":0.75}`，范围 0.35–1.5 |
 | `GET` | `/tile/workspace?mapId=…` | 返回指定图谱的节点、关系及最新完整回答 |
@@ -513,6 +540,9 @@ Markdown 入库以 10 个文档为一批调用向量存储；片段 ID 由文件
 | `GET` | `/model-settings` | 读取脱敏后的模型配置 |
 | `POST` | `/model-settings` | 保存并应用对话／向量模型配置 |
 | `POST` | `/model-settings/test` | 测试已保存的对话模型连接 |
+| `GET` | `/tavily-settings` | 读取联网搜索开关、MCP 地址与密钥是否已配置 |
+| `POST` | `/tavily-settings` | 保存并应用联网配置：`enabled`、`mcpUrl`、`apiKey` |
+| `POST` | `/tavily-settings/test` | 测试已保存的 MCP 连接与搜索工具，不执行搜索 |
 
 所有 Tile 读写请求均必须提供 `mapId`：JSON 请求放在请求体，附件上传放在表单，画布读取与附件下载放在查询参数。省略时返回参数错误。知识库和模型配置仍为共享设置。
 
@@ -588,7 +618,7 @@ npm run dev
 不依赖真实数据库或外部模型的后端定向测试：
 
 ```bash
-mvn -Dtest=CustomChatMemoryAdvisorTest,TileCompletionProtocolTest,TileKnowledgeRoutingTest,TileWorkspaceControllerTest,TileWeightControllerTest,TileArtifactControllerTest,TileFileContentReaderTest,MarkdownVectorOwnershipTest,CustomerServiceTileDeletionTest,ModelApiSettingsServiceTest,ModelApiSettingsControllerTest test
+mvn -Dtest=CustomChatMemoryAdvisorTest,TileCompletionProtocolTest,TileKnowledgeRoutingTest,TileWorkspaceControllerTest,TileWeightControllerTest,TileArtifactControllerTest,TileFileContentReaderTest,MarkdownVectorOwnershipTest,CustomerServiceTileDeletionTest,ModelApiSettingsServiceTest,ModelApiSettingsControllerTest,TavilySettingsServiceTest,TavilyMcpSearchServiceTest test
 ```
 
 配置好数据库及本地环境后，执行默认后端测试：
@@ -647,3 +677,17 @@ JAR 名称对应当前继承的 Maven 项目版本。运行前保留前文数据
 模型配置保存后立即更新当前后端实例，多实例之间没有自动刷新机制。深度较大的图谱会带入更多上下文，当前未实现按 token 预算裁剪历史消息。
 
 项目根目录当前没有 `LICENSE` 文件；若计划公开分发或复用，请先补充明确的许可说明。
+
+### 网页 Tile
+
+Map 支持添加公开网页：点击“新增”旁的网页按钮、画布右键选择“添加网页”，或在画布粘贴 HTTP / HTTPS 网址。先保存为 `WEB` 节点，再通过 Tavily MCP 的 `tavily-extract` / `tavily_extract` 读取正文；工具参数以 MCP 返回的输入定义为准。默认基础提取；返回网页抓取失败或空正文时，若工具支持 `extract_depth`，自动尝试一次高级提取。
+
+在“服务设置 → API设置 → Tavily”保存 MCP 地址与 API Key 后即可使用。显式添加或刷新网页不依赖“自动联网搜索”开关；该开关仍控制回答时是否自动搜索补充资料。提取正文使用已配置的 Tavily 服务。
+
+网页正文保存在 `t_tile.content`，来源地址、实际读取地址、成功抓取时间和读取状态一同持久化。点击 Tile 阅读正文，或全页面阅读；可打开原网页、更新正文、失败重试，关联后发起提问。刷新失败保留上次成功的正文和时间；页面不会自动更新。旧数据库在后端启动时通过 `schema.sql` 增加字段并扩展类型约束，原 Tile 保留。
+
+JSON 导出与导入保留网页快照；导入不发起联网请求，清除原来的进行中/失败状态。单网页最多保存 50 万字符，超过限制会拒绝本次更新；一次模型请求的网页正文共享 6 万字符预算，超出部分明确标记为未读取。登录、付费墙及复杂动态页面可能只返回部分内容，用户可上传 PDF 或将相关段落保存为便签。
+
+当前版本提供正文快照与来源链接，尚未提供网页截图或交互式内嵌浏览器。
+
+验证：`TavilyMcpExtractTest` 验证真实 MCP SDK 的工具发现与调用；`WebTilePersistenceIntegrationTest` 在临时 PostgreSQL schema 验证升级、持久化、Map 隔离、并发刷新与旧正文保留；`frontend/tests/web-tiles.smoke.mjs` 验证添加、阅读、重试、关联提问、刷新恢复和手机布局。

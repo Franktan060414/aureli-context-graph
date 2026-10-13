@@ -1,11 +1,28 @@
 export const TILE_WIDTH = 260;
 export const TILE_HEIGHT = 200;
+export const MIN_TILE_WIDTH = 200;
+export const MIN_TILE_HEIGHT = 160;
+export const MAX_TILE_SIZE = 4000;
 export const ARRANGE_HORIZONTAL_GAP = 96;
 export const ARRANGE_VERTICAL_GAP = 64;
 
 export function tileDimensions(tile) {
-  const scale = Number(tile.weight) === 3 ? 2.5 : Number(tile.weight) === 2 ? 1.5 : 1;
-  return { width: TILE_WIDTH * scale, height: TILE_HEIGHT * scale };
+  return {
+    width: Number.isInteger(tile.width) && tile.width >= MIN_TILE_WIDTH && tile.width <= MAX_TILE_SIZE ? tile.width : TILE_WIDTH,
+    height: Number.isInteger(tile.height) && tile.height >= MIN_TILE_HEIGHT && tile.height <= MAX_TILE_SIZE ? tile.height : TILE_HEIGHT,
+  };
+}
+
+// Keep the opposite edge fixed, including when the minimum/maximum is reached.
+export function resizeTile(tile, edge, dx, dy) {
+  const size = tileDimensions(tile);
+  const width = /[ew]/.test(edge) ? Math.round(Math.min(MAX_TILE_SIZE, Math.max(MIN_TILE_WIDTH,
+    size.width + (edge.includes('w') ? -dx : dx)))) : size.width;
+  const height = /[ns]/.test(edge) ? Math.round(Math.min(MAX_TILE_SIZE, Math.max(MIN_TILE_HEIGHT,
+    size.height + (edge.includes('n') ? -dy : dy)))) : size.height;
+  return { id: tile.id, width, height,
+    x: tile.x + (edge.includes('w') ? size.width - width : 0),
+    y: tile.y + (edge.includes('n') ? size.height - height : 0) };
 }
 
 export function positionTiles(tiles, layout = {}) {
@@ -30,7 +47,7 @@ export function positionTiles(tiles, layout = {}) {
   columns.forEach(column => {
     let y = 24 + (maxHeight - column.height) / 2;
     column.group.forEach(tile => {
-      positions.set(tile.id, { ...tile, x, y, ...layout[tile.id] });
+      positions.set(tile.id, { ...tile, x: layout[tile.id]?.x ?? x, y: layout[tile.id]?.y ?? y });
       y += tile.height + 32;
     });
     x += column.width + 56;

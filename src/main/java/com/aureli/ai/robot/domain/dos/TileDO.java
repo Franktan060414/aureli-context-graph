@@ -31,10 +31,18 @@ public class TileDO {
     /** 当前 Map 的标签；NULL 表示未设置。 */
     private Long labelId;
     private String title;
-    /** QA 问答、NOTE 便签、FILE 临时附件；旧节点默认 QA。 */
+    /** QA 问答、NOTE 便签、FILE 临时附件、WEB 网页快照；旧节点默认 QA。 */
     @Builder.Default
     private String tileType = "QA";
     private String content;
+    private String sourceUrl;
+    private String resolvedUrl;
+    private LocalDateTime fetchedAt;
+    private String fetchStatus;
+    private String fetchError;
+    /** 每次抓取的令牌，用于避免过期请求覆盖新的快照。 */
+    @JsonIgnore
+    private String fetchToken;
     private String fileName;
     private String fileContentType;
     private Long fileSize;
@@ -47,6 +55,9 @@ public class TileDO {
     /** Tile 重要程度：1 普通，2 重要，3 非常重要。 */
     @Builder.Default
     private Integer weight = 1;
+    /** 画布宽高；NULL 使用默认 260×200，与重要程度无关。 */
+    private Integer width;
+    private Integer height;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

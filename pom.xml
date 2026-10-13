@@ -184,6 +184,12 @@
             <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
         </dependency>
 
+        <!-- Tavily Remote MCP: programmatic clients follow runtime API settings. -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-mcp</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch, nextTick } from "vue";
 import {
   ArrowDownLeft,
+  Globe,
   Network,
   GitBranch,
   Database,
@@ -16,6 +17,7 @@ import {
 import { relationTypeForEdge } from "../lib/tile-relations.js";
 import { labelForTile, labelStyle } from "../lib/labels.js";
 import GraphCanvas from "./GraphCanvas.vue";
+import WebPageContent from "./WebPageContent.vue";
 import MarkdownAnswer from "./MarkdownAnswer.vue";
 import PdfDocumentViewer from "./PdfDocumentViewer.vue";
 import DocxDocumentViewer from "./DocxDocumentViewer.vue";
@@ -36,7 +38,8 @@ const props = defineProps({
   selected: String,
   related: Array,
   busy: Boolean,
-  demo: Boolean,
+  sizeSaving: Boolean,
+  webBusy: Boolean,
   loadFile: Function,
 });
 const emit = defineEmits([
@@ -49,13 +52,16 @@ const emit = defineEmits([
   "extend",
   "new",
   "create-question",
+  "create-web",
   "extend-question",
   "move",
   "move-end",
+  "resize",
   "arrange",
   "file",
   "download",
   "edit-note",
+  "refresh-web",
 ]);
 const nodeType = tile => tile?.tileType || "QA";
 const isPdf = computed(() => props.mode !== "graph" && nodeType(props.tile) === "FILE" && /\.pdf$/i.test(props.tile?.fileName || ""));
@@ -111,13 +117,13 @@ function extend(id) {
   >
     <header class="fullscreen-header">
       <div v-if="mode !== 'graph'">
-        <span class="fullscreen-symbol"><ImageIcon v-if="isImage" :size="22" /><FileText v-else-if="isDocument" :size="22" /><Network v-else :size="22" /></span>
+        <span class="fullscreen-symbol"><ImageIcon v-if="isImage" :size="22" /><FileText v-else-if="isDocument" :size="22" /><Globe v-else-if="nodeType(tile) === 'WEB'" :size="22" /><Network v-else :size="22" /></span>
         <div>
-          <h2 tabindex="-1">{{ isPreview ? tile.fileName : tile?.id }}</h2>
+          <h2 tabindex="-1">{{ isPreview ? tile.fileName : nodeType(tile) === 'WEB' ? tile.title : tile?.id }}</h2>
           <p>
             {{
-              isImage ? "图片 · 完整预览" : isPdf ? "PDF · 完整文档" : isDocx ? "DOCX · 完整文档" : nodeType(tile) === "NOTE" ? "便签 · 完整正文" : nodeType(tile) === "FILE" ? "文件附件" : "Tile · 完整问题与回答"
-            }}<span v-if="demo"> · 示例模式</span>
+              isImage ? "图片 · 完整预览" : isPdf ? "PDF · 完整文档" : isDocx ? "DOCX · 完整文档" : nodeType(tile) === "WEB" ? "网页 · 正文快照" : nodeType(tile) === "NOTE" ? "便签 · 完整正文" : nodeType(tile) === "FILE" ? "文件附件" : "Tile · 完整问题与回答"
+            }}
           </p>
         </div>
       </div>
@@ -141,17 +147,20 @@ function extend(id) {
         query=""
         filter="all"
         :busy="busy"
+        :size-saving="sizeSaving"
         :load-file="loadFile"
         marker-id="fullscreen-arrow"
         @select="emit('select', $event)"
         @move="emit('move', $event)"
         @move-end="emit('move-end')"
+        @resize="emit('resize', $event)"
         @arrange="emit('arrange', $event)"
         @expand="emit('expand', $event)"
         @toggle="emit('toggle', $event)"
         @delete="emit('delete', $event)"
         @label="emit('label', $event)"
         @create-question="emit('create-question')"
+        @create-web="emit('create-web', $event)"
         @extend-question="emit('extend-question', $event)"
         @file="emit('file', $event)"
         @new="
@@ -166,9 +175,9 @@ function extend(id) {
         <button class="secondary" @click="emit('download', tile)" :disabled="busy"><Download :size="16" />下载原文件</button>
         <button class="icon-button danger-icon" @click="emit('delete', tile)" :disabled="busy" :aria-label="`删除 ${tile.id}`" title="删除 Tile"><Trash2 :size="17" /></button>
       </div>
-      <ImageFileViewer v-if="isImage" :key="`${demo}:${tile.id}`" :tile="tile" :load-file="loadFile" />
-      <PdfDocumentViewer v-else-if="isPdf" :key="`${demo}:${tile.id}`" :tile="tile" :load-file="loadFile" @close="close" />
-      <DocxDocumentViewer v-else :key="`${demo}:${tile.id}`" :tile="tile" :load-file="loadFile" @close="close" />
+      <ImageFileViewer v-if="isImage" :key="tile.id" :tile="tile" :load-file="loadFile" />
+      <PdfDocumentViewer v-else-if="isPdf" :key="tile.id" :tile="tile" :load-file="loadFile" @close="close" />
+      <DocxDocumentViewer v-else :key="tile.id" :tile="tile" :load-file="loadFile" @close="close" />
     </template>
     <div v-else-if="tile" class="fullscreen-tile-body">
       <div class="tile-reading">
@@ -197,13 +206,14 @@ function extend(id) {
           <p class="reading-question">{{ tile.message }}</p>
         </section>
         <section>
-          <h3>{{ nodeType(tile) === "QA" ? "AI 回答" : nodeType(tile) === "NOTE" ? "便签正文" : "文件名称" }}</h3>
+          <h3>{{ nodeType(tile) === "QA" ? "AI 回答" : nodeType(tile) === "NOTE" ? "便签正文" : nodeType(tile) === "WEB" ? "网页正文" : "文件名称" }}</h3>
           <MarkdownAnswer
             v-if="nodeType(tile) === 'QA'"
             class="reading-answer"
             :content="tile.answer"
             :loading="tile.status === 'loading'"
           />
+          <WebPageContent v-else-if="nodeType(tile) === 'WEB'" :tile="tile" :busy="webBusy" @refresh="emit('refresh-web', $event)" />
           <p v-else class="reading-answer">
             {{
               tile.answer ||

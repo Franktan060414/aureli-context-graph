@@ -1,3 +1,4 @@
+import { sampleGraph } from './fixtures/sample-workspace.js';
 import { selectView } from "./helpers/view-select.js";
 import assert from "node:assert/strict";
 const { chromium } = await import(
@@ -13,6 +14,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
 const errors = [],
   requests = [];
 page.on("pageerror", (e) => errors.push(e.message));
+let graph = sampleGraph();
 let failure = false,
   documents = [
     {
@@ -31,7 +33,7 @@ await page.route("**/customer-service/**", async (route) => {
   requests.push({ path, body: request.postData() });
   if (path.endsWith('/question/plan')) return route.fulfill({ json: { success: true, data: { suggested: false, reason: '单一问题', questions: [], planId: null } } });
   if (path.endsWith("/tile/workspace"))
-    return route.fulfill({ json: { success: true, data: { tiles: [], edges: [] } } });
+    return route.fulfill({ json: { success: true, data: graph } });
   if (path.endsWith("/completion"))
     return route.fulfill({
       contentType: "text/event-stream",
@@ -49,7 +51,11 @@ await page.route("**/customer-service/**", async (route) => {
             pages: 1,
           },
     });
-  if (path.endsWith("/delete")) documents = [];
+  if (path.endsWith("/tile/delete")) {
+    const body = request.postDataJSON(); graph.tiles = graph.tiles.filter(tile => tile.id !== body.tileId);
+    graph.edges = graph.edges.filter(edge => edge.sourceTileId !== body.tileId && edge.targetTileId !== body.tileId);
+  } else if (path.endsWith("/md/delete")) documents = [];
+  if (path.endsWith("/tile/reset")) { graph.tiles = []; graph.edges = []; }
   if (path.endsWith("/update"))
     documents[0].remark = JSON.parse(request.postData()).remark;
   return route.fulfill({ json: { success: true } });
@@ -58,7 +64,7 @@ const click = async (name) =>
   page.getByRole("button", { name, exact: true }).click();
 const fill = async (name, value) =>
   page.getByRole("textbox", { name, exact: true }).fill(value);
-await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'demo'); });
+await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'live'); });
 try {
   await page.goto(process.env.UI_TEST_URL || "http://127.0.0.1:4173");
   await page.waitForSelector(".graph-node");
@@ -78,7 +84,7 @@ try {
   assert.equal(await page.locator(".graph-node").count(), 6);
   await click("删除 Tile");
   await page.waitForFunction(() => document.querySelectorAll(".graph-node").length === 5);
-  assert.equal(requests.length, 0, "示例 Tile 删除不得请求后端");
+  assert.equal(requests.filter(r => r.path.endsWith('/tile/delete')).length, 1);
   for (let index = 0; index < 2; index++) {
     await page.locator('.graph-node .node-main').nth(index).click();
     await page.locator('.detail-relate').click();
@@ -86,51 +92,38 @@ try {
   assert.equal(await page.locator('.graph-node.associated').count(), 2);
   await click("添加Tile");
   await fill("提问内容 *", "多来源上下文示例");
-  await click("生成示例 Tile");
-  assert.equal(await page.locator(".graph-node").count(), 6);
-  assert.equal(requests.length, 0);
+  await click("发送并生成 Tile");
+  await page.waitForFunction(() => document.querySelectorAll('.graph-node').length === 6);
+  await page.getByRole('status').filter({ hasText: 'Tile 已生成' }).waitFor();
+
   await click("重置画布");
   await page.keyboard.press("Escape");
   assert.equal(await page.locator('dialog[aria-labelledby="workspace-modal-title"]').evaluate((d) => d.open), false);
   assert.equal(await page.locator(".graph-node").count(), 6);
   await page.getByRole("link", { name: "知识库管理", exact: true }).click();
-  assert.equal(await page.locator("tbody tr").count(), 3);
-  await click("编辑 知识图谱入门指南.md 备注");
-  await fill("备注", "测试更新备注");
-  await click("保存备注");
-  assert.match(await page.locator("tbody").innerText(), /测试更新备注/);
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "upload.md",
-      mimeType: "text/markdown",
-      buffer: Buffer.from("# test"),
-    });
-  await click("上传到知识库");
-  assert.equal(await page.locator("tbody tr").count(), 4);
-  assert.equal(requests.length, 0);
-  await click("进入工作区");
   await page.waitForSelector("text=test.md");
   await click("编辑 test.md 备注");
   await fill("备注", "接口备注测试");
   await click("保存备注");
   await page.waitForSelector("text=接口备注测试");
   await click("删除 test.md");
-  assert.equal(requests.filter((r) => r.path.endsWith("/delete")).length, 0);
+  assert.equal(requests.filter((r) => r.path.endsWith("/md/delete")).length, 0);
   await click("确认删除");
   await page.waitForSelector("text=知识库还没有文档");
   failure = true;
   await click("刷新");
   await page.waitForSelector("text=知识库加载失败");
   failure = false;
+  graph = { tiles: [], edges: [] };
   await page.getByRole("link", { name: /^图谱工作台/ }).click();
-  assert.equal(await page.locator(".graph-node").count(), 0);
+  await click("同步图谱");
+  await page.waitForFunction(() => document.querySelectorAll(".graph-node").length === 0);
   await click("添加Tile");
   await fill("提问内容 *", "验证接口请求");
   await click("发送并生成 Tile");
   await page.waitForSelector('.answer-text:has-text("接口模拟回答")');
   const sent = JSON.parse(
-    requests.find((r) => r.path.endsWith("/completion")).body,
+    requests.findLast((r) => r.path.endsWith("/completion")).body,
   );
   assert.deepEqual(sent.relatedTileIds, []);
   assert.equal(sent.memoryDepth, 3);
@@ -139,7 +132,10 @@ try {
   await click("确认重置");
   await page.waitForSelector("text=从一个问题，开始连接知识");
   await click("了解 Tile 工作流");
-  await page.getByRole("dialog").getByRole("button", { name: "查看示例", exact: true }).click();
+  await page.keyboard.press("Escape");
+  graph = sampleGraph();
+  await click("同步图谱");
+  await page.locator(".graph-node").first().waitFor();
   await click("搜索与筛选");
   await fill("搜索 Tile", "不存在的查询");
   await click("应用筛选");
@@ -192,7 +188,7 @@ try {
   await page.keyboard.press("Escape");
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: demo isolation, multiple contexts, SSE, CRUD, errors, reset, search, 4 responsive widths, modal keyboard, reduced motion; no browser errors",
+    "PASS: API workspace, multiple contexts, SSE, CRUD, errors, reset, search, 4 responsive widths, modal keyboard, reduced motion; no browser errors",
   );
 } finally {
   await browser.close();

@@ -5,14 +5,15 @@ import { renderMarkdown } from "../lib/markdown.js";
 const props = defineProps({
   content: { type: String, default: "" },
   loading: { type: Boolean, default: false },
+  preview: { type: Boolean, default: false },
 });
 
 // Reparse the accumulated source so Markdown split across stream events resolves.
-const renderedHtml = computed(() => renderMarkdown(props.content));
+const renderedHtml = computed(() => renderMarkdown(props.content, { preview: props.preview }));
 </script>
 
 <template>
-  <div class="markdown-answer" :aria-busy="loading">
+  <div class="markdown-answer" :class="{ 'markdown-preview': preview }" :aria-busy="loading">
     <div v-if="content" v-html="renderedHtml"></div>
     <p v-else>{{ loading ? "正在思考并生成回答…" : "暂无回答" }}</p>
   </div>
@@ -152,4 +153,36 @@ const renderedHtml = computed(() => renderMarkdown(props.content));
 .markdown-answer :deep(div > :last-child) {
   margin-bottom: 0;
 }
+
+/* A preview uses the available Tile height and leaves gestures to the Tile. */
+.markdown-answer.markdown-preview {
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  color: inherit;
+}
+.markdown-preview :deep(p), .markdown-preview :deep(ul), .markdown-preview :deep(ol),
+.markdown-preview :deep(pre), .markdown-preview :deep(blockquote), .markdown-preview :deep(.markdown-table) {
+  margin-bottom: 6px;
+}
+.markdown-preview :deep(h1), .markdown-preview :deep(h2), .markdown-preview :deep(h3),
+.markdown-preview :deep(h4), .markdown-preview :deep(h5), .markdown-preview :deep(h6) {
+  margin: 8px 0 4px;
+  color: inherit;
+}
+.markdown-preview :deep(strong) { color: inherit; }
+.markdown-preview :deep(ul), .markdown-preview :deep(ol) { padding-left: 20px; }
+.markdown-preview :deep(li + li) { margin-top: 2px; }
+.markdown-preview :deep(pre), .markdown-preview :deep(pre code) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.markdown-preview :deep(pre) { padding: 6px; overflow: hidden; }
+.markdown-preview :deep(.markdown-table) { overflow: hidden; }
+.markdown-preview :deep(table) { table-layout: fixed; min-width: 0; }
+.markdown-preview :deep(th), .markdown-preview :deep(td) {
+  min-width: 0; padding: 4px; white-space: normal; color: inherit;
+}
+.markdown-preview :deep(.markdown-link) { color: inherit; text-decoration: underline; }
+.markdown-preview :deep(hr) { margin: 8px 0; }
 </style>

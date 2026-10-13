@@ -32,6 +32,11 @@ class TileCompletionProtocolTest {
         when(settings.chatModel()).thenReturn(model);
         var controller = new AiCustomerServiceController();
         ReflectionTestUtils.setField(controller, "modelApiSettings", settings);
+        var tavily = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
+        when(tavily.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(
+                false, com.aureli.ai.robot.service.search.TavilySettingsService.DEFAULT_URL, ""));
+        ReflectionTestUtils.setField(controller, "tavilySettings", tavily);
+        ReflectionTestUtils.setField(controller, "tavilySearch", mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class));
         ReflectionTestUtils.setField(controller, "vectorStore", vectors);
         ReflectionTestUtils.setField(controller, "tileMapper", tiles);
         ReflectionTestUtils.setField(controller, "tileEdgeMapper", mock(TileEdgeMapper.class));
@@ -85,16 +90,13 @@ class TileCompletionProtocolTest {
         assertNotNull(events.get(events.size()-1).getError());
         assertFalse(events.stream().anyMatch(event -> Boolean.TRUE.equals(event.getDone())));
     }
-    @Test void synchronousRetrievalFailureIsPublicSseErrorWithoutUpstreamDetails() {
-        when(model.call(any(Prompt.class))).thenReturn(new ChatResponse(List.of(
-                new Generation(new AssistantMessage("RAG_REQUIRED")))));
-        when(vectors.similaritySearch(any(org.springframework.ai.vectorstore.SearchRequest.class)))
-                .thenThrow(new IllegalStateException("private-upstream-detail"));
+    @Test void synchronousAnswerFailureIsPublicSseErrorWithoutUpstreamDetails() {
+        when(model.stream(any(Prompt.class))).thenThrow(new IllegalStateException("private-upstream-detail"));
         var events = run();
         assertNotNull(events.get(0).getError());
         assertFalse(events.get(0).getError().contains("private-upstream-detail"));
         assertFalse(events.stream().anyMatch(event -> Boolean.TRUE.equals(event.getDone())));
-        verify(vectors).similaritySearch(any(org.springframework.ai.vectorstore.SearchRequest.class));
+        verifyNoInteractions(vectors);
         verifyNoInteractions(messages);
     }
     @Test void retryCannotOverwriteTileOwnedByAnotherMap() {

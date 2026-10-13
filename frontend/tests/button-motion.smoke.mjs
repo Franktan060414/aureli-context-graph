@@ -1,12 +1,14 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await mockSampleWorkspace(page);
 const url = process.env.UI_TEST_URL || 'http://127.0.0.1:5173';
 const artifact = name => new URL(`../artifacts/${name}`, import.meta.url).pathname;
 await mkdir(new URL('../artifacts', import.meta.url), { recursive: true });
-await page.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
 await page.route('**/customer-service/model-settings', route => route.fulfill({ json: { success: true, data: { chat: { provider: 'local', baseUrl: 'http://127.0.0.1:11434/v1', model: 'llama3:latest', keyConfigured: true }, embedding: { provider: 'local', baseUrl: 'http://127.0.0.1:11434/v1', model: 'qwen3-embedding:4b', keyConfigured: true }, dimensions: 1536 } } }));
 const white = 'rgb(255, 255, 255)', blue = 'rgb(0, 102, 204)', yellow = 'rgb(255, 190, 0)', ink = 'rgb(0, 64, 128)', black = 'rgb(16, 16, 16)';
 const errors = []; page.on('pageerror', e => errors.push(e.message));
@@ -80,7 +82,8 @@ try {
  await page.getByRole('link', { name: '知识库管理', exact: true }).click(); const disabled = page.getByRole('button', { name: '上传到知识库', exact: true });
  assert.equal(await disabled.isDisabled(), true); await disabled.hover(); assert.notEqual((await state(disabled)).fill, blue);
  const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true });
- await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'demo')); await touch.goto(url);
+  await mockSampleWorkspace(touch);
+ await touch.addInitScript(() => localStorage.setItem('aureli-mode', 'live')); await touch.goto(url);
  const touchButton = touch.locator('.detail-relate'); await touchButton.waitFor(); await touchButton.tap();
  await touch.waitForFunction(() => document.querySelector('.detail-relate')?.getAttribute('aria-pressed') === 'true');
  await touch.waitForFunction(() => new DOMMatrix(getComputedStyle(document.querySelector('.detail-relate'), '::after').transform).m41 < 0);

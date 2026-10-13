@@ -53,8 +53,10 @@ public class GraphImportService {
         for (var source : snapshot.tiles()) {
             String id = tileIds.get(source.id());
             var tile = TileDO.builder().mapId(map.getMapId()).tileId(id).tileType(source.tileType())
-                    .title(source.title()).content(source.content()).userMessage(source.message()).answerSummary(source.answer())
-                    .weight(source.weight()).labelId(labelIds.get(source.labelId())).fileName(source.fileName())
+                    .title(source.title()).content(source.content()).sourceUrl(source.sourceUrl()).resolvedUrl(source.resolvedUrl())
+                    .fetchedAt(source.fetchedAt()).fetchStatus(source.fetchStatus()).fetchError(source.fetchError()).userMessage(source.message()).answerSummary(source.answer())
+                    .weight(source.weight()).width(source.width()).height(source.height())
+                    .labelId(labelIds.get(source.labelId())).fileName(source.fileName())
                     .fileContentType(source.fileContentType()).fileSize(source.fileSize()).createTime(now).updateTime(now).build();
             tiles.insert(tile);
             if ("QA".equals(source.tileType())) {
@@ -81,10 +83,11 @@ public class GraphImportService {
             String id = tileIds.get(source.id()), type = source.tileType();
             var related = parents.getOrDefault(id, List.of());
             String kind = "QA".equals(type) ? related.isEmpty() ? "root" : "memory" : type.toLowerCase(Locale.ROOT);
-            String answer = "NOTE".equals(type) ? source.content() : "FILE".equals(type) ? source.fileName() : source.answer();
+            String answer = ("NOTE".equals(type) || "WEB".equals(type)) ? source.content() : "FILE".equals(type) ? source.fileName() : source.answer();
             return new Node(id, "QA".equals(type) ? source.message() : source.title(), answer, related, "ready", kind,
                     source.weight(), type, source.title(), source.content(), source.fileName(), source.fileContentType(),
-                    source.fileSize(), labelIds.get(source.labelId()));
+                    source.fileSize(), labelIds.get(source.labelId()), source.width(), source.height(),
+                    source.sourceUrl(), source.resolvedUrl(), source.fetchedAt(), source.fetchStatus(), source.fetchError());
         }).toList();
         Map<String, Point> layout = new LinkedHashMap<>();
         snapshot.layout().forEach((id, point) -> layout.put(tileIds.get(id), point));
@@ -114,7 +117,7 @@ public class GraphImportService {
             String id = text(value.get("id"), "tiles[].id", true, 128);
             if (!ids.add(id)) invalid("节点 ID 重复：" + id);
             String type = present(value.get("tileType")) ? text(value.get("tileType"), "tileType", true, 16) : "QA";
-            if (!Set.of("QA", "NOTE", "FILE").contains(type)) invalid("节点类型无效。");
+            if (!Set.of("QA", "NOTE", "FILE", "WEB").contains(type)) invalid("节点类型无效。");
             String message = text(value.get("message"), "message", true, Integer.MAX_VALUE);
             String answer = text(value.get("answer"), "answer", false, Integer.MAX_VALUE);
             Long weight = present(value.get("weight")) ? whole(value.get("weight"), "weight", false) : 1L;
@@ -127,12 +130,20 @@ public class GraphImportService {
             String title = present(value.get("title")) ? text(value.get("title"), "title", false, 255) : "QA".equals(type) ? "" : message;
             if (title.length() > 255) invalid("节点标题不能超过 255 个字符。");
             String content = present(value.get("content")) ? text(value.get("content"), "content", false, Integer.MAX_VALUE) : "NOTE".equals(type) ? answer : "";
+            if ("WEB".equals(type) && content.length() > com.aureli.ai.robot.service.search.TavilyMcpSearchService.MAX_WEB_CONTENT_LENGTH)
+                invalid("网页正文不能超过 50 万字符。");
             String fileName = present(value.get("fileName")) ? text(value.get("fileName"), "fileName", false, 512) : "FILE".equals(type) ? message : "";
             if (fileName.length() > 512) invalid("文件名称不能超过 512 个字符。");
             Long size = whole(value.get("fileSize"), "fileSize", true);
             if (size != null && size < 0) invalid("文件大小无效。");
             nodes.add(new Node(id, message, answer, related, "ready", "", weight.intValue(), type, title, content, fileName,
-                    text(value.get("fileContentType"), "fileContentType", false, 128), size, labelId));
+                    text(value.get("fileContentType"), "fileContentType", false, 128), size, labelId,
+                    dimension(value.get("width"), "width", 200), dimension(value.get("height"), "height", 160),
+                    "WEB".equals(type) ? com.aureli.ai.robot.service.web.WebPageUrls.validate(text(value.get("sourceUrl"), "sourceUrl", true, 2048)) : null,
+                    "WEB".equals(type) && present(value.get("resolvedUrl")) && !value.get("resolvedUrl").asString().isBlank()
+                        ? com.aureli.ai.robot.service.web.WebPageUrls.validate(text(value.get("resolvedUrl"), "resolvedUrl", false, 2048)) : null,
+                    "WEB".equals(type) ? timestamp(value.get("fetchedAt")) : null,
+                    "WEB".equals(type) ? (content.isBlank() ? "PENDING" : "READY") : null, null));
         }
         for (var node : nodes) for (var parent : node.relatedTileIds())
             if (!ids.contains(parent) || parent.equals(node.id())) invalid("节点引用了不存在的关联或自身。");
@@ -166,6 +177,19 @@ public class GraphImportService {
             }
         }
         return new Snapshot(name, nodes, links, labelList, layout);
+    }
+
+    private static LocalDateTime timestamp(JsonNode value) {
+        if (!present(value) || value.asString().isBlank()) return null;
+        try { return LocalDateTime.parse(text(value, "fetchedAt", true, 64)); }
+        catch (java.time.format.DateTimeParseException error) { throw new IllegalArgumentException("fetchedAt 时间格式无效。"); }
+    }
+
+    private static Integer dimension(JsonNode value, String path, int min) {
+        Long result = whole(value, path, true);
+        if (result == null) return null;
+        if (result < min || result > 4000) invalid(path + " 必须介于 " + min + " 和 4000 之间。");
+        return result.intValue();
     }
 
     private static boolean present(JsonNode value) { return value != null && !value.isNull(); }

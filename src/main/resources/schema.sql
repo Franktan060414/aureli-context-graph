@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS t_tile (
     id BIGSERIAL PRIMARY KEY,
     tile_id VARCHAR(128) NOT NULL UNIQUE,
     title VARCHAR(255),
-    tile_type VARCHAR(16) NOT NULL DEFAULT 'QA' CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE')),
+    tile_type VARCHAR(16) NOT NULL DEFAULT 'QA' CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE', 'WEB')),
     content TEXT,
     file_name VARCHAR(512),
     file_content_type VARCHAR(128),
@@ -33,12 +33,18 @@ ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS weight SMALLINT NOT NULL DEFAULT 1
 
 -- 升级既有工作区：原问答数据保留并自动标记为 QA。
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS tile_type VARCHAR(16) NOT NULL DEFAULT 'QA'
-    CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE'));
+    CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE', 'WEB'));
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS content TEXT;
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS file_name VARCHAR(512);
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS file_content_type VARCHAR(128);
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS file_size BIGINT;
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS file_data BYTEA;
+
+-- Optional canvas dimensions. Existing Tiles keep NULL and use the normal default size.
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS width INTEGER
+    CONSTRAINT chk_tile_width CHECK (width BETWEEN 200 AND 4000);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS height INTEGER
+    CONSTRAINT chk_tile_height CHECK (height BETWEEN 160 AND 4000);
 
 CREATE TABLE IF NOT EXISTS t_tile_message (
     id BIGSERIAL PRIMARY KEY,
@@ -91,7 +97,7 @@ CREATE INDEX IF NOT EXISTS idx_t_tile_edge_target
 CREATE INDEX IF NOT EXISTS idx_t_tile_edge_relation_type
     ON t_tile_edge (relation_type);
 
--- 多图谱字段必须显式赋值；不创建图谱，也不为旧数据推断归属。
+-- 多图谱字段必须显式赋值；不为旧数据推断图谱归属。
 -- 若尚有未分配图谱的旧数据，应先明确归属再升级，避免无意删除。
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
 ALTER TABLE t_tile_message ADD COLUMN IF NOT EXISTS map_id VARCHAR(128);
@@ -192,3 +198,23 @@ WHERE e.map_id = child.map_id AND e.target_tile_id = child.tile_id
   AND e.target_tile_id ~ '^tile-split-[A-Za-z0-9-]+-[0-3]$'
   AND (e.description = '手动拆分' OR e.description LIKE '手动拆分：%');
 -- 拆分关系升级结束
+
+-- 联网搜索配置；默认关闭，密钥只由后端使用。
+CREATE TABLE IF NOT EXISTS t_tavily_mcp_settings (
+    id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    mcp_url TEXT NOT NULL DEFAULT 'https://mcp.tavily.com/mcp/',
+    api_key VARCHAR(4096) NOT NULL DEFAULT '',
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 网页快照：复用 content 保存正文；幂等升级既有数据库。
+ALTER TABLE t_tile DROP CONSTRAINT IF EXISTS chk_tile_type;
+ALTER TABLE t_tile ADD CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE', 'WEB'));
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS source_url VARCHAR(2048);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS resolved_url VARCHAR(2048);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS fetched_at TIMESTAMP;
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS fetch_status VARCHAR(16);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS fetch_error VARCHAR(512);
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS fetch_token VARCHAR(36);
