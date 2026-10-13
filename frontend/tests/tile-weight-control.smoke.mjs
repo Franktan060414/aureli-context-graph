@@ -30,7 +30,7 @@ try {
   assert.equal(await page.locator('.tile-weight-section').evaluate(e => e.previousElementSibling.querySelector('h2').textContent.includes('AI 回答') && e.nextElementSibling.querySelector('h2').textContent.includes('上下文来源')), true);
   const accents = ['rgb(21, 122, 59)', 'rgb(180, 83, 9)', 'rgb(180, 35, 47)'];
   const white = 'rgb(255, 255, 255)';
-  const dimensions = [260, 390, 650];
+  const dimensions = [260, 260, 260];
   for (const weight of [1, 2, 3, 1]) {
     await select.selectOption(String(weight)); await saved(weight);
     await page.mouse.move(2, 2); await select.blur(); await saved(weight);
@@ -90,10 +90,8 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.mouse.move(2, 2); await select.blur(); await saved(2);
   await page.locator('.inspector').screenshot({ path: new URL('../artifacts/tile-weight-control.png', import.meta.url).pathname });
-  await page.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+  await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   await page.reload(); await select.waitFor();
-  const before = writes.length;
-  await select.selectOption('3'); await saved(3); assert.equal(writes.length, before, 'demo is isolated');
   assert.deepEqual(errors, []);
-  console.log('PASS: three options/colors, correct location, current Tile only, graph sizing, saved reload, failed save retention, busy state, keyboard focus/Escape, 320ms accent animation, reduced motion, responsive layout and demo isolation');
+  console.log('PASS: three options/colors, correct location, current Tile only, graph sizing, saved reload, failed save retention, busy state, keyboard focus/Escape, 320ms accent animation, reduced motion, responsive layout');
 } finally { await browser.close(); }

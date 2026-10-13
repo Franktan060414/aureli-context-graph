@@ -25,7 +25,7 @@ const emit = defineEmits(["toggle", "clear"]);
             <input type="checkbox" :checked="related.includes(tile.id)" :disabled="disabled"
               @change="emit('toggle', tile.id)" />
             <span><strong>{{ tile.message }}</strong><small class="mono">{{ tile.id }}</small>
-              <small v-if="tile.tileType === 'FILE'">{{ tile.content?.trim() ? '已提取正文，可用于提问' : '暂无可读取正文，仅建立关联' }}</small>
+              <small v-if="['FILE', 'WEB'].includes(tile.tileType)">{{ tile.content?.trim() ? '已提取正文，可用于提问' : '暂无可读取正文，仅建立关联' }}</small>
             </span>
           </label>
         </div>

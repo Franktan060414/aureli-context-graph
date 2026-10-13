@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseGraphImport } from '../src/lib/graph-import.js';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 
 test('imports current exports and legacy snapshots without restoring runtime state', () => {
-  const graph = demoGraph();
+  const graph = sampleGraph();
   graph.labels = [{ id: 1, name: '研究', colorHex: '#AABBCC' }];
   graph.tiles[0].labelId = 1;
   graph.layout = { 'tile-001': { x: -42, y: 123 } };
@@ -51,4 +51,17 @@ test('rejects syntax, field types, duplicate IDs, dangling references and invali
     { ...base, labels: [{ id: 1, name: '标签', colorHex: 'red' }] },
   ];
   for (const data of cases) assert.throws(() => parseGraphImport(JSON.stringify(data)), /JSON 格式错误/);
+});
+
+
+test('old exports default nullable dimensions; custom dimensions survive JSON round trips', () => {
+  for (const fields of [{}, { width: null, height: null }, { width: 440, height: 320 }, { width: null, height: 320 }]) {
+    const data = { tiles: [{ id: 'a', message: '问题', weight: 3, ...fields }], edges: [] };
+    const parsed = parseGraphImport(JSON.stringify(data));
+    assert.equal(parsed.tiles[0].width, fields.width ?? null);
+    assert.equal(parsed.tiles[0].height, fields.height ?? null);
+    assert.deepEqual(parseGraphImport(JSON.stringify(parsed)), parsed);
+  }
+  for (const fields of [{ width: '400' }, { width: 0 }, { width: 400.5 }, { width: 4001 }, { height: -1 }, { height: 159 }])
+    assert.throws(() => parseGraphImport(JSON.stringify({ tiles: [{ id: 'a', message: '问题', ...fields }], edges: [] })), /JSON 格式错误/);
 });

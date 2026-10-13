@@ -98,7 +98,8 @@ try {
   await page.locator('.fullscreen-viewer').waitFor({ state: 'detached' });
   await nodeMenu('b');
   const menuWidth = (await menu().boundingBox()).width;
-  assert.equal(await menu().getByRole('menuitem').count(), 5);
+  assert.equal(await menu().getByRole('menuitem').count(), 6);
+  assert.equal(await item('调整尺寸').count(), 0, 'numeric size controls are not offered');
   assert.equal(await item('整理画布').count(), 0, 'arrangement is offered on blank canvas');
   assert.equal(await item('标签').count(), 1);
   assert.equal(await item('从此处延伸问答Tile').locator('svg').innerHTML(), await item('添加问答 Tile').locator('svg').innerHTML(), 'question actions share the same icon');
@@ -157,7 +158,7 @@ try {
   await card('b').waitFor({ state: 'detached' });
   assert.deepEqual(deletes, [{ mapId: 'a', tileId: 'b' }, { mapId: 'a', tileId: 'b' }]);
   await blankMenu(graph(), true);
-  assert.equal(await menu().getByRole('menuitem').count(), 3);
+  assert.equal(await menu().getByRole('menuitem').count(), 4);
   assert.equal(await item('标签').count(), 0, 'labels are offered only on a Tile');
   assert.equal(await item('从此处延伸问答Tile').count(), 0, 'extending requires a Tile');
   assert.notEqual(await item('回到中心').getAttribute('aria-disabled'), 'true');

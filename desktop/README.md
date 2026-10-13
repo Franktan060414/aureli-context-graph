@@ -5,7 +5,7 @@
 ## 安装与使用
 
 1. 退出先前通过 `npm start` 打开的开发版桌面应用。
-2. 打开 `dist/Aureli-1.0.0-arm64.dmg`，将 Aureli 拖到 Applications。
+2. 打开 `dist/Aureli-0.12.0-arm64.dmg`，将 Aureli 拖到 Applications。
 3. 从 Applications 打开 Aureli，等待内置数据库和后端启动。
 4. 在“服务设置”中配置对话模型与向量模型。
 
@@ -80,7 +80,7 @@ npm start
 1. 将应用源码和本次新增的打包文件提交、推送到 GitHub 仓库的默认分支。不要上传 `node_modules`、`desktop/resources`、用户数据库、密码或本机环境配置。
 2. 在 GitHub 仓库打开 **Actions → Windows installer → Run workflow**。
 3. 等待任务通过，打开该次运行，在 **Artifacts** 中下载 **Aureli-Windows-x64**。
-4. 解压下载的 ZIP，将里面的 `Aureli-Setup-1.0.0-x64.exe` 交给 Windows 用户安装。
+4. 解压下载的 ZIP，将里面的 `Aureli-Setup-0.12.0-x64.exe` 交给 Windows 用户安装。
 
 工作流在 GitHub 的 Windows x64 机器上准备 Java 21 运行环境，使用该机器自带的 PostgreSQL 17 编译 pgvector 0.8.6，并复制所需的 Microsoft CRT DLL。接着构建前端、后端和 NSIS 安装包，验证内置数据库创建、持久化及正常退出。测试还会对打包后的资源执行一次。Mac 版 Java 和 Postgres.app 不会进入 Windows 安装包。
 

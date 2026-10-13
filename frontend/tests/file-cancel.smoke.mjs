@@ -1,3 +1,4 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import { selectView } from "./helpers/view-select.js";
 import assert from "node:assert/strict";
 const playwright = await import(process.env.PLAYWRIGHT_MODULE_PATH || "playwright");
@@ -7,12 +8,9 @@ const browser = await playwright[engine].launch({ headless: true,
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const errors = [], uploads = [];
 page.on("pageerror", error => errors.push(error.message));
-await page.addInitScript(() => localStorage.setItem("aureli-mode", "demo"));
-await page.route("**/customer-service/**", route => {
-  uploads.push(route.request().url());
-  return route.fulfill({ json: { success: true, data: [] } });
-});
-const dialog = page.locator(".modal");
+await page.addInitScript(() => localStorage.setItem("aureli-mode", "live"));
+const { writes } = await mockSampleWorkspace(page);
+const dialog = page.locator('dialog[aria-labelledby="workspace-modal-title"]');
 const open = async () => {
   await page.getByRole("button", { name: "添加文件", exact: true }).click();
   await page.getByRole("heading", { name: "添加文件", exact: true }).waitFor();
@@ -60,6 +58,6 @@ try {
   await page.getByRole("button", { name: "取消", exact: true }).click();
   await assertClosed();
   assert.deepEqual(errors, []);
-  assert.deepEqual(uploads, [], "demo cancellation and upload stay local");
+  assert.equal(writes.filter(write => write.path.endsWith('/tile/file')).length, 1, 'only the confirmed file uploads');
   console.log(`PASS (${engine}): bubbling picker cancellation, repeated open/cancel, footer/close/Escape, native backdrop cleanup, retained selection and upload, reduced motion and mobile layout`);
 } finally { await browser.close(); }

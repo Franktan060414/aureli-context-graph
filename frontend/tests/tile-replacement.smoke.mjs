@@ -149,32 +149,7 @@ try {
     await page.close();
   }
 
-  const demo = await browser.newPage();
-  let demoWrites = 0;
-  await demo.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demo.route('**/customer-service/tile/*', route => { demoWrites++; return route.abort(); });
-  await demo.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await selectView(demo, 'Tile 列表');
-  const original = await exported(demo);
-  await demo.locator('.tile-list article').first().getByRole('button', { name: '选择关联', exact: true }).click();
-  await demo.getByRole('button', { name: '拆分选中的 AI 问答 Tile', exact: true }).click();
-  assert.equal(await demo.locator('dialog.modal').getByRole('button', { name: '拆分并覆盖', exact: true }).count(), 0);
-  await demo.locator('dialog.modal').getByRole('button', { name: '生成拆分', exact: true }).click();
-  await demo.getByRole('status').filter({ hasText: '示例拆分，已创建 2 个子 Tile' }).waitFor();
-  const splitDemo = await exported(demo);
-  assert.equal(splitDemo.tiles.length, original.tiles.length + 2);
-  assert.ok(splitDemo.tiles.some(tile => tile.id === original.tiles[0].id));
-  await demo.locator('.tile-list article').nth(0).getByRole('button', { name: '选择关联', exact: true }).click();
-  await demo.locator('.tile-list article').nth(1).getByRole('button', { name: '选择关联', exact: true }).click();
-  await demo.getByRole('button', { name: '融合选中的 AI 问答 Tile', exact: true }).click();
-  await demo.locator('dialog.modal').getByRole('button', { name: '融合并覆盖', exact: true }).click();
-  await demo.getByRole('status').filter({ hasText: '融合并覆盖完成' }).waitFor();
-  const fusedDemo = await exported(demo);
-  assert.equal(fusedDemo.tiles.length, original.tiles.length + 1);
-  const ids = new Set(fusedDemo.tiles.map(tile => tile.id));
-  assert.ok(fusedDemo.edges.every(edge => ids.has(edge.sourceTileId) && ids.has(edge.targetTileId)));
-  assert.equal(demoWrites, 0);
-  console.log('PASS: split overwrite option removed in live/demo, normal split retains source, fusion overwrite, descriptions/cancel, failure retry, busy protection, preserved edge metadata, neighbour references, artifact exclusion, layouts, reload, 320–1440px and demo isolation');
+  console.log('PASS: split overwrite option removed in API, normal split retains source, fusion overwrite, descriptions/cancel, failure retry, busy protection, preserved edge metadata, neighbour references, artifact exclusion, layouts, reload, 320–1440px');
 } finally {
   await browser.close();
 }

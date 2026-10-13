@@ -24,8 +24,7 @@ watch(() => [props.tile.id, retry.value], async (_, __, onCleanup) => {
     if (!active) return;
     if (!blob?.size) throw new Error("文件内容为空，请重新添加 PDF。");
     objectUrl = URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
-    // Fetch through the app client first, so custom backend addresses and demo
-    // files work with PDF.js's same-origin viewer validation.
+    // Fetch through the app client so custom backends work with PDF.js's same-origin viewer validation.
     viewerSrc.value = `${assetBase}pdfjs-6.4.299-dist/web/viewer.html?file=${encodeURIComponent(`${objectUrl}#${props.tile.fileName}`)}#zoom=page-width`;
   } catch (reason) {
     if (active) {

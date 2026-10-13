@@ -185,24 +185,6 @@ try {
   assert.equal(await page.locator('#inspector-question-form-message').inputValue(), '侧栏提出的复合问题');
   assert.equal(await page.locator('#inspector-question-form-tile-id').inputValue(), 'sidebar-cancel');
   assert.equal(await page.locator('.graph-node').count(), 7);
-  // A fresh local example creates the same structure without contacting the service.
-  const demoPage = await browser.newPage({ viewport: { width: 375, height: 900 } });
-  const demoCalls = [];
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.route('**/customer-service/**', route => { demoCalls.push(route.request().url()); return route.abort(); });
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await demoPage.locator('.graph-node').first().waitFor();
-  const demoCount = await demoPage.locator('.graph-node').count();
-  await demoPage.getByRole('button', { name: '打开添加Tile弹窗', exact: true }).click();
-  const demoDialog = demoPage.locator('dialog[aria-labelledby="workspace-modal-title"]');
-  await demoDialog.getByLabel('提问内容').fill('研究目标用户的需求；制定可实施的方案');
-  await demoDialog.getByRole('button', { name: '生成示例 Tile', exact: true }).click();
-  await demoDialog.getByRole('heading', { name: 'AI 建议拆分问题' }).waitFor();
-  await demoDialog.getByRole('button', { name: '执行拆分', exact: true }).click();
-  await demoPage.waitForFunction(() => !document.querySelector('dialog[aria-labelledby="workspace-modal-title"]').open);
-  assert.equal(await demoPage.locator('.graph-node').count(), demoCount + 3);
-  assert.deepEqual(demoCalls, []);
-  await demoPage.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: no planning modal, Markdown and distinct sections, cancel/close/Escape preserve drafts and zero Tiles, late inline cancellation, decline one Tile, simple/fallback, conflict rejection, exact plan execution, atomic failure/retry, busy protection, DIVIDES, refresh, responsive dialog and local demo');
+  console.log('PASS: no planning modal, Markdown and distinct sections, cancel/close/Escape preserve drafts and zero Tiles, late inline cancellation, decline one Tile, simple/fallback, conflict rejection, exact plan execution, atomic failure/retry, busy protection, DIVIDES, refresh, responsive dialog');
 } finally { await browser.close(); }

@@ -123,6 +123,13 @@ public final class CustomerServicePrompts {
             </knowledge_reference>
             """;
 
+    private static final String KNOWLEDGE_UNAVAILABLE = """
+            本次知识库检索暂时不可用，未取得知识库依据。
+            继续依据所选 Tile 与通用知识回答，不得声称已查阅知识库。
+            只有本次另行提供了联网参考资料时，才能将其用作依据；未提供时不得声称已联网查证。
+            如果问题必须依据私有知识库且当前资料不足，简短说明无法核实，不能用网页猜测内部制度或个人历史。
+            """;
+
     private CustomerServicePrompts() {
     }
 
@@ -194,5 +201,13 @@ public final class CustomerServicePrompts {
 
     public static String knowledgeDocument(String text) {
         return text + "\n---\n";
+    }
+
+    public static Prompt knowledgeUnavailable(Prompt prompt) {
+        List<Message> messages = new ArrayList<>(prompt.getSystemMessages());
+        messages.add(new SystemMessage(KNOWLEDGE_UNAVAILABLE));
+        messages.addAll(prompt.getInstructions().stream()
+                .filter(message -> message.getMessageType() != MessageType.SYSTEM).toList());
+        return new Prompt(messages, prompt.getOptions());
     }
 }

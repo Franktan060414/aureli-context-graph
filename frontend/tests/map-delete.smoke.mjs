@@ -141,22 +141,6 @@ try {
   assert.equal(await page.locator('.map-add').evaluate(el => el === document.activeElement), true);
   await page.reload(); await page.getByRole('heading', { name: '创建你的第一张图谱' }).waitFor();
   assert.deepEqual(deletes, ['map-c', 'map-a', 'map-a', 'map-b']);
-  // Demo deletion stays local and remains usable with the final map removed.
-  const demoPage = await browser.newPage({ viewport: { width: 375, height: 900 }, isMobile: true, hasTouch: true });
-  demoPage.on('pageerror', error => errors.push(error.message));
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.route('**/customer-service/**', () => { throw new Error('demo must not write to API'); });
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await demoPage.getByRole('button', { name: '展开导航', exact: true }).click();
-  await demoPage.getByRole('button', { name: '删除图谱 示例图谱', exact: true }).click();
-  const demoDialog = demoPage.locator('dialog[aria-labelledby="workspace-modal-title"]');
-  await demoDialog.getByRole('button', { name: '删除图谱', exact: true }).click();
-  await demoPage.getByRole('heading', { name: '创建你的第一张图谱' }).waitFor();
-  await demoPage.locator('.map-add').click();
-  await demoPage.getByLabel('图谱名称').fill('新的示例图谱');
-  await demoPage.locator('.map-create-form').getByRole('button', { name: '创建', exact: true }).click();
-  await demoPage.locator('.map-item.selected').filter({ hasText: '新的示例图谱' }).waitFor({ state: 'attached' });
-  await demoPage.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: shared scaled Tile delete style/animation, cancellation, inactive/active/last map deletion, failure/retry, single busy request, adjacent selection, cache cleanup, reload and mobile/demo isolation');
+  console.log('PASS: shared scaled Tile delete style/animation, cancellation, inactive/active/last map deletion, failure/retry, single busy request, adjacent selection, cache cleanup, reload and mobile layout');
 } finally { await browser.close(); }

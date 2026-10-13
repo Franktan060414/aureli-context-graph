@@ -1,6 +1,7 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 import { arrangeTiles } from '../src/lib/graph-layout.js';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -53,18 +54,19 @@ async function setup(page, mode) {
   await page.addInitScript(mode => {
     localStorage.setItem('aureli-mode', mode);
     if (!localStorage.getItem('aureli-tile-layouts')) localStorage.setItem('aureli-tile-layouts', JSON.stringify({
-      demo: { 'tile-001': { x: 1100, y: 900 } },
-      [`live:${location.origin}`]: { 'tile-001': { x: 1300, y: 1000 } },
+      [`live:${location.origin}:sample`]: { 'tile-001': { x: 1100, y: 900 } },
+      [`live:${location.origin}:other`]: { 'tile-001': { x: 1300, y: 1000 } },
     }));
   }, mode);
 }
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await setup(page, 'demo');
+  await setup(page, 'live');
+  await mockSampleWorkspace(page);
   await page.goto(baseUrl);
   const graph = page.locator('.graph-wrap');
   await graph.locator('.graph-node').last().waitFor();
-  const arranged = expected(demoGraph());
+  const arranged = expected(sampleGraph());
   const selected = await graph.locator('.graph-node.selected').getAttribute('data-tile-id');
   const before = await layoutSnapshot(page, graph);
   for (const dismissal of ['取消', '关闭排列选择', 'Escape']) {
@@ -82,8 +84,8 @@ try {
   assert.deepEqual(await coordinates(graph), arranged);
   assert.equal(await graph.locator('.graph-node.selected').getAttribute('data-tile-id'), selected);
   let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('aureli-tile-layouts')));
-  assert.deepEqual(saved['demo:demo'], arranged);
-  assert.equal(saved[`live:${new URL(baseUrl).origin}`]['tile-001'].x, 1300, 'demo layout does not alter live layout');
+  assert.deepEqual(saved[`live:${new URL(baseUrl).origin}:sample`], arranged);
+  assert.equal(saved[`live:${new URL(baseUrl).origin}:other`]['tile-001'].x, 1300, 'arrangement does not alter another map layout');
   await graph.getByRole('button', { name: '一键整理画布', exact: true }).focus();
   await page.keyboard.press('Enter');
   const keyboardDialog = graph.getByRole('dialog', { name: '整理画布', exact: true });
@@ -131,7 +133,7 @@ try {
 
   const live = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await setup(live, 'live');
-  const workspace = demoGraph();
+  const workspace = sampleGraph();
   workspace.tiles[0].weight = 3;
   workspace.tiles[1].weight = 2;
   workspace.tiles.reverse();
@@ -147,7 +149,7 @@ try {
   await confirmArrange(live, liveGraph);
   assert.deepEqual(await coordinates(liveGraph), expected(workspace));
   saved = await live.evaluate(() => JSON.parse(localStorage.getItem('aureli-tile-layouts')));
-  assert.equal(saved.demo['tile-001'].x, 1100, 'live layout does not alter demo layout');
+  assert.equal(saved[`live:${new URL(baseUrl).origin}:sample`]['tile-001'].x, 1100, 'arrangement does not alter another map layout');
   await live.reload();
   await liveGraph.locator('.graph-node').last().waitFor();
   assert.deepEqual(await coordinates(liveGraph), expected(workspace));

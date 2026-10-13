@@ -15,6 +15,10 @@
 /frontend/artifacts/
 /frontend/test-results/
 /frontend/playwright-report/
+# Local screenshots, design drafts, archives and generated sample documents
+**/artifacts/
+/output/
+/frontend/elkjs-master/
 
 # Vite copies frontend/public and emits bundles here; keep the legacy sources
 /src/main/resources/static/*

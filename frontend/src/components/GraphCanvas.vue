@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick, watch } from "vue";
 import {
+  Globe,
   Plus,
   Minus,
   Maximize,
@@ -23,7 +24,7 @@ import {
   ContextMenuContent,
   ContextMenuItem,
 } from "reka-ui";
-import { arrangeTiles, connectionGeometry, positionTiles, TILE_HEIGHT } from "../lib/graph-layout.js";
+import { arrangeTiles, connectionGeometry, positionTiles, resizeTile } from "../lib/graph-layout.js";
 import { useMotion } from "../composables/useMotion.js";
 import { relationTypeForEdge } from "../lib/tile-relations.js";
 import { labelForTile, labelStyle } from "../lib/labels.js";
@@ -31,6 +32,8 @@ import { labelRegions } from "../lib/label-regions.js";
 import { arrangeLayeredTiles, layoutSignature } from "../lib/layered-layout.js";
 import { routeIsCurrent, polylineGeometry, rerouteConnection } from "../lib/graph-routing.js";
 import ImageThumbnail from "./ImageThumbnail.vue";
+import { webStatus } from "../lib/web-tiles.js";
+import MarkdownAnswer from "./MarkdownAnswer.vue";
 import { isImageTile } from "../lib/image-preview.js";
 import { createCanvasWheelClassifier } from "../lib/canvas-input.js";
 const { animateSurface } = useMotion();
@@ -47,10 +50,11 @@ const props = defineProps({
   query: String,
   filter: String,
   busy: Boolean,
+  sizeSaving: Boolean,
   loadFile: Function,
   markerId: { type: String, default: "arrow" },
 });
-const emit = defineEmits(["select", "toggle", "delete", "label", "extend-question", "create-question", "new", "expand", "move", "move-end", "arrange", "file"]);
+const emit = defineEmits(["select", "toggle", "delete", "label", "extend-question", "create-question", "create-web", "new", "expand", "move", "move-end", "resize", "arrange", "file"]);
 const nodeType = tile => tile.tileType || "QA";
 const relationTypes = ["RELATES", "EXTENDS", "FUSES", "DIVIDES"];
 const viewport = ref(null),
@@ -60,6 +64,23 @@ const viewport = ref(null),
   pan = ref({ x: 0, y: 0 });
 const viewportSize = ref({ width: 620, height: 380 });
 const arrangeDialog = ref(null);
+const sizeDraft = ref(null), resizing = ref(null);
+const resizeEdges = [
+  { edge: 'n', name: '上边' }, { edge: 'e', name: '右边' },
+  { edge: 's', name: '下边' }, { edge: 'w', name: '左边' },
+  { edge: 'nw', name: '左上角' }, { edge: 'ne', name: '右上角' },
+  { edge: 'sw', name: '左下角' }, { edge: 'se', name: '右下角' },
+];
+function keyboardResize(event, tile, edge) {
+  const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+  if (!directions[event.key] || props.busy || arranging.value) return;
+  event.preventDefault(); event.stopPropagation();
+  const step = event.shiftKey ? 40 : 10;
+  emit('resize', resizeTile(tile, edge, ...directions[event.key].map(value => value * step)));
+}
+const questionLines = tile => tile.height >= 450 ? 3 : tile.height >= 300 ? 2 : 1;
+const answerLines = tile => Math.max(1, Math.floor((tile.height - 80 - questionLines(tile) * 25.5
+  - (labelForTile(tile, props.labels) ? 24 : 0)) / 22.4));
 const canvas = ref(null), contextOpen = ref(false), contextTileId = ref(null);
 const contextTile = computed(() => props.tiles.find(tile => tile.id === contextTileId.value));
 let contextOrigin, skipContextFocus = false, contextOpenedAt = 0;
@@ -90,6 +111,13 @@ function keyboardContextMenu(event) {
     clientY: Math.max(12, Math.min(bounds.top + 24, innerHeight - 12)),
   }));
 }
+function pasteWebUrl(event) {
+  if (props.busy || arranging.value || event.target.closest('input, textarea, [contenteditable="true"]')) return;
+  const value = event.clipboardData?.getData('text/plain')?.trim();
+  if (!/^https?:\/\/\S+$/i.test(value || '')) return;
+  event.preventDefault();
+  emit('create-web', value);
+}
 function contextAction(action) {
   if (action === 'arrange') {
     if (props.busy || arranging.value || !props.tiles.length) return;
@@ -105,8 +133,12 @@ function contextAction(action) {
     return;
   }
   const tile = contextTile.value;
+  if (action === 'create-web') {
+    if (props.busy || arranging.value) return;
+    skipContextFocus = true; contextOpen.value = false; emit('create-web', ''); return;
+  }
   if (props.busy || arranging.value) return;
-  if (action !== 'create-question' && !tile) return;
+  if (!['create-question', 'create-web'].includes(action) && !tile) return;
   if (['toggle', 'extend-question'].includes(action) && tile.status !== 'ready') return;
   skipContextFocus = action !== 'toggle';
   contextOpen.value = false;
@@ -133,7 +165,8 @@ watch(contextTile, tile => { if (contextTileId.value && !tile) contextOpen.value
 const arrangeMode = ref('tree'), arranging = ref(false), arrangeError = ref('');
 const focusedLabel = ref(null), regions = shallowRef([]);
 let arrangementRequest = 0, arrangementController, arrangeOrigin;
-const positions = computed(() => positionTiles(props.tiles, props.layout));
+const positions = computed(() => positionTiles(props.tiles, props.layout)
+  .map(tile => sizeDraft.value?.id === tile.id ? { ...tile, ...sizeDraft.value } : tile));
 watch([positions, () => props.labels], () => {
   regions.value = labelRegions(positions.value, props.labels, regions.value);
   if (!props.labels.some(label => String(label.id) === focusedLabel.value)) focusedLabel.value = null;
@@ -164,7 +197,7 @@ const links = computed(() => {
     if (props.arrangement.mode === 'layered') {
       const route = props.arrangement.routes?.[edge.id];
       if (routeIsCurrent(route, source, target, positions.value)) geometry = polylineGeometry(route.sections);
-      else if (dragging.value) geometry = connectionGeometry(source, target);
+      else if (dragging.value || resizing.value) geometry = connectionGeometry(source, target);
       else {
         const key = JSON.stringify([fingerprint, source.id, target.id]);
         if (routeCache.get(edge.id)?.key !== key) routeCache.set(edge.id, {
@@ -179,9 +212,9 @@ const links = computed(() => {
 });
 let drag, dragFrame, suppressClick = false;
 function startDrag(event, tile) {
-  if (event.button !== 0 || !event.isPrimary || drag || arranging.value) return;
+  if (event.button !== 0 || !event.isPrimary || drag || arranging.value || props.sizeSaving) return;
   suppressClick = false;
-  if (event.target.closest('.node-expand, .node-relate')) return;
+  if (event.target.closest('.node-expand, .node-relate, .node-resize')) return;
   stopWheelGesture();
   const world = viewport.value.querySelector('.graph-world');
   const bounds = world.getBoundingClientRect();
@@ -196,6 +229,18 @@ function startDrag(event, tile) {
     offsetY: (event.clientY - bounds.top) / scale - tile.y,
     previous: props.layout[tile.id], camera: { ...pan.value }, active: false,
   };
+  listenForDrag();
+}
+function startResize(event, tile, edge) {
+  if (event.button !== 0 || !event.isPrimary || drag || arranging.value || props.busy) return;
+  stopWheelGesture();
+  suppressClick = false;
+  const world = viewport.value.querySelector('.graph-world');
+  drag = { kind: 'resize', id: tile.id, edge, tile: { ...tile },
+    pointerId: event.pointerId, element: event.currentTarget,
+    startX: event.clientX, startY: event.clientY, clientX: event.clientX, clientY: event.clientY,
+    scale: world.getBoundingClientRect().width / world.offsetWidth,
+    camera: { ...pan.value }, active: false };
   listenForDrag();
 }
 function startPan(event) {
@@ -228,6 +273,7 @@ function moveDrag(event) {
     if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 5) return;
     drag.active = true;
     dragging.value = drag.kind === 'tile' ? drag.id : null;
+    resizing.value = drag.kind === 'resize' ? drag.id : null;
     panning.value = drag.kind === 'canvas';
     suppressClick = true;
     drag.element.setPointerCapture(drag.pointerId);
@@ -236,6 +282,12 @@ function moveDrag(event) {
   event.preventDefault();
 }
 function updatePosition() {
+  if (drag?.kind === 'resize') {
+    sizeDraft.value = resizeTile(drag.tile, drag.edge,
+      (drag.clientX - drag.startX + drag.camera.x - pan.value.x) / drag.scale,
+      (drag.clientY - drag.startY + drag.camera.y - pan.value.y) / drag.scale);
+    return;
+  }
   if (drag?.kind === 'canvas') {
     // The camera translates freely in screen pixels in every direction.
     pan.value = {
@@ -283,8 +335,11 @@ function finishDrag(event, cancel = false) {
     updatePosition();
   }
   const finished = drag;
+  const finalSize = sizeDraft.value;
   drag = null;
   dragging.value = null;
+  resizing.value = null;
+  sizeDraft.value = null;
   panning.value = false;
   cancelAnimationFrame(dragFrame);
   window.removeEventListener('pointermove', moveDrag);
@@ -298,6 +353,9 @@ function finishDrag(event, cancel = false) {
       if (cancel) {
         pan.value = finished.previous;
       }
+    } else if (finished.kind === 'resize') {
+      if (cancel) pan.value = finished.camera;
+      else if (finalSize) emit('resize', finalSize);
     } else {
       if (cancel) {
         pan.value = finished.camera;
@@ -438,6 +496,7 @@ async function arrange() {
   }
 }
 watch(() => props.workspaceId, () => {
+  finishDrag(null, true);
   stopWheelGesture();
   contextOpen.value = false;
   contextTileId.value = null;
@@ -553,7 +612,7 @@ onMounted(() => {
 onUnmounted(() => {
   stopWheelGesture();
   closeArrange();
-  finishDrag();
+  finishDrag(null, true);
   observer?.disconnect();
 });
 watch(
@@ -590,6 +649,7 @@ watch(
       @keydown.capture="keyboardContextMenu"
       @pointerdown.capture="rememberContextTarget"
       @contextmenu.capture="prepareContextMenu"
+      @paste="pasteWebUrl"
       @scroll="closeContextOnScroll"
     >
       <div
@@ -655,11 +715,11 @@ watch(
                 'tile-label-surface': !!labelForTile(tile, labels),
                 selected: selected === tile.id,
                 dragging: dragging === tile.id,
+                resizing: resizing === tile.id,
                 associated: related.includes(tile.id),
                 dimmed: !matches(tile),
                 'label-dimmed': focusedLabel != null && String(tile.labelId) !== focusedLabel,
                 'label-focused': focusedLabel != null && String(tile.labelId) === focusedLabel,
-                'weight-expanded': tile.height > TILE_HEIGHT,
                 'has-image': isImageTile(tile),
               },
             ]"
@@ -667,13 +727,20 @@ watch(
               ...labelStyle(labelForTile(tile, labels)),
               left: tile.x + 'px', top: tile.y + 'px',
               width: tile.width + 'px', height: tile.height + 'px',
-              '--tile-question-lines': Number(tile.weight) === 3 ? 3 : Number(tile.weight) === 2 ? 2 : 1,
-              '--tile-answer-lines': (Number(tile.weight) === 3 ? 15 : Number(tile.weight) === 2 ? 7 : 4)
-                - (labelForTile(tile, labels) ? 1 : 0),
+              '--tile-question-lines': questionLines(tile),
+              '--tile-answer-lines': answerLines(tile),
             }"
             @pointerdown="startDrag($event, tile)"
             @lostpointercapture="finishDrag"
           >
+            <button v-for="handle in resizeEdges" :key="handle.edge" type="button"
+              class="node-resize" :class="`node-resize-${handle.edge}`" :data-resize-edge="handle.edge"
+              :disabled="busy || arranging" :tabindex="handle.edge === 'se' && selected === tile.id ? 0 : -1"
+              :aria-label="`调整 ${tile.id} 尺寸（${handle.name}）`"
+              :title="`拖动${handle.name}调整大小；方向键微调，Shift 加速`"
+              @pointerdown.stop="startResize($event, tile, handle.edge)"
+              @keydown="keyboardResize($event, tile, handle.edge)"
+              @click.stop />
             <button
               class="node-relate"
               :disabled="busy || arranging || tile.status !== 'ready'"
@@ -693,10 +760,14 @@ watch(
             >
               <Expand :size="15" />
             </button>
-            <button
+            <div
               class="node-main"
+              role="button"
+              tabindex="0"
               title="拖动以移动 Tile；触控板双指平移、捏合缩放；鼠标滚轮缩放；右键打开快捷菜单；Alt + 方向键微调位置"
               @keydown="keyboardMove($event, tile.id)"
+              @keydown.enter.self="emit('select', tile.id)"
+              @keydown.space.self.prevent="emit('select', tile.id)"
               @dragstart.prevent
               @click="emit('select', tile.id)"
               :aria-label="`查看 ${tile.id}：${tile.message}`"
@@ -708,17 +779,19 @@ watch(
                     ? "生成中"
                     : tile.status === "error"
                       ? "失败"
-                      : nodeType(tile) === "NOTE" ? "便签" : nodeType(tile) === "FILE" ? "文件" : "已完成"
+                      : nodeType(tile) === "WEB" ? webStatus(tile) : nodeType(tile) === "NOTE" ? "便签" : nodeType(tile) === "FILE" ? "文件" : "已完成"
                 }}</span>
               </span>
               <small v-if="labelForTile(tile, labels)" class="tile-label-badge" :title="labelForTile(tile, labels).name">{{ labelForTile(tile, labels).name }}</small>
               <strong>{{ tile.message }}</strong
               >
               <ImageThumbnail v-if="isImageTile(tile) && loadFile" :tile="tile" :load-file="loadFile" />
+              <MarkdownAnswer v-else-if="['QA', 'WEB'].includes(nodeType(tile))" class="node-answer"
+                :content="nodeType(tile) === 'WEB' ? (tile.content || tile.sourceUrl || '').slice(0, 4000) : tile.answer || ''" :loading="tile.status === 'loading'" preview />
               <span v-else class="node-answer">{{
                 tile.answer || (nodeType(tile) === "QA" ? "正在生成回答…" : "已保存")
               }}</span>
-            </button>
+            </div>
           </article>
         </div>
       </div>
@@ -770,6 +843,9 @@ watch(
         </template>
         <ContextMenuItem class="graph-context-item" :disabled="busy || arranging" @select="contextAction('create-question')">
           <MessageSquarePlus :size="16" aria-hidden="true" />添加问答 Tile
+        </ContextMenuItem>
+        <ContextMenuItem class="graph-context-item" :disabled="busy || arranging" @select="contextAction('create-web')">
+          <Globe :size="16" aria-hidden="true" />添加网页
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenuPortal>
@@ -836,6 +912,38 @@ watch(
 </template>
 
 <style>
+.graph-world .graph-node.resizing { z-index: 3; }
+.graph-node .node-resize {
+  position: absolute;
+  z-index: 5;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  touch-action: none;
+  user-select: none;
+  transition: none;
+}
+.graph-node .node-resize:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; background: var(--yellow-soft); }
+.graph-node .node-resize-n, .graph-node .node-resize-s { left: 10px; right: 10px; height: 12px; cursor: ns-resize; }
+.graph-node .node-resize-n { top: -6px; }
+.graph-node .node-resize-s { bottom: -6px; }
+.graph-node .node-resize-e, .graph-node .node-resize-w { top: 10px; bottom: 10px; width: 12px; cursor: ew-resize; }
+.graph-node .node-resize-e { right: -6px; }
+.graph-node .node-resize-w { left: -6px; }
+.graph-node .node-resize-nw, .graph-node .node-resize-ne,
+.graph-node .node-resize-sw, .graph-node .node-resize-se { width: 24px; height: 24px; z-index: 6; }
+.graph-node .node-resize-nw { top: -12px; left: -12px; cursor: nwse-resize; }
+.graph-node .node-resize-ne { top: -12px; right: -12px; cursor: nesw-resize; }
+.graph-node .node-resize-sw { bottom: -12px; left: -12px; cursor: nesw-resize; }
+.graph-node .node-resize-se { bottom: -12px; right: -12px; cursor: nwse-resize; }
+.graph-node:hover .node-resize-se::before, .graph-node:focus-within .node-resize-se::before {
+  content: ''; position: absolute; width: 7px; height: 7px; left: 3px; top: 3px;
+  border-right: 2px solid var(--primary); border-bottom: 2px solid var(--primary);
+}
 .graph-context-menu {
   z-index: 70;
   min-width: 190px;

@@ -137,25 +137,7 @@ try {
   await page.reload();
   await node("uploaded-1").scrollIntoViewIfNeeded();
   await node("uploaded-1").locator("img").waitFor();
-  // Demo uploads stay local for PNG, JPEG, WebP, GIF and SVG.
-  const beforeDemo = JSON.stringify(counts);
-  await page.addInitScript(() => localStorage.setItem("aureli-mode", "demo"));
-  await page.reload();
-  const demoFixtures = [["png", "image/png", png], ["jpg", "image/jpeg", Buffer.from(fixtures.jpeg, "base64")], ["webp", "image/webp", Buffer.from(fixtures.webp, "base64")], ["gif", "image/gif", Buffer.from("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", "base64")], ["svg", "image/svg+xml", svg]];
-  for (const [extension, mimeType, buffer] of demoFixtures) {
-    const name = `本地图片.${extension}`;
-    await page.getByRole("button", { name: "添加文件", exact: true }).click();
-    await page.locator("#node-file").setInputFiles({ name, mimeType, buffer });
-    await page.getByRole("button", { name: "添加到画布", exact: true }).click();
-    await page.locator(".modal").waitFor({ state: "hidden" });
-    const tile = page.locator(".graph-node", { hasText: name });
-    await tile.scrollIntoViewIfNeeded(); await tile.locator("img").waitFor();
-    await tile.locator('button[aria-label^="全页面查看"]').click();
-    await rendered(); await close();
-  }
-  assert.equal(JSON.stringify(counts), beforeDemo, "demo previews do not download from the backend");
-  assert.deepEqual(errors, []);
-  console.log("PASS: image upload/reload, canvas/full-page rendering, MIME/extension detection, shared requests, zoom, downloads, Escape, failure/retry, mobile portrait, full-page graph, URL cleanup, late requests, SVG isolation and local PNG/JPEG/WebP/GIF/SVG previews");
+  console.log("PASS: image upload/reload, canvas/full-page rendering, MIME/extension detection, shared requests, zoom, downloads, Escape, failure/retry, mobile portrait, full-page graph, URL cleanup, late requests, SVG isolation");
 } catch (error) {
   await mkdir("artifacts", { recursive: true });
   await page.screenshot({ path: "artifacts/image-preview-failure.png" });

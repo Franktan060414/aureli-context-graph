@@ -1,3 +1,4 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
 import { selectView } from "./helpers/view-select.js";
@@ -8,9 +9,10 @@ const browser = await chromium.launch({
   ...(process.env.BROWSER_EXECUTABLE_PATH ? { executablePath: process.env.BROWSER_EXECUTABLE_PATH } : {}),
 });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await mockSampleWorkspace(page);
 const errors = [];
 page.on("pageerror", error => errors.push(error.message));
-await page.addInitScript(() => localStorage.setItem("aureli-mode", "demo"));
+await page.addInitScript(() => localStorage.setItem("aureli-mode", "live"));
 const output = new URL("../../output/view-select-preview/", import.meta.url).pathname;
 await mkdir(output, { recursive: true });
 const trigger = page.locator(".view-select-trigger");

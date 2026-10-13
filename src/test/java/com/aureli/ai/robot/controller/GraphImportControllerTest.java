@@ -66,6 +66,27 @@ class GraphImportControllerTest {
         verifyNoInteractions(maps,tiles,messages,edges,labels);
     }
 
+    @Test void preservesNullableDimensionsForLegacyAndCustomSizeImports() {
+        var mapper = JsonMapper.builder().build();
+        var legacy = service.importGraph(mapper.readTree(FIXTURE));
+        assertNull(legacy.tiles().getFirst().width());
+        assertNull(legacy.tiles().getFirst().height());
+        var custom = service.importGraph(mapper.readTree(FIXTURE.replace("\"weight\":3", "\"weight\":3,\"width\":440,\"height\":320")));
+        assertEquals(440, custom.tiles().getFirst().width());
+        assertEquals(320, custom.tiles().getFirst().height());
+        var captor = org.mockito.ArgumentCaptor.forClass(TileDO.class);
+        verify(tiles, times(6)).insert(captor.capture());
+        assertEquals(440, captor.getAllValues().get(3).getWidth());
+        assertEquals(320, captor.getAllValues().get(3).getHeight());
+    }
+
+    @Test void rejectsMalformedDimensionsBeforeWriting() {
+        var mapper = JsonMapper.builder().build();
+        for (var dimensions : java.util.List.of("\"width\":0", "\"width\":4001", "\"height\":159", "\"height\":300.5", "\"width\":\"400\""))
+            assertThrows(IllegalArgumentException.class, () -> service.importGraph(mapper.readTree(FIXTURE.replace("\"weight\":3", "\"weight\":3," + dimensions))));
+        verifyNoInteractions(maps, tiles, messages, edges, labels);
+    }
+
     @Test void serializesImportedWorkspaceForTheClient() throws Exception {
         mvc.perform(post("/customer-service/maps/import").contentType(MediaType.APPLICATION_JSON).content(FIXTURE))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true))

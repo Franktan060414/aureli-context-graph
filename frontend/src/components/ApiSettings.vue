@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import {
   Settings2,
   MessageSquare,
@@ -14,6 +14,7 @@ import {
   Send,
 } from "@lucide/vue";
 import { createApiClient } from "../lib/api.js";
+import TavilySettings from "./TavilySettings.vue";
 const props = defineProps({ apiBase: String, busy: Boolean });
 const emit = defineEmits(["base-change", "notify"]);
 const serviceBase = ref(props.apiBase),
@@ -25,6 +26,9 @@ const serviceBase = ref(props.apiBase),
   testResult = ref(null),
   loadError = ref(""),
   saved = ref(false);
+const serviceBaseChanged = computed(() =>
+  (serviceBase.value || '').trim().replace(/\/+$/, '') !== (props.apiBase || '').trim().replace(/\/+$/, ''),
+);
 const dimensions = ref(1536),
   showKeys = reactive({ chat: false, embedding: false });
 const defaults = (kind, provider = "openai") => ({
@@ -216,7 +220,7 @@ async function testConnection() {
       <span class="metric-icon blue"><Settings2 :size="22" /></span>
       <div>
         <h2>API 配置</h2>
-        <p>配置对话模型与向量模型，选择 Anthropic 或 OpenAI 标准接口。</p>
+        <p>配置对话模型、向量模型与联网搜索工具。</p>
       </div>
       <button
         class="secondary"
@@ -435,5 +439,10 @@ async function testConnection() {
         </div>
       </div>
     </form>
+    <p v-if="serviceBaseChanged" class="config-notice" role="status">
+      项目服务地址已修改，请先点击“保存并应用”，再配置联网搜索。
+    </p>
+    <TavilySettings :api-base="apiBase" :busy="busy || loading || saving || testing || serviceBaseChanged"
+      @notify="emit('notify', $event)" />
   </section>
 </template>

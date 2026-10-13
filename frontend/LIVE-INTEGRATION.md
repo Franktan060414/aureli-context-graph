@@ -32,24 +32,11 @@
 
 最新视觉验收由 `tests/accessible.smoke.mjs` 覆盖标题、Dock、按钮、图标、全部页面 / 对话框 / 全页面视图、焦点、对比与大尺寸操作区；现有业务接口保持不变。
 
-## 重跑
+## 当前验证方式
 
-`tests/live.integration.mjs` 会使用当前服务配置创建 3 个临时 Tile 和临时文档，通过实际 Vite 代理测试流式问答、记忆和 RAG。文档在成功后自动删除；专属记录写入 `/tmp/aureli-studio-integration.json` 供随后浏览器验收与精准清理。运行前应确保对应本地模型与数据库可用。
+以上为 2026-10-04 的历史验收记录。配套的一次性联调脚本及记录清理测试已移除：它们使用旧界面和未指定 `mapId` 的旧接口，不适用于当前多图谱版本。
 
-```sh
-# frontend 目录；有可用 Playwright/Chrome，并配置相应环境变量
-node tests/live.integration.mjs
-node tests/live.browser.mjs
-```
-
-然后在项目根目录运行 Java 21，传入记录中的 prefix（仅接受 studio-check-数字格式）。此测试只删除本次 4 个确切 ID，绝不调用全局重置：
-
-```sh
-mvn -Dtest=TilePersistenceIntegrationTest -Daureli.integration.prefix=studio-check-<timestamp> test
-```
-
-如中途失败，应查看记录中的 fileId / fileIds，只对本次创建的文档做删除，不对原有资料做清理。快照单测 `TileWorkspaceControllerTest` 验证完整回答、最新回答覆盖、关联源去重及方向保留。
-
+当前前端协议与布局验证使用 `npm test`；浏览器验收使用 `tests/*.smoke.mjs`，通过模拟接口验证交互。后端控制器、流式保存与记忆测试位于 `src/test/java`；通过系统属性开启的持久化测试应使用独立测试数据库，具体开启条件见对应测试类。`TileWorkspaceControllerTest` 验证完整回答、最新回答覆盖、关联源去重及方向保留。
 
 ## 便签与附件持久化
 

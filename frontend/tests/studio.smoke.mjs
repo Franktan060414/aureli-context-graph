@@ -1,10 +1,12 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await mockSampleWorkspace(page);
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
-await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'demo'); });
+await page.addInitScript(() => { if (!localStorage.getItem('aureli-mode')) localStorage.setItem('aureli-mode', 'live'); });
 try {
   await page.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
   await page.locator('.graph-node').first().waitFor();
@@ -71,7 +73,7 @@ try {
   assert.ok(Math.abs(inspectorAfterReset.y - inspectorBeforeDrag.y) < 2, 'double click resets configurator y position');
   await page.getByRole('button', { name: '添加Tile', exact: true }).click();
   await page.getByLabel('提问内容').fill('平面图谱交互验收');
-  await page.getByRole('button', { name: '生成示例 Tile', exact: true }).click();
+  await page.getByRole('button', { name: '发送并生成 Tile', exact: true }).click();
   assert.equal(await page.locator('.graph-node').count(), 7);
   await page.getByRole('button', { name: '全页面查看图谱', exact: true }).click();
   await page.keyboard.press('Escape');

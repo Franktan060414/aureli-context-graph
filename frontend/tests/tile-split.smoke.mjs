@@ -152,19 +152,6 @@ try {
   assert.deepEqual((await page.locator('.graph-wrap svg.edges text').allTextContents()).map(text => text.trim()), ['DIVIDES', 'DIVIDES']);
   await page.locator('.graph-header').screenshot({ path: new URL('../artifacts/tile-split-toolbar.png', import.meta.url).pathname });
 
-  const beforeDemo = writes.length;
-  const demoPage = await browser.newPage();
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  const demoSplit = demoPage.getByRole('button', { name: '拆分选中的 AI 问答 Tile', exact: true });
-  await demoSplit.waitFor();
-  assert.equal(await demoSplit.isDisabled(), true, 'demo mode also requires explicit association');
-  await selectView(demoPage, "Tile 列表");
-  await demoPage.locator('.tile-list article').first().getByRole('button', { name: '选择关联', exact: true }).click();
-  await demoPage.getByRole('button', { name: '拆分选中的 AI 问答 Tile', exact: true }).click();
-  await demoPage.locator('dialog.modal').getByRole('button', { name: '生成拆分', exact: true }).click();
-  await demoPage.getByRole('status').filter({ hasText: '示例拆分，已创建 2 个子 Tile' }).waitFor();
-  assert.equal(writes.length, beforeDemo, 'demo never calls backend split');
   assert.deepEqual(errors, []);
-  console.log('PASS: initial/reloaded/cleared association disables split, only one explicit QA association enables split, adjacent toolbar, artifact/multi-selection guards, optional requirements, AI rejection reason/no nodes, retry/busy protection, atomic UI update, source retention, layout/refresh, mobile and demo isolation');
+  console.log('PASS: initial/reloaded/cleared association disables split, only one explicit QA association enables split, adjacent toolbar, artifact/multi-selection guards, optional requirements, AI rejection reason/no nodes, retry/busy protection, atomic UI update, source retention, layout/refresh, mobile');
 } finally { await browser.close(); }

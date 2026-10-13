@@ -95,7 +95,7 @@ try {
   assert.equal(await research.isChecked(), false, 'rapid repeated clicks settle on the latest state');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await research.click();
-  assert.equal(await row.locator('.label-choice-box svg').evaluate(el => getComputedStyle(el).transform), 'none');
+  assert.equal(await row.locator('.label-choice-box svg').evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).isIdentity), true);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await dialog.screenshot({ path: '/tmp/aureli-label-compact-panel.png' });
   await close();
@@ -182,17 +182,6 @@ try {
   }
   await dialog.screenshot({ path: '/tmp/aureli-label-panel.png' }); await close();
   assert.ok(writes.filter(w => w.path === 'assign').every(w => w.body.mapId === 'a'));
-  const demoPage = await browser.newPage(); let demoWrites = 0;
-  await demoPage.route('**/customer-service/**', async route => { demoWrites++; await route.abort(); });
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await demoPage.getByRole('button', { name: '标签', exact: true }).click();
-  const demoPanel = demoPage.locator('.label-panel');
-  await demoPanel.getByRole('button', { name: '新建标签', exact: true }).click();
-  await demoPanel.getByLabel('标签名称', { exact: true }).fill('示例标签');
-  await demoPanel.getByRole('button', { name: '保存标签', exact: true }).click();
-  await demoPanel.getByRole('radio', { name: '示例标签', exact: true }).waitFor();
-  assert.equal(demoWrites, 0); await demoPage.close();
   assert.deepEqual(errors, []);
   console.log('PASS: label CRUD, bulk apply/clear, failures, mixed selection, QA/NOTE/FILE colors, list/fullscreen, persistence, map ownership, responsive layout');
 } catch (failure) { console.log(await page.locator('.graph-node .node-main').evaluateAll(nodes => nodes.map(el => ({ color: getComputedStyle(el).backgroundColor, style: el.parentElement.getAttribute('style'), classes: el.parentElement.className })))); await page.screenshot({ path: '/tmp/aureli-label-failure.png', fullPage: true }); throw failure; } finally { await browser.close(); }

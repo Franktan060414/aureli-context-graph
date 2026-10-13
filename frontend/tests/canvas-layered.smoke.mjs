@@ -30,7 +30,7 @@ try {
   const initial = await coords(graph());
   const choose = await open(graph());
   await choose.getByRole('radio', { name: 'Layered 排列', exact: true }).check();
-  await page.screenshot({ path: 'frontend/artifacts/canvas-layout-choices.png' });
+  await page.screenshot({ path: new URL('../artifacts/canvas-layout-choices.png', import.meta.url).pathname });
   await page.keyboard.press('Escape');
   assert.deepEqual(await coords(graph()), initial, 'changing a radio and cancelling must not move nodes');
   await arrange(graph(), 'Layered 排列');
@@ -134,7 +134,7 @@ try {
   const mobile = await open(graph());
   const dimensions = await mobile.boundingBox(); assert.ok(dimensions.width <= 343);
   await mobile.getByRole('radio', { name: 'Layered 排列', exact: true }).check();
-  await page.screenshot({ path: 'frontend/artifacts/canvas-layout-choices-mobile.png' });
+  await page.screenshot({ path: new URL('../artifacts/canvas-layout-choices-mobile.png', import.meta.url).pathname });
   await mobile.getByRole('button', { name: '开始整理', exact: true }).click();
   await mobile.waitFor({ state: 'hidden' }).catch(async error => { console.log('Mobile dialog:', await mobile.textContent()); console.log('Browser errors:', errors); throw error; });
   assert.equal(await graph().locator('.graph-label-region').count(), 2);
@@ -142,7 +142,7 @@ try {
   await page.setViewportSize({ width: 1440, height: 1080 });
   await page.getByRole('button', { name: '全页面查看图谱', exact: true }).click();
   await full.getByRole('button', { name: '适应画布', exact: true }).click();
-  await page.screenshot({ path: 'frontend/artifacts/canvas-layered-fullscreen.png' });
+  await page.screenshot({ path: new URL('../artifacts/canvas-layered-fullscreen.png', import.meta.url).pathname });
   assert.deepEqual(writes, [], 'layout and dragging never modify Tile, tag or relationship data');
   assert.deepEqual(errors, []);
   console.log('PASS: Layered worker, choices/cancel, saved modes/routes, per-map isolation, fullscreen, pointer/keyboard dragging, detach/rejoin, focus of scattered tags, retryable worker failure and mobile.');

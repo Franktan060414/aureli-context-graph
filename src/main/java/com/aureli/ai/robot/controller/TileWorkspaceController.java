@@ -207,14 +207,15 @@ public class TileWorkspaceController {
         return Response.success(node(tile, parents, null));
     }
 
-    private Node node(TileDO tile, List<String> parents, String answer) {
+    public static Node node(TileDO tile, List<String> parents, String answer) {
         String type = tile.getTileType() == null ? "QA" : tile.getTileType();
         boolean qa = "QA".equals(type);
         return new Node(tile.getTileId(), qa ? tile.getUserMessage() : tile.getTitle(),
-                qa ? answer : "NOTE".equals(type) ? tile.getContent() : tile.getFileName(), parents,
+                qa ? answer : ("NOTE".equals(type) || "WEB".equals(type)) ? tile.getContent() : tile.getFileName(), parents,
                 "ready", qa ? parents.isEmpty() ? "root" : "memory" : type.toLowerCase(java.util.Locale.ROOT),
                 tile.getWeight(), type, tile.getTitle(), tile.getContent(),
-                tile.getFileName(), tile.getFileContentType(), tile.getFileSize(), tile.getLabelId());
+                tile.getFileName(), tile.getFileContentType(), tile.getFileSize(), tile.getLabelId(), tile.getWidth(), tile.getHeight(),
+                tile.getSourceUrl(), tile.getResolvedUrl(), tile.getFetchedAt(), tile.getFetchStatus(), tile.getFetchError());
     }
 
     @PostMapping("/tile/weight")
@@ -227,9 +228,33 @@ public class TileWorkspaceController {
         return updated == 0 ? Response.fail("Tile 不存在，请同步图谱后重试") : Response.success();
     }
 
+    @PostMapping("/tile/size")
+    @Transactional
+    public Response<?> updateSize(@RequestBody @Validated com.aureli.ai.robot.model.vo.customerService.UpdateTileSizeReqVO request) {
+        int updated = tiles.update(null, Wrappers.<TileDO>lambdaUpdate()
+                .eq(TileDO::getMapId, MapIds.normalize(request.mapId())).eq(TileDO::getTileId, request.tileId())
+                .set(TileDO::getWidth, request.width()).set(TileDO::getHeight, request.height())
+                .set(TileDO::getUpdateTime, LocalDateTime.now()));
+        return updated == 0 ? Response.fail("Tile 不存在，请同步图谱后重试") : Response.success();
+    }
+
     public record Node(String id, String message, String answer, List<String> relatedTileIds, String status, String kind,
                        Integer weight, String tileType, String title, String content,
-                       String fileName, String fileContentType, Long fileSize, Long labelId) {}
+                       String fileName, String fileContentType, Long fileSize, Long labelId, Integer width, Integer height,
+                       String sourceUrl, String resolvedUrl, LocalDateTime fetchedAt, String fetchStatus, String fetchError) {
+        public Node(String id, String message, String answer, List<String> relatedTileIds, String status, String kind,
+                    Integer weight, String tileType, String title, String content,
+                    String fileName, String fileContentType, Long fileSize, Long labelId, Integer width, Integer height) {
+            this(id, message, answer, relatedTileIds, status, kind, weight, tileType, title, content,
+                    fileName, fileContentType, fileSize, labelId, width, height, null, null, null, null, null);
+        }
+        public Node(String id, String message, String answer, List<String> relatedTileIds, String status, String kind,
+                    Integer weight, String tileType, String title, String content,
+                    String fileName, String fileContentType, Long fileSize, Long labelId) {
+            this(id, message, answer, relatedTileIds, status, kind, weight, tileType, title, content,
+                    fileName, fileContentType, fileSize, labelId, null, null);
+        }
+    }
     public record Edge(String id, String sourceTileId, String targetTileId, String direction,
                        String relationType, java.math.BigDecimal weight, String description) {}
     public record Workspace(List<Node> tiles, List<Edge> edges, List<LabelDO> labels) {

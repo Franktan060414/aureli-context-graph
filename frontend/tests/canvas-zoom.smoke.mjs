@@ -1,6 +1,7 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import { selectView } from "./helpers/view-select.js";
 import assert from 'node:assert/strict';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
@@ -10,7 +11,7 @@ const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 page.setDefaultTimeout(8000);
 await page.emulateMedia({ reducedMotion: 'reduce' });
-await page.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+const fixture = await mockSampleWorkspace(page, { zoom: 0.8 });
 
 async function assertZoom(expected) {
   await page.waitForFunction(value => {
@@ -78,11 +79,13 @@ try {
     ['', 1], ['zoom=', 1], ['zoom=invalid', 1], ['zoom=NaN', 1],
     ['zoom=Infinity', 1], ['zoom=-1', 0.35], ['zoom=0', 0.35], ['zoom=99', 1.5],
   ]) {
+    fixture.maps[0].zoom = expected;
     await page.goto(`${baseUrl}/?${query}#graph`);
     await assertZoom(expected);
   }
   await page.getByRole('button', { name: '放大图谱', exact: true }).click();
   await assertZoom(1.5);
+  fixture.maps[0].zoom = 0.35;
   await page.goto(`${baseUrl}/?zoom=0.35#graph`);
   await page.getByRole('button', { name: '缩小图谱', exact: true }).click();
   await assertZoom(0.35);
@@ -96,7 +99,7 @@ try {
   await live.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
   let releaseWorkspace;
   const workspaceReady = new Promise(resolve => { releaseWorkspace = resolve; });
-  let workspace = demoGraph();
+  let workspace = sampleGraph();
   await live.route('**/customer-service/maps', route => route.fulfill({ json: { success: true, data: [{ mapId: 'default', name: '默认图谱' }] } }));
 await live.route('**/customer-service/tile/workspace?*', async route => {
     await workspaceReady;

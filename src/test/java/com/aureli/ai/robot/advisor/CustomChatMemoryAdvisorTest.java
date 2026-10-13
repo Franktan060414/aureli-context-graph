@@ -89,6 +89,28 @@ class CustomChatMemoryAdvisorTest {
         return prompt;
     }
 
+    @Test void selectedWebSnapshotIncludesSourceAndOldBodyAfterFailedRefresh() {
+        var page = TileDO.builder().tileId("web-one").tileType("WEB").title("网页")
+                .sourceUrl("https://example.com/article").resolvedUrl("https://example.com/article")
+                .content("网页中的原始正文").fetchStatus("FAILED").fetchedAt(java.time.LocalDateTime.of(2026, 10, 13, 10, 0)).weight(2).build();
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(page));
+        String text = read(List.of("web-one"), 0).getInstructions().stream().map(message -> message.getText()).collect(Collectors.joining("\n"));
+        assertTrue(text.contains("网页中的原始正文"));
+        assertTrue(text.contains("https://example.com/article"));
+        assertTrue(text.contains("上次成功保存"));
+        assertTrue(text.contains("2026-10-13T10:00"));
+    }
+
+    @Test void webContentHasASharedContextBudgetAndMissingBodyIsExplicit() {
+        when(tiles.selectByTileIds(eq("map-test"), anyCollection())).thenReturn(List.of(
+                TileDO.builder().tileId("web-one").tileType("WEB").content("正文".repeat(40000)).build(),
+                TileDO.builder().tileId("web-two").tileType("WEB").content("第二网页尾部").build(),
+                TileDO.builder().tileId("web-three").tileType("WEB").fetchStatus("FAILED").build()));
+        String text = read(List.of("web-one", "web-two", "web-three"), 0).getInstructions().stream().map(message -> message.getText()).collect(Collectors.joining("\n"));
+        assertTrue(text.contains("其余内容未读取")); assertFalse(text.contains("第二网页尾部"));
+        assertTrue(text.contains("尚未获得正文")); assertTrue(text.length() < 63000);
+    }
+
     private void assertScope(String... expected) {
         @SuppressWarnings("unchecked")
         ArgumentCaptor<Collection<String>> captured = ArgumentCaptor.forClass(Collection.class);

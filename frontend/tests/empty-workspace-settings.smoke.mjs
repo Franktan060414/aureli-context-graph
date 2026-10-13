@@ -55,11 +55,7 @@ try {
   await page.screenshot({ path: process.env.UI_TEST_SCREENSHOT || '/tmp/aureli-empty-workspace-settings.png', fullPage: true });
 
   await page.getByRole('link', { name: '知识库管理', exact: true }).click();
-  const switchMode = page.locator('.mode-banner button');
-  await switchMode.filter({ hasText: '查看示例' }).click();
-  await switchMode.filter({ hasText: '进入工作区' }).waitFor({ timeout: 3000 });
-  await switchMode.click();
-  await switchMode.filter({ hasText: '查看示例' }).waitFor();
+  assert.equal(await page.locator('.mode-banner').count(), 0);
   assert.deepEqual(errors, []);
-  console.log('PASS: empty workspace permits settings save/test and mode switching; real pending requests still lock fields');
+  console.log('PASS: empty workspace permits settings save/test; real pending requests still lock fields');
 } finally { await browser.close(); }

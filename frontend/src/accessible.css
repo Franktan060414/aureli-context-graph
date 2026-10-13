@@ -119,9 +119,6 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 .eyebrow { color: var(--blue-ink); font-size: 12px; letter-spacing: 2px; font-weight: 800; margin-bottom: 12px; }
 .page-heading p { font-size: 16px; line-height: 1.6; color: var(--muted); margin-top: 12px; }
 .heading-actions { gap: 12px; flex-shrink: 0; }
-.preview-tag { font-size: 12px; color: var(--text); background: white; border: 2px solid var(--yellow); border-radius: 20px; padding: 5px 10px; font-weight: 800; }
-.mode-banner { font-size: 13px; background: white; color: var(--muted); border: 1px solid var(--line); border-left: 4px solid var(--primary); border-radius: 8px; padding: 5px 14px; margin-bottom: 22px; }
-.mode-banner button { font-size: 13px; color: var(--blue-ink); }
 .metrics { gap: 12px; margin-bottom: 24px; }
 .metrics article { border: 1px solid var(--line); border-radius: 10px; background: white; padding: 16px; column-gap: 12px; row-gap: 0; align-items: center; }
 .metrics article > div > span { font-size: 13px; font-weight: 700; color: var(--muted); }
@@ -186,7 +183,7 @@ input::placeholder,textarea::placeholder { color: var(--subtle); }
 .node-main { height: 100%; padding: 16px 14px 14px; gap: 8px; border-radius: 8px; }
 .node-top { padding-right: 68px; min-height: 28px; flex-shrink: 0; }
 .node-status { margin-left: 0; font-size: 12px; font-weight: 700; color: var(--blue-ink); }
-.node-main strong { font-size: 17px; font-weight: 800; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--tile-question-lines); white-space: normal; overflow-wrap: anywhere; flex-shrink: 0; }
+.node-main > strong { font-size: 17px; font-weight: 800; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--tile-question-lines); white-space: normal; overflow-wrap: anywhere; flex-shrink: 0; }
 .node-answer { font-size: 14px; color: var(--muted); flex: 1; min-height: 0; -webkit-line-clamp: var(--tile-answer-lines); overflow-wrap: anywhere; }
 .node-expand, .node-relate { top: 8px; right: 8px; width: 32px; height: 32px; min-height: 32px; background: white; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 7px; }
 .node-relate { right: 46px; }
@@ -415,9 +412,6 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
   .export-button { display: inline-flex; }
   .heading-actions .primary,.heading-actions .secondary { min-height: 48px; font-size: 14px; padding: 10px 14px; }
   .heading-actions > button { flex: 1; }
-  .preview-tag { font-size: 12px; }
-  .mode-banner { padding: 8px 12px; font-size: 12px; flex-wrap: wrap; }
-  .mode-banner button { font-size: 13px; margin-left: auto; }
   .metrics { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
   .metrics article { grid-template-columns: 36px 1fr; column-gap: 10px; padding: 12px; }
   .metric-icon { width: 36px; height: 36px; }
@@ -1002,7 +996,7 @@ html[data-input=keyboard] *,html[data-input=keyboard] *:before,html[data-input=k
 .label-create-row { padding: 10px; border-top: 1px solid var(--line); }
 .label-create-row .label-create { width: 100%; min-height: 40px; justify-content: center; font-size: 14px; }
 @media (prefers-reduced-motion: reduce) {
-  .label-panel .label-choice-box svg { transform: none; transition: opacity 150ms var(--ease-out); }
+  .label-choice-box svg { transform: none; transition: opacity 150ms var(--ease-out); }
 }
 html[data-input=keyboard] .label-choice-box::before, html[data-input=keyboard] .label-choice-box svg { transition: none; }
 @media (hover: hover) and (pointer: fine) {

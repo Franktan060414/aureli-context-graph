@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
-import { demoGraph } from '../src/lib/demo.js';
+import { sampleGraph } from './fixtures/sample-workspace.js';
 import { selectView } from './helpers/view-select.js';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const baseUrl = process.env.UI_TEST_URL || 'http://127.0.0.1:5173';
 const errors = [], writes = [];
-const workspace = demoGraph();
+const workspace = sampleGraph();
 Object.assign(workspace.tiles[1], { tileType: 'NOTE', kind: 'note', message: '平移测试便签', answer: '便签正文' });
 Object.assign(workspace.tiles[4], { tileType: 'FILE', kind: 'file', message: '平移测试文件', answer: 'example.md' });
 

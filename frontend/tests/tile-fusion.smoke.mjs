@@ -96,19 +96,6 @@ try {
   await dialog.getByRole('button', { name: '取消', exact: true }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.locator('.graph-header').screenshot({ path: new URL('../artifacts/tile-fusion-toolbar.png', import.meta.url).pathname });
-  const beforeDemo = writes.length;
-  await page.evaluate(() => localStorage.setItem('aureli-mode', 'demo'));
-  // The init script intentionally sets live mode; replace it with a fresh demo page.
-  const demoPage = await browser.newPage();
-  await demoPage.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
-  await demoPage.goto(process.env.UI_TEST_URL || 'http://127.0.0.1:5173');
-  await selectView(demoPage, "Tile 列表");
-  await demoPage.locator('.tile-list article').nth(0).getByRole('button', { name: '选择关联', exact: true }).click();
-  await demoPage.locator('.tile-list article').nth(1).getByRole('button', { name: '选择关联', exact: true }).click();
-  await demoPage.getByRole('button', { name: '融合选中的 AI 问答 Tile', exact: true }).click();
-  await demoPage.getByRole('button', { name: '确认融合', exact: true }).click();
-  await demoPage.getByRole('status').filter({ hasText: '示例融合 Tile 已创建' }).waitFor();
-  assert.equal(writes.length, beforeDemo, 'demo fusion does not call the backend');
   assert.deepEqual(errors, []);
-  console.log('PASS: QA filtering, highest eligible weight, 2+ selections, confirmation/cancel/close/Escape/focus, no premature request, error retry, busy protection, original retention, new question/answer, refresh persistence, responsive dialog and demo isolation');
+  console.log('PASS: QA filtering, highest eligible weight, 2+ selections, confirmation/cancel/close/Escape/focus, no premature request, error retry, busy protection, original retention, new question/answer, refresh persistence, responsive dialog');
 } finally { await browser.close(); }

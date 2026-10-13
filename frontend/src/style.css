@@ -247,13 +247,27 @@ strong {
 .brand {
   display: block;
   padding: 4px 8px;
+  min-height: 44px;
   line-height: 0;
 }
 .brand-logo {
   display: block;
   width: 100%;
-  height: auto;
 }
+.context-note .sidebar-brand-icon {
+  width: 36px;
+  margin-block: 4px;
+  flex: none;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+}
+.header-brand .aureli-logo { width: 32px; }
 .nav-caption {
   font-size: 10px;
   letter-spacing: 1px;
@@ -429,15 +443,6 @@ h1 {
   line-height: 1.5;
   font-weight: 650;
 }
-.preview-tag {
-  border: 1px solid #cedcf5;
-  border-radius: 4px;
-  font-size: 10px;
-  letter-spacing: 0;
-  padding: 2px 7px;
-  color: #456591;
-  font-weight: 500;
-}
 .page-heading p {
   font-size: 12px;
   color: var(--muted);
@@ -446,30 +451,6 @@ h1 {
 .heading-actions {
   display: flex;
   gap: 10px;
-}
-.mode-banner {
-  background: #edf3ff;
-  border: 1px solid #dbe6fc;
-  color: #405e93;
-  padding: 10px 14px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 11px;
-  margin-bottom: 22px;
-}
-.mode-banner > span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.mode-banner button {
-  color: var(--primary);
-  font-size: 11px;
-  flex-shrink: 0;
-  padding: 3px 0;
 }
 .metrics {
   display: grid;
@@ -718,6 +699,7 @@ h1 {
   gap: 8px;
   text-align: left;
   align-items: stretch;
+  justify-content: center;
   width: 100%;
   height: 115px;
   font-weight: 400;
@@ -741,7 +723,7 @@ h1 {
 .node-status.error {
   color: var(--danger);
 }
-.node-main strong {
+.node-main > strong {
   font-size: 13px;
   line-height: 1.5;
   font-weight: 600;
@@ -1173,9 +1155,16 @@ h1 {
   border-top: 1px solid var(--line);
   letter-spacing: 0.3px;
 }
-.page-footer > span:first-child > span {
-  margin: 0 8px;
-  color: var(--subtle);
+.page-footer { gap: 12px; }
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.footer-brand .aureli-logo {
+  width: 32px;
+  flex: 0 0 32px;
 }
 .empty-graph,
 .empty-state {
@@ -1659,9 +1648,6 @@ td:nth-child(5) {
   .metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .mode-banner {
-    font-size: 10px;
-  }
   .upload-panel {
     flex-wrap: wrap;
     padding: 20px;
@@ -1752,9 +1738,6 @@ td:nth-child(5) {
     font-size: 23px;
     gap: 8px;
   }
-  .preview-tag {
-    font-size: 9px;
-  }
   .eyebrow {
     font-size: 8px;
   }
@@ -1772,18 +1755,6 @@ td:nth-child(5) {
     min-height: 36px;
     padding: 8px 10px;
     font-size: 11px;
-  }
-  .mode-banner {
-    align-items: start;
-    padding: 10px;
-    gap: 8px;
-  }
-  .mode-banner > span {
-    align-items: start;
-  }
-  .mode-banner button {
-    font-size: 10px;
-    white-space: nowrap;
   }
   .metrics {
     gap: 10px;

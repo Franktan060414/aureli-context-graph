@@ -1,10 +1,12 @@
+import { mockSampleWorkspace } from './helpers/sample-api.js';
 import assert from 'node:assert/strict';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE_PATH });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await mockSampleWorkspace(page);
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
-await page.addInitScript(() => localStorage.setItem('aureli-mode', 'demo'));
+await page.addInitScript(() => localStorage.setItem('aureli-mode', 'live'));
 await page.emulateMedia({ reducedMotion: 'reduce' });
 const inspector = page.locator('.inspector');
 const header = page.locator('.inspector-header');

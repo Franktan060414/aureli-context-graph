@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue';
 import MarkdownAnswer from './MarkdownAnswer.vue';
+import BrandLogo from './BrandLogo.vue';
 import { arrangeTiles, connectionGeometry } from '../lib/graph-layout.js';
 import { arrangeLayeredTiles } from '../lib/layered-layout.js';
 import { polylineGeometry } from '../lib/graph-routing.js';
@@ -94,18 +95,19 @@ defineExpose({ prepare });
 <template>
   <div ref="stage" class="graph-export-document graph-export-stage" aria-hidden="true" inert>
     <div data-export-brand class="graph-export-brand">
-      <img src="/branding/aureli-logo.png" alt="Aureli" width="1194" height="260" />
+      <BrandLogo />
     </div>
     <article v-for="tile in snapshot.tiles" :key="tile.id" data-export-card
       class="graph-export-card" :style="cardStyle(tile)">
       <span v-if="labelForTile(tile, snapshot.labels)" class="graph-export-label">{{ labelForTile(tile, snapshot.labels).name }}</span>
       <section>
-        <h3>{{ kind(tile) === 'QA' ? '问题' : kind(tile) === 'NOTE' ? '便签' : '文件' }}</h3>
+        <h3>{{ kind(tile) === 'QA' ? '问题' : kind(tile) === 'NOTE' ? '便签' : kind(tile) === 'WEB' ? '网页' : '文件' }}</h3>
+        <p v-if="kind(tile) === 'WEB'" class="graph-export-plain">{{ tile.sourceUrl }} · {{ tile.fetchedAt }}</p>
         <p class="graph-export-question">{{ tile.message || tile.title || tile.fileName }}</p>
       </section>
       <section>
         <h3>{{ kind(tile) === 'QA' ? '回答' : '正文' }}</h3>
-        <MarkdownAnswer v-if="kind(tile) === 'QA'" :content="body(tile)" />
+        <MarkdownAnswer v-if="['QA', 'WEB'].includes(kind(tile))" :content="body(tile)" />
         <p v-else class="graph-export-plain">{{ body(tile) }}</p>
       </section>
     </article>

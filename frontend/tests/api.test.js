@@ -285,3 +285,17 @@ test('map deletion explicitly addresses its own encoded ID, independent of activ
   globalThis.fetch = async () => Response.json({ success: false, message: '删除失败' });
   await assert.rejects(api.deleteMap('other-map'), /删除失败/);
 });
+
+test('show example creates a new map without using the active map ID', async context => {
+  const calls = [];
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, options });
+    return Response.json({ success: true, data: { mapId: `example-${calls.length}`, name: '示例图谱 · 功能导览' } });
+  });
+  const api = createApiClient('http://localhost:8080', () => 'existing-map');
+  const first = await api.createExampleMap(), second = await api.createExampleMap();
+  assert.notEqual(first.data.mapId, second.data.mapId);
+  assert.equal(calls[0].url, 'http://localhost:8080/customer-service/maps/example');
+  assert.equal(calls[0].options.method, 'POST');
+  assert.deepEqual(JSON.parse(calls[0].options.body), {});
+});

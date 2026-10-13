@@ -15,6 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TileQuestionAnswerGeneratorTest {
+    private com.aureli.ai.robot.service.search.TavilySettingsService disabledTavily() {
+        var service = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
+        when(service.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(
+                false, com.aureli.ai.robot.service.search.TavilySettingsService.DEFAULT_URL, ""));
+        return service;
+    }
     ChatResponse reply(String text) { return new ChatResponse(List.of(new Generation(new AssistantMessage(text)))); }
     @Test void usesExistingKnowledgeDecisionAndPreservesApprovedContextWithoutSaving() {
         var settings = mock(ModelApiSettingsService.class);
@@ -24,7 +30,7 @@ class TileQuestionAnswerGeneratorTest {
         when(settings.chatModel()).thenReturn(model);
         when(model.call(any(Prompt.class))).thenReturn(reply("DIRECT"));
         when(model.stream(any(Prompt.class))).thenReturn(Flux.just(reply("完整"), reply("答案")));
-        var generator = new TileQuestionAnswerGenerator(settings, vectors);
+        var generator = new TileQuestionAnswerGenerator(settings, vectors, disabledTavily(), mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class));
         String answer = generator.answer("已确认的子问题", List.of(new UserMessage("原问题：保留已有接口"), new AssistantMessage("原回答")));
         assertEquals("完整答案", answer);
         var prompt = ArgumentCaptor.forClass(Prompt.class); verify(model).stream(prompt.capture());
@@ -38,11 +44,36 @@ class TileQuestionAnswerGeneratorTest {
         var model = mock(ChatModel.class); when(settings.chatModel()).thenReturn(model);
         when(model.getOptions()).thenReturn(ChatOptions.builder().build());
         when(model.call(any(Prompt.class))).thenReturn(reply("DIRECT"));
-        var generator = new TileQuestionAnswerGenerator(settings, mock(VectorStore.class));
+        var generator = new TileQuestionAnswerGenerator(settings, mock(VectorStore.class), disabledTavily(), mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class));
         when(model.stream(any(Prompt.class))).thenReturn(Flux.empty());
         assertThrows(IllegalStateException.class, () -> generator.answer("问题", List.of()));
         when(model.stream(any(Prompt.class))).thenReturn(Flux.just(reply("部分答案")), Flux.error(new IllegalStateException("broken")));
         generator.answer("问题", List.of());
         assertThrows(IllegalStateException.class, () -> generator.answer("问题", List.of()));
+    }
+
+    @Test void disabledWebSearchAndUnavailableKnowledgeStillProduceSplitAnswer() {
+        var settings = mock(ModelApiSettingsService.class);
+        var model = mock(ChatModel.class);
+        when(settings.chatModel()).thenReturn(model);
+        when(model.getOptions()).thenReturn(ChatOptions.builder().build());
+        when(model.call(any(Prompt.class))).thenReturn(reply("RAG_REQUIRED"));
+        when(model.stream(any(Prompt.class))).thenReturn(Flux.just(reply("依据已有资料回答")));
+        var vectors = mock(VectorStore.class);
+        when(vectors.similaritySearch(any(org.springframework.ai.vectorstore.SearchRequest.class)))
+                .thenThrow(new IllegalStateException("private-embedding-error"));
+        var web = mock(com.aureli.ai.robot.service.search.TavilyMcpSearchService.class);
+        var generator = new TileQuestionAnswerGenerator(settings, vectors, disabledTavily(), web);
+
+        assertEquals("依据已有资料回答", generator.answer("已确认的技术子问题",
+                List.of(new UserMessage("已有技术资料"))));
+
+        verifyNoInteractions(web);
+        verify(model).call(any(Prompt.class));
+        var prompt = ArgumentCaptor.forClass(Prompt.class);
+        verify(model).stream(prompt.capture());
+        assertTrue(prompt.getValue().getContents().contains("已有技术资料"));
+        assertTrue(prompt.getValue().getContents().contains("不得声称已查阅知识库"));
+        assertFalse(prompt.getValue().getContents().contains("private-embedding-error"));
     }
 }

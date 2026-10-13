@@ -1,4 +1,11 @@
+import { webSourceUrl } from './web-tiles.js';
+import { MIN_TILE_WIDTH, MIN_TILE_HEIGHT, MAX_TILE_SIZE } from './graph-layout.js';
 const invalid = message => { throw new Error(`JSON 格式错误：${message}`); };
+const dimension = (value, path, min) => {
+  if (value == null) return null;
+  if (!Number.isInteger(value) || value < min || value > MAX_TILE_SIZE) invalid(`${path} 必须是 ${min} 到 ${MAX_TILE_SIZE} 之间的整数。`);
+  return value;
+};
 const object = (value, path) => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) invalid(`${path} 必须是对象。`);
   return value;
@@ -38,10 +45,12 @@ export function parseGraphImport(source) {
     if (ids.has(id)) invalid(`${path}.id 重复。`);
     ids.add(id);
     const tileType = tile.tileType ?? 'QA';
-    if (!['QA', 'NOTE', 'FILE'].includes(tileType)) invalid(`${path}.tileType 无效。`);
+    if (!['QA', 'NOTE', 'FILE', 'WEB'].includes(tileType)) invalid(`${path}.tileType 无效。`);
     const message = text(tile.message, `${path}.message`, { required: true });
     const answer = text(tile.answer, `${path}.answer`);
     const weight = tile.weight ?? 1;
+    const width = dimension(tile.width, `${path}.width`, MIN_TILE_WIDTH);
+    const height = dimension(tile.height, `${path}.height`, MIN_TILE_HEIGHT);
     if (![1, 2, 3].includes(weight)) invalid(`${path}.weight 必须是 1、2 或 3。`);
     const labelId = tile.labelId ?? null;
     if (labelId !== null && !labelIds.has(labelId)) invalid(`${path}.labelId 引用了不存在的标签。`);
@@ -49,12 +58,19 @@ export function parseGraphImport(source) {
       .map(parent => text(parent, `${path}.relatedTileIds`, { required: true, max: 128 }));
     const title = text(tile.title ?? (tileType === 'QA' ? '' : message), `${path}.title`, { max: 255 });
     const content = text(tile.content ?? (tileType === 'NOTE' ? answer : ''), `${path}.content`);
+    if (tileType === 'WEB' && content.length > 500000) invalid(`${path}.content 不能超过 50 万字符。`);
     const fileName = text(tile.fileName ?? (tileType === 'FILE' ? message : ''), `${path}.fileName`, { max: 512 });
     const fileContentType = text(tile.fileContentType, `${path}.fileContentType`, { max: 128 });
     const fileSize = tile.fileSize ?? null;
     if (fileSize !== null && (!Number.isSafeInteger(fileSize) || fileSize < 0)) invalid(`${path}.fileSize 无效。`);
-    return { id, message, answer, relatedTileIds: [...new Set(relatedTileIds)], weight, labelId,
-      tileType, title, content, fileName, fileContentType, fileSize, status: 'ready' };
+    const sourceUrl = tileType === 'WEB' ? text(tile.sourceUrl, `${path}.sourceUrl`, { required: true, max: 2048 }) : null;
+    const resolvedUrl = tileType === 'WEB' ? text(tile.resolvedUrl, `${path}.resolvedUrl`, { max: 2048 }) || null : null;
+    if (tileType === 'WEB' && (!webSourceUrl(sourceUrl) || (resolvedUrl && !webSourceUrl(resolvedUrl)))) invalid(`${path} 的网页地址无效。`);
+    const fetchedAt = tileType === 'WEB' ? text(tile.fetchedAt, `${path}.fetchedAt`, { max: 64 }) || null : null;
+    if (fetchedAt && (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?$/.test(fetchedAt) || Number.isNaN(Date.parse(fetchedAt)))) invalid(`${path}.fetchedAt 时间格式无效。`);
+    return { id, message, answer, relatedTileIds: [...new Set(relatedTileIds)], weight, width, height, labelId,
+      tileType, title, content, fileName, fileContentType, fileSize, sourceUrl, resolvedUrl, fetchedAt,
+      fetchStatus: tileType === 'WEB' ? content.trim() ? 'READY' : 'PENDING' : null, fetchError: null, status: 'ready' };
   });
   for (const tile of tiles) for (const id of tile.relatedTileIds)
     if (id === tile.id || !ids.has(id)) invalid(`节点 ${tile.id} 引用了无效的关联节点 ${id}。`);
