@@ -41,7 +41,7 @@ Aureli（界面名称：Aureli Context Graph）是一个基于 Spring Boot、Spr
 | 运行时模型配置 | 分别设置对话与向量模型，持久化配置、立即应用，并测试已保存的对话模型连接 |
 | 示例图谱 | 点击「显示示例」在数据库中创建问答、便签、附件、标签与关联；可正常编辑、清空和删除 |
 | 桌面入口 | Electron 加载本地后端页面，复用网页工作台 |
-| iOS 原生开发预览 | SwiftUI 客户端复用现有后端，支持图谱浏览、节点阅读、关联问答与便签；真机运行说明见 [ios/README.md](ios/README.md)，尚未发布 iPhone 安装包 |
+| iOS 本地运行开发版 | SwiftUI 原生分支对话、Swift 业务核心与 SQLite；点按展开/收起，长按关联/取消关联。图谱与 Tile 列表入口暂时隐藏，完整图谱服务仍保留；移动端暂不包含 RAG 和向量检索。运行与结构说明见 [ios/README.md](ios/README.md)，尚未发布 iPhone 安装包 |
 
 ## 上下文与知识检索
 
@@ -133,7 +133,7 @@ Git 跟踪前后端源码、测试、必要静态资源、依赖清单、构建�
 │   ├── tests/                          # 协议测试与浏览器验收脚本
 │   └── vite.config.js                  # 开发代理和后端静态资源输出
 ├── desktop/                            # Electron 本地桌面入口
-├── ios/                                # SwiftUI 原生客户端开发预览与 Xcode 工程
+├── ios/                                # iOS 本地运行版、Swift 核心与 Xcode 工程
 ├── knowledge-base/                     # 示例知识文档，需手动上传入库
 ├── Markdown/                           # 本地知识库上传文件目录
 ├── config/                             # 旧模型配置文件的兼容迁移入口

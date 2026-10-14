@@ -100,7 +100,8 @@ try {
   await page.keyboard.press("Escape");
   assert.equal(await page.locator('dialog[aria-labelledby="workspace-modal-title"]').evaluate((d) => d.open), false);
   assert.equal(await page.locator(".graph-node").count(), 6);
-  await page.getByRole("link", { name: "知识库管理", exact: true }).click();
+  await page.getByRole("link", { name: "服务设置", exact: true }).click();
+  await click("知识库配置");
   await page.waitForSelector("text=test.md");
   await click("编辑 test.md 备注");
   await fill("备注", "接口备注测试");
@@ -115,7 +116,7 @@ try {
   await page.waitForSelector("text=知识库加载失败");
   failure = false;
   graph = { tiles: [], edges: [] };
-  await page.getByRole("link", { name: /^图谱工作台/ }).click();
+  await page.getByRole("link", { name: "我的图谱", exact: true }).click();
   await click("同步图谱");
   await page.waitForFunction(() => document.querySelectorAll(".graph-node").length === 0);
   await click("添加Tile");
@@ -159,7 +160,8 @@ try {
       if (await page.locator(".toast").count()) await click("关闭提示");
       await page.screenshot({ path: "artifacts/mobile.png", fullPage: true });
       await click("展开导航");
-      await page.getByRole("link", { name: "知识库管理", exact: true }).click();
+      await page.getByRole("link", { name: "服务设置", exact: true }).click();
+      await click("知识库配置");
       assert.equal(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
@@ -173,7 +175,8 @@ try {
         fullPage: true,
       });
       await click("展开导航");
-      await page.getByRole("link", { name: /^图谱工作台/ }).click();
+      await page.getByRole("link", { name: "我的图谱", exact: true }).click();
+      await click("关闭导航");
     }
   }
   await page.emulateMedia({ reducedMotion: "reduce" });

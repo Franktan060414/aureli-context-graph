@@ -29,7 +29,8 @@ try {
   await page.getByRole('button', { name: '重新同步', exact: true }).click();
   await page.getByRole('button', { name: '查看 stored-tile：数据库中的问题', exact: true }).click();
   assert.equal(await page.locator('.answer-text').innerText(), '数据库中的完整回答');
-  await page.getByRole('link', { name: '知识库管理', exact: true }).click();
+  await page.getByRole('link', { name: '服务设置', exact: true }).click();
+  await page.getByRole('button', { name: '知识库配置', exact: true }).click();
   await page.locator('.status-pill', { hasText: '向量化中' }).waitFor();
   await page.locator('.status-pill', { hasText: '已完成' }).waitFor({ timeout: 7000 });
   assert.equal(listCalls, 2, 'processing status refreshes without a manual click');

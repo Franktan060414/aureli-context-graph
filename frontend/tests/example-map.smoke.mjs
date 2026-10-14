@@ -80,7 +80,8 @@ try {
   assert.equal(createCalls, 2, 'refresh does not create another map');
   assert.equal(graphs.get('example-2').tiles[0].weight, 3);
   assert.equal(graphs.get('example-2').tiles.at(-1).content, '已经保存到服务端的修改');
-  await page.getByRole('link', { name: '知识库管理', exact: true }).click();
+  await page.getByRole('link', { name: '服务设置', exact: true }).click();
+  await page.getByRole('button', { name: '知识库配置', exact: true }).click();
   await show(page).click(); await completeCreate();
   assert.equal(maps.length, 3); assert.equal(new URL(page.url()).searchParams.get('map'), 'example-3');
   assert.equal(graphs.get('example-3').tiles.at(-1).content, '原始便签');

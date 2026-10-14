@@ -45,7 +45,8 @@ try {
   await selectView(page, "Tile 列表");
   await selectView(page, "图谱视图");
   await assertZoom(0.8);
-  await page.getByRole('link', { name: '知识库管理', exact: true }).click();
+  await page.getByRole('link', { name: '服务设置', exact: true }).click();
+  await page.getByRole('button', { name: '知识库配置', exact: true }).click();
   await page.getByRole('link', { name: /图谱工作台/ }).click();
   await assertZoom(0.8);
 

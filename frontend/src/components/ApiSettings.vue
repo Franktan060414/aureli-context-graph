@@ -244,20 +244,6 @@ async function testConnection() {
       novalidate
     >
       <fieldset :disabled="loading || saving || testing || busy">
-        <div v-if="!mobileLocal" class="api-service-field">
-          <label for="project-service-url"
-            >项目服务地址 <span class="optional">选填</span></label
-          ><input
-            id="project-service-url"
-            type="url"
-            v-model.trim="serviceBase"
-            placeholder="留空使用当前服务"
-            aria-describedby="project-service-help"
-          />
-          <p id="project-service-help" class="field-help">
-            管理接口地址，例如 http://localhost:8080。留空时使用当前服务。
-          </p>
-        </div>
         <div class="model-config-grid">
           <section
             v-for="group in groups"
@@ -404,7 +390,7 @@ async function testConnection() {
             <CheckCircle2 :size="16" />配置已保存，后续请求使用新模型。
           </p>
           <p v-else class="field-help">
-            保存后应用到真实工作区；测试连接仅使用后端已保存的对话模型配置。
+            测试连接将使用已保存的对话模型配置。
           </p>
         </div>
         <div class="api-settings-action-buttons">

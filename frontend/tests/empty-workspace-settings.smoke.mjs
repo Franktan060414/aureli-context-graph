@@ -54,8 +54,22 @@ try {
   assert.equal(await page.locator('#chat-model').isEnabled(), true);
   await page.screenshot({ path: process.env.UI_TEST_SCREENSHOT || '/tmp/aureli-empty-workspace-settings.png', fullPage: true });
 
-  await page.getByRole('link', { name: '知识库管理', exact: true }).click();
+  assert.equal(await page.getByRole('link', { name: '知识库管理', exact: true }).count(), 0);
+  await page.getByRole('button', { name: '知识库配置', exact: true }).click();
+  await page.getByRole('heading', { name: '知识库配置', exact: true }).waitFor();
+  await page.getByRole('heading', { name: '知识库还没有文档', exact: true }).waitFor();
+  assert.equal(new URL(page.url()).hash, '#settings/knowledge');
+  assert.equal(await page.getByRole('link', { name: '服务设置', exact: true }).getAttribute('aria-current'), 'page');
+  assert.equal(await page.getByRole('button', { name: '知识库配置', exact: true }).getAttribute('aria-current'), 'page');
   assert.equal(await page.locator('.mode-banner').count(), 0);
+  await page.reload();
+  await page.getByRole('heading', { name: '知识库还没有文档', exact: true }).waitFor();
+  await page.goto(new URL('#knowledge', page.url()).href);
+  await page.waitForURL(/#settings\/knowledge$/);
+  await page.getByRole('heading', { name: '知识库配置', exact: true }).waitFor();
+  await page.getByRole('button', { name: '工作台设置', exact: true }).click();
+  await page.getByRole('button', { name: '知识库配置', exact: true }).click();
+  await page.getByRole('heading', { name: '知识库还没有文档', exact: true }).waitFor();
   assert.deepEqual(errors, []);
-  console.log('PASS: empty workspace permits settings save/test; real pending requests still lock fields');
+  console.log('PASS: empty workspace permits settings save/test; nested knowledge configuration loads, refreshes, and supports legacy links');
 } finally { await browser.close(); }

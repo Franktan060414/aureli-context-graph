@@ -79,7 +79,7 @@ try {
  await page.keyboard.press('Escape'); await page.locator('.fullscreen-viewer').waitFor({ state: 'detached' });
  await away(); await page.getByRole('link', { name: '服务设置', exact: true }).click(); await page.waitForSelector('#chat-model:enabled');
  const provider = page.locator('.provider-options label.selected').first(); await provider.hover(); assert.equal((await state(provider)).color, white); assert.equal((await state(provider)).x, 0);
- await page.getByRole('link', { name: '知识库管理', exact: true }).click(); const disabled = page.getByRole('button', { name: '上传到知识库', exact: true });
+ await page.getByRole('button', { name: '知识库配置', exact: true }).click(); const disabled = page.getByRole('button', { name: '上传到知识库', exact: true });
  assert.equal(await disabled.isDisabled(), true); await disabled.hover(); assert.notEqual((await state(disabled)).fill, blue);
  const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true });
   await mockSampleWorkspace(touch);

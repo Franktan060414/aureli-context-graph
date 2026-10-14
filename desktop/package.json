@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Aureli 本地图式 AI 工作台，内置 Java 和 PostgreSQL",
   "main": "main.cjs",
   "scripts": {

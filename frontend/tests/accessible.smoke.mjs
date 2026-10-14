@@ -25,7 +25,8 @@ try {
  assert.equal(await page.locator('.graph-workbench .metrics,.graph-workbench .mode-banner').count(),0);
  assert.equal(await page.locator('.graph-workbench > .sr-only').count(),1);
  const canvas=await page.locator('.graph-wrap').boundingBox(); assert.ok(canvas.y<320 && canvas.height>=1080*.6 && canvas.y+canvas.height<1080,'canvas fills the initial viewport');
- assert.equal((await styles('.sidebar')).border,blue); assert.equal((await styles('.sidebar nav a.active')).background,'rgb(255, 255, 255)'); assert.equal((await styles('.sidebar nav a.active')).border,blue);
+ assert.equal((await styles('.sidebar nav a.active')).background,blue); assert.equal((await styles('.sidebar nav a.active')).border,blue);
+ for (const link of await page.locator('.dock-navigation a').all()) { const box=await link.boundingBox(); assert.equal(box.width,box.height); assert.ok(box.width>=44); assert.ok(await link.getAttribute('aria-label')); }
  const button=await styles('.workspace-actions .export-button'); assert.ok(contrast(button.color,button.background)>=4.5);
  const selected=await styles('.graph-node.selected'); assert.equal(selected.border,blue); assert.equal(selected.outline,yellow);
  for (const selector of ['.workspace-actions .export-button','.graph-toolbar-actions .icon-button','.canvas-controls button']) {
@@ -39,7 +40,7 @@ try {
  await page.getByRole('button',{name:'全页面查看 tile-003',exact:true}).click(); await page.locator('.fullscreen-viewer').waitFor();
  assert.equal((await styles('.tile-reading')).border,blue); assert.ok((await styles('.fullscreen-header h2')).fontSize>=24);
  await page.screenshot({path:artifact('accessible-tile.png')}); await page.keyboard.press('Escape');
- await page.getByRole('link',{name:'知识库管理',exact:true}).click(); await assertPage(); const description=await styles('.page-heading p'); assert.ok(contrast(description.color,'rgb(255, 255, 255)')>=7); await page.screenshot({path:artifact('accessible-knowledge.png')});
+ await page.getByRole('link',{name:'服务设置',exact:true}).click(); await page.getByRole('button',{name:'知识库配置',exact:true}).click(); await assertPage(); const description=await styles('.page-heading p'); assert.ok(contrast(description.color,'rgb(255, 255, 255)')>=7); await page.screenshot({path:artifact('accessible-knowledge.png')});
  await page.getByRole('button',{name:/^编辑 .* 备注$/}).first().click(); assert.equal((await styles('.modal')).border,blue); await page.keyboard.press('Escape');
  await page.getByRole('link',{name:'服务设置',exact:true}).click(); await page.waitForSelector('#chat-model:enabled'); await assertPage();
  assert.equal((await styles('.model-config-section')).border,blue); assert.equal((await styles('.provider-options label.selected')).background,'rgb(255, 255, 255)');
@@ -47,10 +48,10 @@ try {
  await page.locator('h1').focus(); await page.screenshot({path:artifact('accessible-settings.png'),fullPage:true});
  for (const width of [375,768,1024,1440]) {
   await page.setViewportSize({width,height:900}); await assertPage();
-  const nav = async name => { if(width<768) await page.getByRole('button',{name:'展开导航',exact:true}).click(); await page.getByRole('link',{name:name==='图谱工作台'?/^图谱工作台/:name,exact:true}).click(); await assertPage(); };
+  const nav = async name => { if(width<768) await page.getByRole('button',{name:'展开导航',exact:true}).click(); await page.getByRole('link',{name:name==='知识库配置'?'服务设置':name==='图谱工作台'?'我的图谱':name,exact:true}).click(); if(name==='知识库配置') await page.getByRole('button',{name:'知识库配置',exact:true}).click(); else if(width<768) await page.getByRole('button',{name:'关闭导航',exact:true}).click(); await assertPage(); };
   await nav('图谱工作台'); if(width===375) await page.screenshot({path:artifact('accessible-mobile.png'),fullPage:true});
-  await nav('知识库管理'); await nav('服务设置');
+  await nav('知识库配置'); await nav('服务设置');
  }
  assert.deepEqual(errors,[]);
- console.log('PASS: editorial headings, flat blue surfaces, outlined Dock, blue/yellow focus, large controls, text contrast, all pages/dialogs/fullscreen, four responsive widths');
+ console.log('PASS: editorial headings, flat blue surfaces, square icon Dock, blue/yellow focus, large controls, text contrast, all pages/dialogs/fullscreen, four responsive widths');
 } finally { await browser.close(); }

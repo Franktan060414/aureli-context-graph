@@ -259,15 +259,6 @@ strong {
   margin-block: 4px;
   flex: none;
 }
-.header-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex: none;
-}
-.header-brand .aureli-logo { width: 32px; }
 .nav-caption {
   font-size: 10px;
   letter-spacing: 1px;
@@ -362,31 +353,6 @@ strong {
   min-width: 0;
   flex: 1;
 }
-.topbar {
-  height: 68px;
-  border-bottom: 1px solid var(--line);
-  background: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-}
-.breadcrumb {
-  display: flex;
-  gap: 13px;
-  align-items: center;
-  font-size: 12px;
-  color: var(--muted);
-}
-.breadcrumb strong {
-  font-weight: 500;
-  color: var(--text);
-}
-.topbar-actions {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
 .service-state {
   display: flex;
   gap: 7px;
@@ -402,11 +368,6 @@ strong {
 }
 .service-state i.connected {
   background: var(--teal);
-}
-.top-divider {
-  height: 20px;
-  width: 1px;
-  background: var(--line);
 }
 .user-avatar {
   width: 30px;
@@ -1554,9 +1515,6 @@ td:nth-child(5) {
   .main-content {
     padding: 24px;
   }
-  .topbar {
-    padding: 0 24px;
-  }
   .workspace-grid {
     grid-template-columns: minmax(0, 1fr) 272px;
     gap: 12px;
@@ -1706,23 +1664,8 @@ td:nth-child(5) {
   .main-shell {
     margin-left: 0;
   }
-  .topbar {
-    height: 60px;
-    padding: 0 16px;
-  }
   .mobile-menu {
     display: flex;
-  }
-  .breadcrumb {
-    gap: 8px;
-    font-size: 11px;
-  }
-  .topbar-actions {
-    gap: 8px;
-  }
-  .top-divider,
-  .topbar-actions > .icon-button {
-    display: none;
   }
   .service-state {
     font-size: 9px;

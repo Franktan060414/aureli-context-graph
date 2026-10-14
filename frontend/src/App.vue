@@ -72,28 +72,37 @@ import { createMapZoomSaver } from "./lib/map-zoom.js";
 import { readLayouts, positionTiles, tileDimensions } from "./lib/graph-layout.js";
 import { readArrangements } from "./lib/layered-layout.js";
 const nav = [
-  { id: "graph", label: "图谱工作台", icon: Network },
-  { id: "knowledge", label: "知识库管理", icon: BookOpen },
+  { id: "graph", label: "我的图谱", icon: Network },
   { id: "settings", label: "服务设置", icon: Settings2 },
-].filter(item => !window.AURELI_MOBILE?.local || item.id !== 'knowledge');
+];
 const titles = {
   graph: "图谱工作台",
-  knowledge: "知识库管理",
   settings: "服务设置",
 };
 const subtitles = {
   graph: "让每一次提问，成为知识网络的新连接。",
-  knowledge: "管理共享知识，为每一个 Tile 提供可靠的回答依据。",
   settings: "统一配置 API，让对话与检索使用合适的模型。",
 };
-const section = ref(location.hash.startsWith('#settings/') ? 'settings'
-  : ["graph", "knowledge", "settings"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "graph");
-const settingsPage = ref(location.hash === '#settings/workbench' ? 'workbench' : 'api');
 const settingsPages = [
-  { id: 'api', label: 'API设置', icon: Settings2 },
-  { id: 'workbench', label: '工作台设置', icon: Network },
-];
+  { id: 'api', label: 'API设置', description: subtitles.settings },
+  { id: 'knowledge', label: '知识库配置', description: '管理共享知识，为每一个 Tile 提供可靠的回答依据。' },
+  { id: 'workbench', label: '工作台设置', description: '管理工作台，恢复历史聊天记录。' },
+].filter(page => !window.AURELI_MOBILE?.local || page.id !== 'knowledge');
+function resolveNavigation(hash) {
+  const id = hash.replace(/^#/, '');
+  if (id && !['graph', 'knowledge', 'settings'].includes(id) && !id.startsWith('settings/')) return null;
+  const page = id === 'knowledge' ? 'knowledge' : id.split('/')[1];
+  return {
+    section: id === 'knowledge' || id === 'settings' || id.startsWith('settings/') ? 'settings' : 'graph',
+    page: settingsPages.some(item => item.id === page) ? page : 'api',
+  };
+}
+const initialNavigation = resolveNavigation(location.hash) || { section: 'graph', page: 'api' };
+const section = ref(initialNavigation.section);
+const settingsPage = ref(initialNavigation.page);
 const settingsTitle = computed(() => settingsPages.find(page => page.id === settingsPage.value).label);
+const settingsDescription = computed(() => settingsPages.find(page => page.id === settingsPage.value).description);
+const isKnowledgePage = computed(() => section.value === 'settings' && settingsPage.value === 'knowledge');
 const historyImportBusy = ref(false);
 const isMobile = ref(window.matchMedia("(max-width: 767px)").matches);
 const mobileMedia = window.matchMedia("(max-width: 767px)");
@@ -578,7 +587,7 @@ const form = reactive({
 let toastTimer, filePollTimer;
 function scheduleFileRefresh() {
   clearTimeout(filePollTimer);
-  if (section.value === 'knowledge' && document.visibilityState === 'visible' && files.value.some(file => file.status === 0 || file.status === 1)) {
+  if (isKnowledgePage.value && document.visibilityState === 'visible' && files.value.some(file => file.status === 0 || file.status === 1)) {
     filePollTimer = setTimeout(loadFiles, 2000);
   }
 }
@@ -597,24 +606,25 @@ function notify(message, error = false) {
   toast.value = { message, error };
   toastTimer = setTimeout(() => (toast.value = null), 4500);
 }
-async function navigate(id, page = 'api') {
+async function navigate(id, page = 'api', keepNavigationOpen = false) {
+  if (id === 'knowledge') { id = 'settings'; page = 'knowledge'; }
+  if (!settingsPages.some(item => item.id === page)) page = 'api';
   section.value = id;
   if (id === 'settings') settingsPage.value = page;
-  location.hash = id === 'settings' && page === 'workbench' ? 'settings/workbench' : id;
-  mobileNav.value = false;
+  location.hash = id === 'settings' && page !== 'api' ? `settings/${page}` : id;
+  mobileNav.value = isMobile.value && keepNavigationOpen;
   await nextTick();
-  heading.value?.focus({ preventScroll: true });
+  if (!mobileNav.value) heading.value?.focus({ preventScroll: true });
   window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   animateSurface(document.querySelector(".workspace-grid, .knowledge-panel, .api-settings-panel"), { axis: "y", distance: 5 });
 }
 function hashChanged() {
-  const id = location.hash.slice(1);
-  if (id === 'settings/workbench' || id === 'settings/api') {
-    section.value = 'settings';
-    settingsPage.value = id.endsWith('/workbench') ? 'workbench' : 'api';
-  } else if (titles[id]) {
-    section.value = id;
-    if (id === 'settings') settingsPage.value = 'api';
+  const route = resolveNavigation(location.hash);
+  if (!route) return;
+  section.value = route.section;
+  settingsPage.value = route.page;
+  if (location.hash === '#knowledge') {
+    history.replaceState(history.state, '', `#settings/${route.page}`);
   }
 }
 function mediaChanged(event) {
@@ -635,8 +645,9 @@ watch(mobileNav, async (open) => {
   }
 });
 onMounted(() => {
+  hashChanged();
   loadMaps();
-  if (section.value === "knowledge") loadFiles();
+  if (isKnowledgePage.value) loadFiles();
   document.addEventListener("visibilitychange", scheduleFileRefresh);
   window.addEventListener("hashchange", hashChanged);
   mobileMedia.addEventListener("change", mediaChanged);
@@ -656,10 +667,12 @@ onUnmounted(() => {
   clearTimeout(filePollTimer);
   document.removeEventListener("visibilitychange", scheduleFileRefresh);
 });
-watch(section, (id) => {
-  clearTimeout(filePollTimer);
+watch(section, () => {
   query.value = "";
-  if (id === "knowledge") loadFiles();
+});
+watch(isKnowledgePage, (active) => {
+  clearTimeout(filePollTimer);
+  if (active) loadFiles();
 });
 
 function toggle(id) {
@@ -1523,7 +1536,7 @@ function exportGraph() {
     <aside
       class="sidebar"
       :class="{ open: mobileNav }"
-      aria-label="主导航"
+      aria-label="工作空间导航"
       :inert="isMobile && !mobileNav"
     >
       <button
@@ -1534,32 +1547,41 @@ function exportGraph() {
       >
         <X :size="18" />
       </button>
-      <a
-        class="brand"
-        href="#graph"
-        aria-label="AURELI 首页"
-        @click.prevent="navigate('graph')"
-      >
-        <BrandLogo class="brand-logo" decorative />
-      </a>
-      <span class="nav-caption">WORKSPACE / 工作空间</span>
-      <nav aria-label="工作空间">
-        <template v-for="item in nav" :key="item.id">
-          <a :href="`#${item.id}`" :class="{ active: section === item.id }"
-            :aria-expanded="item.id === 'settings' ? section === 'settings' : undefined"
-            :aria-controls="item.id === 'settings' && section === 'settings' ? 'settings-navigation' : undefined"
-            :aria-current="section === item.id ? 'page' : undefined" @click.prevent="navigate(item.id)">
-            <component :is="item.icon" :size="19" aria-hidden="true" /><span>{{ item.label }}</span>
-            <span v-if="item.id === 'graph'" class="nav-count">{{ workspace.tiles.length }}</span>
+      <div class="dock-rail">
+        <a class="dock-brand" href="#graph" aria-label="AURELI 首页" title="Aureli 首页"
+          @click.prevent="navigate('graph', 'api', true)">
+          <BrandLogo icon decorative />
+        </a>
+        <nav class="dock-navigation" aria-label="主导航">
+          <a v-for="item in nav" :key="item.id" :href="`#${item.id}`"
+            class="dock-link" :class="{ active: section === item.id }"
+            :aria-label="item.label" :title="item.label"
+            :aria-current="section === item.id ? 'page' : undefined"
+            :aria-controls="section === item.id ? `${item.id}-navigation` : undefined"
+            @click.prevent="navigate(item.id, 'api', true)">
+            <component :is="item.icon" :size="23" aria-hidden="true" />
           </a>
-          <div v-if="item.id === 'graph'" class="map-navigation" aria-label="图谱列表">
+        </nav>
+        <button v-if="section === 'graph'" class="dock-help icon-button" aria-label="了解 Tile 工作流" title="了解 Tile 工作流"
+          @click="mobileNav = false; openModal('help')">
+          <CircleHelp :size="22" aria-hidden="true" />
+        </button>
+      </div>
+      <section class="secondary-navigation" :aria-label="section === 'graph' ? '图谱导航' : '设置导航'">
+        <div class="secondary-header">
+          <div class="secondary-heading">
+            <h2>{{ section === 'graph' ? '我的图谱' : '服务设置' }}</h2>
+            <span v-if="section === 'graph'" class="secondary-count" :aria-label="`${maps.length} 张图谱`">{{ maps.length }}</span>
+          </div>
+        </div>
+        <div class="secondary-body">
+          <div v-if="section === 'graph'" id="graph-navigation" class="map-navigation" role="group" aria-label="图谱列表">
             <div class="map-list">
               <div v-for="map in maps" :key="map.mapId" class="map-row">
                 <button class="map-item" type="button"
                   :class="{ selected: currentMapId === map.mapId }" :aria-pressed="currentMapId === map.mapId"
                   :disabled="mapSwitchDisabled" :title="map.name" @click="switchMap(map.mapId)">
-                  <Network :size="15" aria-hidden="true" /><span>{{ map.name }}</span>
-                  <Check v-if="currentMapId === map.mapId" :size="14" aria-hidden="true" />
+                  <span>{{ map.name }}</span>
                 </button>
                 <button type="button" class="icon-button danger-icon map-delete-action"
                   :disabled="mapDeleteDisabled(map)" :aria-label="`删除图谱 ${map.name}`" title="删除图谱"
@@ -1569,6 +1591,7 @@ function exportGraph() {
               </div>
             </div>
             <p v-if="mapListLoading" class="map-feedback" role="status">正在加载图谱…</p>
+            <p v-else-if="!maps.length && !mapListError" class="map-feedback">还没有图谱，创建一张开始探索。</p>
             <form v-if="showMapForm" class="map-create-form" @submit.prevent="createMap">
               <label for="map-name">图谱名称</label>
               <input id="map-name" :ref="setMapNameInput" v-model="mapName" required maxlength="100" autocomplete="off"
@@ -1583,88 +1606,51 @@ function exportGraph() {
               <button v-if="!showMapForm" type="button" @click="loadMaps">重新加载</button>
             </div>
           </div>
-          <div v-if="item.id === 'settings' && section === 'settings'" id="settings-navigation"
+          <div v-else id="settings-navigation"
             class="map-navigation" role="group" aria-label="服务设置子导航">
             <div class="map-list">
               <div v-for="page in settingsPages" :key="page.id" class="map-row">
                 <button class="map-item" :class="{ selected: settingsPage === page.id }" type="button"
                   :aria-current="settingsPage === page.id ? 'page' : undefined" @click="navigate('settings', page.id)">
-                  <component :is="page.icon" :size="15" aria-hidden="true" /><span>{{ page.label }}</span>
-                  <Check v-if="settingsPage === page.id" :size="14" aria-hidden="true" />
+                  <span>{{ page.label }}</span>
                 </button>
               </div>
             </div>
           </div>
-        </template>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="context-note">
-          <span class="mini-label">CONNECTED KNOWLEDGE</span
-          ><BrandLogo class="sidebar-brand-icon" icon decorative /><strong>独立思考，自由连接。</strong>
-          <p title="songyu.tan@techscience.com">songyu.tan@techscience.com</p>
-          <button @click="openModal('help')">
-            了解 Tile 工作流<ArrowUpRight :size="15" />
-          </button>
         </div>
-      </div>
+        <div class="secondary-footer">
+          <BrandLogo class="secondary-brand" decorative />
+        </div>
+      </section>
     </aside>
     <div
       class="main-shell"
       :class="{ 'graph-shell': section === 'graph' }"
       :inert="isMobile && mobileNav"
     >
-      <header v-if="section !== 'graph'" class="topbar">
-        <div class="breadcrumb">
-          <button
-            class="mobile-menu icon-button"
-            @click="mobileNav = !mobileNav"
-            aria-label="展开导航"
-            :aria-expanded="mobileNav"
-          >
-            <Menu :size="20" /></button
-          ><span>工作空间</span><ChevronRight :size="14" /><strong>{{
-            titles[section]
-          }}</strong><template v-if="section === 'settings'"><ChevronRight :size="14" /><strong>{{ settingsTitle }}</strong></template><span v-if="section === 'graph' && currentMap" class="current-map-name">{{ currentMap.name }}</span>
-        </div>
-        <div class="topbar-actions">
-          <span class="service-state"
-            ><i :class="{ connected: connection === 'connected' }"></i
-            >{{
-              connection === "connected"
-                  ? "服务已连接"
-                  : connection === "error"
-                    ? "连接异常"
-                    : "服务待连接"
-            }}</span
-          ><span class="top-divider"></span
-          ><button
-            class="icon-button"
-            aria-label="查看使用指南"
-            @click="openModal('help')"
-          >
-            <CircleHelp :size="20" /></button
-          ><span class="header-brand" title="Aureli"><BrandLogo icon /></span>
-        </div>
-      </header>
       <main id="main" class="main-content" :class="{ 'graph-workbench': section === 'graph' }">
         <div :class="section === 'graph' ? 'sr-only' : 'page-heading'">
           <div>
+            <button v-if="section === 'settings' && isMobile"
+              class="mobile-menu settings-navigation-toggle icon-button"
+              @click="mobileNav = !mobileNav" aria-label="展开导航"
+              :aria-expanded="mobileNav" aria-controls="settings-navigation">
+              <Menu :size="20" aria-hidden="true" />
+            </button>
             <div class="eyebrow" v-if="section !== 'graph'">
               {{
                 section === "graph"
                   ? "01 / KNOWLEDGE GRAPH"
-                  : section === "knowledge"
-                    ? "02 / KNOWLEDGE BASE"
-                    : "03 / SERVICE SETTINGS"
+                  : "02 / SERVICE SETTINGS"
               }}
             </div>
             <h1 ref="heading" tabindex="-1">
               {{ section === 'settings' ? settingsTitle : titles[section]
               }}
             </h1>
-            <p v-if="section !== 'graph'">{{ section === 'settings' && settingsPage === 'workbench' ? '管理工作台，恢复历史聊天记录。' : subtitles[section] }}</p>
+            <p v-if="section !== 'graph'">{{ section === 'settings' ? settingsDescription : subtitles[section] }}</p>
           </div>
-          <button v-if="section === 'knowledge'" class="secondary" @click="showExample" :disabled="exampleDisabled">
+          <button v-if="isKnowledgePage" class="secondary" @click="showExample" :disabled="exampleDisabled">
             <LoaderCircle v-if="exampleCreating" :size="16" class="spinning" aria-hidden="true" />
             {{ exampleCreating ? "正在创建…" : "显示示例" }}<ArrowRight v-if="!exampleCreating" :size="14" aria-hidden="true" />
           </button>
@@ -1708,7 +1694,6 @@ function exportGraph() {
                     <Split :size="17" aria-hidden="true" />
                   </button>
                   <div class="graph-create-actions" role="group" aria-label="新增节点">
-                    <button type="button" class="graph-create-label" disabled>新增+</button>
                     <button class="icon-button graph-create-action ai-accent-button" aria-label="打开添加Tile弹窗" title="添加问答" @click="openQuestionDialog" :disabled="generating || graphLoading || modalBusy || nodeBusy"><span class="ai-accent-fill" aria-hidden="true"><span class="ai-accent-colors"></span></span><span class="graph-create-ai" aria-hidden="true">AI</span></button>
                     <button class="icon-button graph-create-action" aria-label="添加便签" title="添加便签" @click="openModal('note')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><StickyNote :size="17" /></button>
                     <button class="icon-button graph-create-action" aria-label="添加文件" title="添加文件" @click="openModal('file')" :disabled="generating || graphLoading || modalBusy || nodeBusy"><Upload :size="17" /></button>
@@ -2131,7 +2116,7 @@ function exportGraph() {
           </div>
         </template>
 
-        <template v-else-if="section === 'knowledge'">
+        <template v-else-if="isKnowledgePage">
           <section class="upload-panel surface">
             <span class="upload-icon"><Upload :size="24" /></span>
             <div>

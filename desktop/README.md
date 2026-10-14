@@ -5,7 +5,7 @@
 ## 安装与使用
 
 1. 退出先前通过 `npm start` 打开的开发版桌面应用。
-2. 打开 `dist/Aureli-0.12.0-arm64.dmg`，将 Aureli 拖到 Applications。
+2. 打开 `dist/Aureli-0.13.0-arm64.dmg`，将 Aureli 拖到 Applications。
 3. 从 Applications 打开 Aureli，等待内置数据库和后端启动。
 4. 在“服务设置”中配置对话模型与向量模型。
 
@@ -80,13 +80,13 @@ npm start
 1. 将应用源码和本次新增的打包文件提交、推送到 GitHub 仓库的默认分支。不要上传 `node_modules`、`desktop/resources`、用户数据库、密码或本机环境配置。
 2. 在 GitHub 仓库打开 **Actions → Windows installer → Run workflow**。
 3. 等待任务通过，打开该次运行，在 **Artifacts** 中下载 **Aureli-Windows-x64**。
-4. 解压下载的 ZIP，将里面的 `Aureli-Setup-0.12.0-x64.exe` 交给 Windows 用户安装。
+4. 解压下载的 ZIP，将里面的 `Aureli-Setup-0.13.0-x64.exe` 交给 Windows 用户安装。
 
 工作流在 GitHub 的 Windows x64 机器上准备 Java 21 运行环境，使用该机器自带的 PostgreSQL 17 编译 pgvector 0.8.6，并复制所需的 Microsoft CRT DLL。接着构建前端、后端和 NSIS 安装包，验证内置数据库创建、持久化及正常退出。测试还会对打包后的资源执行一次。Mac 版 Java 和 Postgres.app 不会进入 Windows 安装包。
 
 后端打包前会在临时目录创建独立的 PostgreSQL 测试库，使用随机端口和密码，并通过仅用于测试的 `application-ci.yml` 提供配置。Maven 测试成功或失败后都会停止该数据库；成功时删除临时数据，失败时保留日志并上传 **Aureli-Windows-diagnostics**。这一过程不依赖本机 `application-dev.yml` 或 Docker 数据库，测试配置不会进入发布 JAR。不要通过跳过测试来绕过数据库配置错误。
 
-Windows 与 Mac 都使用 `build/icon.png` 中的摩天轮图标。Windows 安装包的数据库是全新创建的，用户数据默认保存在 `%APPDATA%\Aureli\`，卸载时保留用户数据。AI 模型需要另外配置。
+Windows 与 Mac 都使用由 `frontend/public/favicon.svg` 转换的 `build/icon.png` 图标。Windows 安装包的数据库是全新创建的，用户数据默认保存在 `%APPDATA%\Aureli\`，卸载时保留用户数据。AI 模型需要另外配置。
 
 Windows 异常退出或断电后，可能留下 `postgres-data/postmaster.pid`。启动时会先用 PostgreSQL 自带的 `pg_ctl status` 检查进程；确认进程已退出后，由 PostgreSQL 在启动时校验并处理旧锁文件，继续使用原有数据库和凭据。若进程仍在运行或无法确认状态，应用会停止启动并提示检查，不会强制删除锁文件或停止其他数据库进程。不要删除整个 `postgres-data` 目录来解决启动问题。
 
