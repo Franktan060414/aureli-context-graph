@@ -72,7 +72,7 @@ public class TileQuestionPlanService {
         Input input = normalize(request);
         // Only the user-authored root question is classified; generated child questions are discussion.
         validateSources(input);
-        MemoryCategory category = memoryClassification.classify(settings.chatModel(), input.message);
+        MemoryCategory category = memoryClassification.classifyForTile(settings.chatModel(), input.message, input.mapId, input.tileId);
         Context context = transactions.execute(status -> readContext(input, category));
         Proposal proposal;
         try {

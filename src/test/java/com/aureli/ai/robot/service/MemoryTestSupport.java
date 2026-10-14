@@ -12,7 +12,7 @@ public final class MemoryTestSupport {
     }
     public static MemoryClassificationService classifier() {
         var classifier = mock(MemoryClassificationService.class);
-        when(classifier.classify(any(), anyString())).thenReturn(MemoryCategory.UNKNOWN);
+        when(classifier.classifyForTile(any(), anyString(), anyString(), anyString())).thenReturn(MemoryCategory.UNKNOWN);
         return classifier;
     }
 }

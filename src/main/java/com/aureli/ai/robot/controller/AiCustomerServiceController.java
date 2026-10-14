@@ -129,7 +129,7 @@ public class AiCustomerServiceController {
         ChatModel chatModel = modelApiSettings.chatModel();
         // Classification and database reads stay off the response thread and outside write transactions.
         return Flux.defer(() -> {
-            var category = memoryClassification.classify(chatModel, userMessage);
+            var category = memoryClassification.classifyForTile(chatModel, userMessage, mapId, aiChatReqVO.getTileId());
             int tokenBudget = generalSettings.contextTokenBudget();
             ChatClient.ChatClientRequestSpec chatClientRequestSpec = ChatClient.create(chatModel)
                     .prompt()
