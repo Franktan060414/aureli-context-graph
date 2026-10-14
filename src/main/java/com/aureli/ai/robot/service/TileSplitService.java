@@ -105,6 +105,7 @@ public class TileSplitService {
                         .title(item.userMessage().substring(0, Math.min(255, item.userMessage().length())))
                         .userMessage(item.userMessage())
                         .answerSummary(item.answer().substring(0, Math.min(1000, item.answer().length())))
+                        .memoryCategory("DISCUSSION")
                         .weight(source.weight()).labelId(inheritedLabel).createTime(now).updateTime(now).build();
                 tiles.insert(tile);
                 messages.insert(TileMessageDO.builder().mapId(mapId).tileId(childId).role("user")

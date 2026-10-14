@@ -49,7 +49,8 @@ class TileQuestionPlanControllerTest {
         var settings = mock(ModelApiSettingsService.class); when(settings.chatModel()).thenReturn(model);
         var tx = mock(TransactionTemplate.class);
         when(tx.execute(any())).thenAnswer(call -> ((TransactionCallback<?>) call.getArgument(0)).doInTransaction(new SimpleTransactionStatus()));
-        service = new TileQuestionPlanService(tiles, messages, edges, maps, settings, generator, tx);
+        service = new TileQuestionPlanService(tiles, messages, edges, maps, settings, generator, tx,
+                MemoryTestSupport.settings(), MemoryTestSupport.classifier());
         mvc = MockMvcBuilders.standaloneSetup(new TileQuestionPlanController(service)).build();
         when(maps.selectCount(any())).thenReturn(1L);
         when(model.call(any(Prompt.class))).thenReturn(reply(proposed));

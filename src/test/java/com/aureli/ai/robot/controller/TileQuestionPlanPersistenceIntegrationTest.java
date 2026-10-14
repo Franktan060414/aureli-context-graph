@@ -39,7 +39,8 @@ class TileQuestionPlanPersistenceIntegrationTest {
                 "{\"suggested\":true,\"reason\":\"两个独立目标\",\"questions\":[\"如何建模？\",\"如何验证？\"]}")))));
         var generator = mock(TileQuestionAnswerGenerator.class);
         when(generator.answer(anyString(), anyList())).thenAnswer(call -> "完整回答：" + call.getArgument(0));
-        var service = new TileQuestionPlanService(tiles, messages, edges, maps, settings, generator, transactions);
+        var service = new TileQuestionPlanService(tiles, messages, edges, maps, settings, generator, transactions,
+                com.aureli.ai.robot.service.MemoryTestSupport.settings(), com.aureli.ai.robot.service.MemoryTestSupport.classifier());
         jdbc.update("INSERT INTO t_map(map_id, name) VALUES (?, '自动建议测试')", map);
         try {
             var request = AiCustomerServiceChatReqVO.builder().mapId(map).tileId("plan-root-" + UUID.randomUUID())
@@ -67,7 +68,8 @@ class TileQuestionPlanPersistenceIntegrationTest {
             var brokenEdges = mock(TileEdgeMapper.class);
             when(brokenEdges.insert(any(TileEdgeDO.class))).thenAnswer(call -> edges.insert((TileEdgeDO) call.getArgument(0)))
                     .thenThrow(new IllegalStateException("fixture failure on second edge"));
-            var failing = new TileQuestionPlanService(tiles, messages, brokenEdges, maps, settings, generator, transactions);
+            var failing = new TileQuestionPlanService(tiles, messages, brokenEdges, maps, settings, generator, transactions,
+                    com.aureli.ai.robot.service.MemoryTestSupport.settings(), com.aureli.ai.robot.service.MemoryTestSupport.classifier());
             var retry = AiCustomerServiceChatReqVO.builder().mapId(map).tileId("plan-rollback-" + UUID.randomUUID())
                     .message("如何建模并验证？").relatedTileIds(List.of()).build();
             String failedId = failing.prepare(retry).planId();

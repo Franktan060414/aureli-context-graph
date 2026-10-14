@@ -1,6 +1,7 @@
 package com.aureli.ai.robot.advisor;
 
 import com.aureli.ai.robot.domain.TileRelationTypes;
+import com.aureli.ai.robot.domain.MemoryCategory;
 
 import com.aureli.ai.robot.domain.maps.MapIds;
 
@@ -51,11 +52,22 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
     private final BigDecimal edgeWeight;
     private final String edgeDescription;
     private final TransactionTemplate transactionTemplate;
+    private final MemoryCategory memoryCategory;
 
     public CustomStreamLoggerAndMessage2DBAdvisor(TileMapper tileMapper, TileMessageMapper tileMessageMapper,
             TileEdgeMapper tileEdgeMapper, String tileId, String userMessage, Collection<String> relatedTileIds,
             String edgeDirection, String relationType, BigDecimal edgeWeight, String edgeDescription,
             TransactionTemplate transactionTemplate, String mapId) {
+        this(tileMapper, tileMessageMapper, tileEdgeMapper, tileId, userMessage, relatedTileIds,
+                edgeDirection, relationType, edgeWeight, edgeDescription, transactionTemplate, mapId,
+                MemoryCategory.UNKNOWN);
+    }
+
+    public CustomStreamLoggerAndMessage2DBAdvisor(TileMapper tileMapper, TileMessageMapper tileMessageMapper,
+            TileEdgeMapper tileEdgeMapper, String tileId, String userMessage, Collection<String> relatedTileIds,
+            String edgeDirection, String relationType, BigDecimal edgeWeight, String edgeDescription,
+            TransactionTemplate transactionTemplate, String mapId, MemoryCategory memoryCategory) {
+        this.memoryCategory = memoryCategory == null ? MemoryCategory.UNKNOWN : memoryCategory;
         this.mapId = MapIds.normalize(mapId);
         this.tileMapper = tileMapper;
         this.tileMessageMapper = tileMessageMapper;
@@ -176,6 +188,7 @@ public class CustomStreamLoggerAndMessage2DBAdvisor implements StreamAdvisor {
                 .title(abbreviate(userMessage, 80))
                 .userMessage(userMessage)
                 .answerSummary(abbreviate(completeResponse, 240))
+                .memoryCategory(memoryCategory.name())
                 .weight(existTile == null || existTile.getWeight() == null ? 1 : existTile.getWeight())
                 .createTime(existTile == null ? now : existTile.getCreateTime())
                 .updateTime(now)

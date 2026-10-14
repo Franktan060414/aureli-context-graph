@@ -3,6 +3,7 @@ package com.aureli.ai.robot.service;
 import com.aureli.ai.robot.advisor.CustomChatMemoryAdvisor;
 import com.aureli.ai.robot.controller.TileWorkspaceController;
 import com.aureli.ai.robot.domain.TileRelationTypes;
+import com.aureli.ai.robot.domain.MemoryCategory;
 import com.aureli.ai.robot.domain.dos.*;
 import com.aureli.ai.robot.domain.mapper.*;
 import com.aureli.ai.robot.domain.maps.MapIds;
@@ -34,14 +35,18 @@ public class TileQuestionPlanService {
     private final ModelApiSettingsService settings;
     private final TileQuestionAnswerGenerator generator;
     private final TransactionTemplate transactions;
+    private final GeneralSettingsService generalSettings;
+    private final MemoryClassificationService memoryClassification;
     private final Cache<String, Plan> plans = CacheBuilder.newBuilder()
             .maximumSize(1000).expireAfterWrite(30, TimeUnit.MINUTES).build();
 
     public TileQuestionPlanService(TileMapper tiles, TileMessageMapper messages, TileEdgeMapper edges,
                                    MapMapper maps, ModelApiSettingsService settings,
-                                   TileQuestionAnswerGenerator generator, TransactionTemplate transactions) {
+                                   TileQuestionAnswerGenerator generator, TransactionTemplate transactions,
+                                   GeneralSettingsService generalSettings, MemoryClassificationService memoryClassification) {
         this.tiles = tiles; this.messages = messages; this.edges = edges; this.maps = maps;
         this.settings = settings; this.generator = generator; this.transactions = transactions;
+        this.generalSettings = generalSettings; this.memoryClassification = memoryClassification;
     }
     public record Proposal(boolean suggested, String reason, List<String> questions, String planId) {}
     public static class PlanException extends RuntimeException {
@@ -50,8 +55,8 @@ public class TileQuestionPlanService {
     }
     public static class PlanningUnavailable extends RuntimeException {}
     private record Input(String mapId, String tileId, String message, List<String> related,
-                         int depth, String direction, BigDecimal weight, String description) {}
-    private record Context(List<Message> memory, String fingerprint) {}
+                         String direction, BigDecimal weight, String description) {}
+    private record Context(List<Message> memory, String fingerprint, MemoryCategory category) {}
     private static class Plan {
         final Input input;
         final Context context;
@@ -65,7 +70,10 @@ public class TileQuestionPlanService {
 
     public Proposal prepare(AiCustomerServiceChatReqVO request) {
         Input input = normalize(request);
-        Context context = transactions.execute(status -> readContext(input));
+        // Only the user-authored root question is classified; generated child questions are discussion.
+        validateSources(input);
+        MemoryCategory category = memoryClassification.classify(settings.chatModel(), input.message);
+        Context context = transactions.execute(status -> readContext(input, category));
         Proposal proposal;
         try {
             String text = settings.chatModel().call(TileQuestionPlanPrompts.plan(input.message, context.memory))
@@ -115,10 +123,15 @@ public class TileQuestionPlanService {
             requireCurrent(plan.input, plan.context);
             // 不在数据库事务内等待模型；任何答案失败都不会保存半组节点。
             String rootAnswer = validAnswer(generator.answer(plan.input.message, plan.context.memory));
-            var childMemory = new ArrayList<>(plan.context.memory);
-            childMemory.add(new UserMessage(CustomerServicePrompts.tileMemory(plan.input.tileId, 1,
+            var rootMemory = new ArrayList<Message>();
+            rootMemory.add(new UserMessage(CustomerServicePrompts.tileMemory(plan.input.tileId, 1,
                     "原始问题（子问题必须继承其范围和约束）：\n" + plan.input.message)));
-            childMemory.add(new AssistantMessage(CustomerServicePrompts.tileMemory(plan.input.tileId, 1, rootAnswer)));
+            rootMemory.add(new AssistantMessage(CustomerServicePrompts.tileMemory(plan.input.tileId, 1, rootAnswer)));
+            int budget = generalSettings.contextTokenBudget();
+            var directRoot = MemoryTokenBudget.fit(rootMemory, budget);
+            var childMemory = new ArrayList<>(MemoryTokenBudget.fit(plan.context.memory,
+                    budget - (int)MemoryTokenBudget.tokens(directRoot)));
+            childMemory.addAll(directRoot);
             var answers = new ArrayList<String>();
             for (String question : plan.questions) answers.add(validAnswer(generator.answer(question, List.copyOf(childMemory))));
             plan.result = transactions.execute(status -> {
@@ -131,21 +144,28 @@ public class TileQuestionPlanService {
         }
     }
 
-    private Context readContext(Input input) {
+    private void validateSources(Input input) {
         if (maps.selectCount(Wrappers.<MapDO>lambdaQuery().eq(MapDO::getMapId, input.mapId)) == 0)
             throw new IllegalArgumentException("图谱已不存在，请先创建或选择图谱。");
         if (tiles.selectCount(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getTileId, input.tileId)) > 0)
             throw new PlanException("QUESTION_TILE_EXISTS", "Tile ID 已存在，请同步图谱并使用新的 ID。");
-        if (input.related.isEmpty()) return new Context(List.of(), "[]");
+        if (input.related.isEmpty()) return;
         var sources = tiles.selectByTileIds(input.mapId, input.related).stream()
                 .sorted(Comparator.comparing(TileDO::getTileId)).toList();
         if (!sources.stream().map(TileDO::getTileId).collect(java.util.stream.Collectors.toSet())
                 .containsAll(input.related)) throw new IllegalArgumentException("关联 Tile 已不存在或不属于当前图谱，请重新选择。");
-        var memory = new CustomChatMemoryAdvisor(messages, edges, tiles, input.related, input.depth,
-                pendingEdges(input), input.mapId).memoryMessages();
+    }
+
+    private Context readContext(Input input, MemoryCategory category) {
+        validateSources(input);
+        if (input.related.isEmpty()) return new Context(List.of(), "[]", category);
+        var sources = tiles.selectByTileIds(input.mapId, input.related).stream()
+                .sorted(Comparator.comparing(TileDO::getTileId)).toList();
+        var memory = new CustomChatMemoryAdvisor(messages, edges, tiles, input.related,
+                pendingEdges(input), input.mapId, category, generalSettings.contextTokenBudget()).memoryMessages();
         String snapshot = JsonUtil.toJsonString(List.of(sources, memory.stream().map(message ->
                 Map.of("role", message.getMessageType().getValue(), "content", message.getText())).toList()));
-        return new Context(memory, snapshot);
+        return new Context(memory, snapshot, category);
     }
     private String validAnswer(String answer) {
         if (answer == null || answer.isBlank() || answer.length() > 100000)
@@ -153,7 +173,7 @@ public class TileQuestionPlanService {
         return answer.trim();
     }
     private void requireCurrent(Input input, Context context) {
-        if (!context.fingerprint.equals(readContext(input).fingerprint))
+        if (!context.fingerprint.equals(readContext(input, context.category).fingerprint))
             throw new PlanException("QUESTION_CONTEXT_CHANGED", "关联内容已发生变化，请返回问题重新提交，获取新的拆分建议。");
     }
     private List<TileEdgeDO> pendingEdges(Input input) {
@@ -168,11 +188,12 @@ public class TileQuestionPlanService {
         LocalDateTime now = LocalDateTime.now();
         var nodes = new ArrayList<TileWorkspaceController.Node>();
         var links = new ArrayList<TileWorkspaceController.Edge>();
-        nodes.add(saveNode(input.mapId, input.tileId, input.message, rootAnswer, input.related, now));
+        nodes.add(saveNode(input.mapId, input.tileId, input.message, rootAnswer, input.related, now, plan.context.category));
         for (var edge : pendingEdges(input)) links.add(saveEdge(edge, now));
         for (int index = 0; index < plan.questions.size(); index++) {
             String id = "tile-divides-" + planId + "-" + index;
-            nodes.add(saveNode(input.mapId, id, plan.questions.get(index), answers.get(index), List.of(input.tileId), now));
+            nodes.add(saveNode(input.mapId, id, plan.questions.get(index), answers.get(index), List.of(input.tileId), now,
+                    MemoryCategory.DISCUSSION));
             links.add(saveEdge(TileEdgeDO.builder().mapId(input.mapId).sourceTileId(input.tileId)
                     .targetTileId(id).direction("DIRECTED").relationType("DIVIDES").weight(BigDecimal.ONE)
                     .description("AI 建议拆分").build(), now));
@@ -180,11 +201,12 @@ public class TileQuestionPlanService {
         return new TileWorkspaceController.Workspace(List.copyOf(nodes), List.copyOf(links));
     }
     private TileWorkspaceController.Node saveNode(String mapId, String id, String question, String answer,
-                                                  List<String> related, LocalDateTime now) {
+                                                  List<String> related, LocalDateTime now, MemoryCategory category) {
         if (answer == null || answer.isBlank() || answer.length() > 100000) throw new IllegalStateException("答案无效");
         String title = question.substring(0, Math.min(255, question.length()));
         tiles.insert(TileDO.builder().mapId(mapId).tileId(id).tileType("QA").title(title).userMessage(question)
                 .answerSummary(answer.substring(0, Math.min(1000, answer.length()))).weight(1)
+                .memoryCategory(category.name())
                 .createTime(now).updateTime(now).build());
         messages.insert(TileMessageDO.builder().mapId(mapId).tileId(id).role("user").content(question).createTime(now).build());
         messages.insert(TileMessageDO.builder().mapId(mapId).tileId(id).role("assistant").content(answer).createTime(now).build());
@@ -210,13 +232,12 @@ public class TileQuestionPlanService {
         related.removeIf(value -> value == null || value.isBlank());
         related = related.stream().map(String::trim).filter(value -> !value.equals(id))
                 .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
-        int depth = request.getMemoryDepth() == null ? 1 : request.getMemoryDepth();
-        if (depth < 0 || depth > 10 || related.size() > 100 || related.stream().anyMatch(value -> value.length() > 128))
-            throw new IllegalArgumentException("关联选择或记忆深度无效，请重新选择。");
+        if (related.size() > 100 || related.stream().anyMatch(value -> value.length() > 128))
+            throw new IllegalArgumentException("关联选择无效，请重新选择。");
         String direction = "UNDIRECTED".equalsIgnoreCase(request.getEdgeDirection() == null ? "" : request.getEdgeDirection().trim())
                 ? "UNDIRECTED" : "DIRECTED";
         BigDecimal weight = request.getEdgeWeight() == null ? BigDecimal.ONE : request.getEdgeWeight().max(BigDecimal.ZERO).min(BigDecimal.ONE);
-        return new Input(map, id, question, List.copyOf(related), depth, direction, weight, request.getEdgeDescription());
+        return new Input(map, id, question, List.copyOf(related), direction, weight, request.getEdgeDescription());
     }
     private Proposal parse(Map<String, Object> json, String original) {
         if (json == null || !(json.get("suggested") instanceof Boolean suggested)

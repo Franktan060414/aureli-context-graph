@@ -21,16 +21,19 @@ public class TileQuestionAnswerGenerator {
     private final VectorStore vectors;
     private final TavilySettingsService tavilySettings;
     private final TavilyMcpSearchService tavilySearch;
+    private final GeneralSettingsService generalSettings;
     public TileQuestionAnswerGenerator(ModelApiSettingsService settings, VectorStore vectors,
-            TavilySettingsService tavilySettings, TavilyMcpSearchService tavilySearch) {
+            TavilySettingsService tavilySettings, TavilyMcpSearchService tavilySearch,
+            GeneralSettingsService generalSettings) {
         this.settings = settings;
         this.vectors = vectors;
         this.tavilySettings = tavilySettings;
         this.tavilySearch = tavilySearch;
+        this.generalSettings = generalSettings;
     }
     public String answer(String question, List<Message> memory) {
         var model = settings.chatModel();
-        var messages = new ArrayList<>(memory);
+        var messages = new ArrayList<>(MemoryTokenBudget.fit(memory, generalSettings.contextTokenBudget()));
         messages.add(new UserMessage(question));
         var chunks = ChatClient.create(model).prompt().messages(messages)
                 .advisors(new CustomerServiceAdvisor(vectors, model),

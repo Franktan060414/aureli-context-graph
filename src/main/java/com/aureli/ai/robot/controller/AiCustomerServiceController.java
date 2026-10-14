@@ -15,6 +15,8 @@ import com.aureli.ai.robot.domain.mapper.TileMapper;
 import com.aureli.ai.robot.domain.mapper.TileMessageMapper;
 import com.aureli.ai.robot.model.vo.customerService.*;
 import com.aureli.ai.robot.service.CustomerService;
+import com.aureli.ai.robot.service.GeneralSettingsService;
+import com.aureli.ai.robot.service.MemoryClassificationService;
 import com.aureli.ai.robot.service.model.ModelApiSettingsService;
 import com.aureli.ai.robot.utils.PageResponse;
 import com.aureli.ai.robot.utils.Response;
@@ -31,6 +33,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -66,6 +69,10 @@ public class AiCustomerServiceController {
     private TavilySettingsService tavilySettings;
     @Resource
     private TavilyMcpSearchService tavilySearch;
+    @Resource
+    private GeneralSettingsService generalSettings;
+    @Resource
+    private MemoryClassificationService memoryClassification;
 
     /**
      * 问答 MD 文件上传
@@ -119,40 +126,43 @@ public class AiCustomerServiceController {
         String userMessage = aiChatReqVO.getMessage();
         String mapId = MapIds.normalize(aiChatReqVO.getMapId());
         List<String> relatedTileIds = resolveRelatedTileIds(aiChatReqVO);
-        int memoryDepth = resolveMemoryDepth(aiChatReqVO.getMemoryDepth());
-
         ChatModel chatModel = modelApiSettings.chatModel();
-        ChatClient.ChatClientRequestSpec chatClientRequestSpec = ChatClient.create(chatModel)
-                .prompt()
-                .user(userMessage);
+        // Classification and database reads stay off the response thread and outside write transactions.
+        return Flux.defer(() -> {
+            var category = memoryClassification.classify(chatModel, userMessage);
+            int tokenBudget = generalSettings.contextTokenBudget();
+            ChatClient.ChatClientRequestSpec chatClientRequestSpec = ChatClient.create(chatModel)
+                    .prompt()
+                    .user(userMessage);
 
-        var persistenceAdvisor = new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
-                tileMessageMapper,
-                tileEdgeMapper,
-                aiChatReqVO.getTileId(),
-                userMessage,
-                relatedTileIds,
-                aiChatReqVO.getEdgeDirection(),
-                aiChatReqVO.getRelationType(),
-                aiChatReqVO.getEdgeWeight(),
-                aiChatReqVO.getEdgeDescription(),
-                transactionTemplate, mapId);
+            var persistenceAdvisor = new CustomStreamLoggerAndMessage2DBAdvisor(tileMapper,
+                    tileMessageMapper,
+                    tileEdgeMapper,
+                    aiChatReqVO.getTileId(),
+                    userMessage,
+                    relatedTileIds,
+                    aiChatReqVO.getEdgeDirection(),
+                    aiChatReqVO.getRelationType(),
+                    aiChatReqVO.getEdgeWeight(),
+                    aiChatReqVO.getEdgeDescription(),
+                    transactionTemplate, mapId, category);
 
-        List<Advisor> advisors = Lists.newArrayList();
-        if (!relatedTileIds.isEmpty()) {
-            advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, tileMapper,
-                    relatedTileIds, memoryDepth, persistenceAdvisor.pendingEdges(), mapId));
-        }
+            List<Advisor> advisors = Lists.newArrayList();
+            if (!relatedTileIds.isEmpty()) {
+                advisors.add(new CustomChatMemoryAdvisor(tileMessageMapper, tileEdgeMapper, tileMapper,
+                        relatedTileIds, persistenceAdvisor.pendingEdges(), mapId, category, tokenBudget));
+            }
 
-        advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
-        advisors.add(new TavilySearchAdvisor(tavilySettings, tavilySearch, chatModel));
-        advisors.add(persistenceAdvisor);
+            advisors.add(new CustomerServiceAdvisor(vectorStore, chatModel));
+            advisors.add(new TavilySearchAdvisor(tavilySettings, tavilySearch, chatModel));
+            advisors.add(persistenceAdvisor);
 
-        chatClientRequestSpec.advisors(advisors);
+            chatClientRequestSpec.advisors(advisors);
 
-        // defer also captures synchronous embedding / advisor failures into the SSE protocol.
-        return Flux.defer(() -> chatClientRequestSpec.stream().content()
-                .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build()))
+            // defer also captures synchronous embedding / advisor failures into the SSE protocol.
+            return chatClientRequestSpec.stream().content()
+                    .mapNotNull(text -> AiCustomerServiceChatRspVO.builder().v(text).build());
+        }).subscribeOn(Schedulers.boundedElastic())
                 .concatWithValues(AiCustomerServiceChatRspVO.builder().done(true).build())
                 .onErrorResume(error -> {
                     log.error("Tile completion failed: {}", aiChatReqVO.getTileId(), error);
@@ -175,13 +185,6 @@ public class AiCustomerServiceController {
         relatedTileIds.removeIf(tileId -> StringUtils.isBlank(tileId)
                 || StringUtils.equals(tileId, aiChatReqVO.getTileId()));
         return relatedTileIds.stream().toList();
-    }
-
-    private int resolveMemoryDepth(Integer memoryDepth) {
-        if (memoryDepth == null) {
-            return 1;
-        }
-        return Math.max(memoryDepth, 0);
     }
 
 }

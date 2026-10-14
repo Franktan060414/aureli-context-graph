@@ -31,6 +31,8 @@ class TileCompletionProtocolTest {
         var settings = mock(ModelApiSettingsService.class);
         when(settings.chatModel()).thenReturn(model);
         var controller = new AiCustomerServiceController();
+        ReflectionTestUtils.setField(controller, "generalSettings", com.aureli.ai.robot.service.MemoryTestSupport.settings());
+        ReflectionTestUtils.setField(controller, "memoryClassification", com.aureli.ai.robot.service.MemoryTestSupport.classifier());
         ReflectionTestUtils.setField(controller, "modelApiSettings", settings);
         var tavily = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
         when(tavily.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(
@@ -64,6 +66,33 @@ class TileCompletionProtocolTest {
         var savedTile = ArgumentCaptor.forClass(TileDO.class);
         verify(tiles).insert(savedTile.capture());
         assertEquals(1, savedTile.getValue().getWeight());
+    }
+
+    @Test void classificationIsPersistedButNeverAppearsInTheAnswerOrPublicTile() {
+        answer();
+        when(model.call(any(Prompt.class))).thenAnswer(call -> {
+            Prompt prompt = call.getArgument(0);
+            String reply = prompt.getSystemMessage().getText().contains("内部记忆用途分类器") ? "PROJECT_RULE" : "DIRECT";
+            return new ChatResponse(List.of(new Generation(new AssistantMessage(reply))));
+        });
+        when(transaction.execute(any())).thenAnswer(call -> ((TransactionCallback<?>)call.getArgument(0))
+                .doInTransaction(new SimpleTransactionStatus()));
+        var actual = controller();
+        ReflectionTestUtils.setField(actual, "memoryClassification", new com.aureli.ai.robot.service.MemoryClassificationService());
+        var events = actual.tileChat(AiCustomerServiceChatReqVO.builder().mapId("map-test").tileId("classified")
+                .message("这个项目必须离线运行").build()).collectList().block(Duration.ofSeconds(5));
+        assertEquals("完整回答", events.getFirst().getV());
+        assertTrue(events.getLast().getDone());
+        var saved = ArgumentCaptor.forClass(TileDO.class);
+        verify(tiles).insert(saved.capture());
+        assertEquals("PROJECT_RULE", saved.getValue().getMemoryCategory());
+        String json = tools.jackson.databind.json.JsonMapper.builder().build().writeValueAsString(saved.getValue());
+        assertFalse(json.contains("memoryCategory")); assertFalse(json.contains("PROJECT_RULE"));
+        verify(model, times(2)).call(any(Prompt.class)); // classification, then existing knowledge routing
+        var persisted = ArgumentCaptor.forClass(com.aureli.ai.robot.domain.dos.TileMessageDO.class);
+        verify(messages, times(2)).insert(persisted.capture());
+        assertEquals(List.of("这个项目必须离线运行", "完整回答"), persisted.getAllValues().stream()
+                .map(com.aureli.ai.robot.domain.dos.TileMessageDO::getContent).toList());
     }
     @ParameterizedTest
     @ValueSource(ints = {2, 3})

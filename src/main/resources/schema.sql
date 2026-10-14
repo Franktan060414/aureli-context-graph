@@ -31,6 +31,18 @@ CREATE TABLE IF NOT EXISTS t_tile (
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS weight SMALLINT NOT NULL DEFAULT 1
     CONSTRAINT chk_tile_weight CHECK (weight IN (1, 2, 3));
 
+ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS memory_category VARCHAR(32) NOT NULL DEFAULT 'UNKNOWN'
+    CONSTRAINT chk_tile_memory_category CHECK (memory_category IN
+        ('PREFERENCE', 'PROJECT_RULE', 'DECISION', 'DISCUSSION', 'UNKNOWN'));
+
+CREATE TABLE IF NOT EXISTS t_general_setting (
+    config_title VARCHAR(128) PRIMARY KEY,
+    config_content TEXT NOT NULL
+);
+INSERT INTO t_general_setting (config_title, config_content)
+VALUES ('context_token_budget', '8000')
+ON CONFLICT (config_title) DO NOTHING;
+
 -- 升级既有工作区：原问答数据保留并自动标记为 QA。
 ALTER TABLE t_tile ADD COLUMN IF NOT EXISTS tile_type VARCHAR(16) NOT NULL DEFAULT 'QA'
     CONSTRAINT chk_tile_type CHECK (tile_type IN ('QA', 'NOTE', 'FILE', 'WEB'));

@@ -42,7 +42,7 @@ public class AiCustomerServiceChatReqVO {
     private List<String> relatedTileIds;
 
     /**
-     * 从所选来源继续追溯的最大边数。0 表示只读取直接选择的 Tile。
+     * 兼容旧客户端的字段。新版按连接收集候选，以预算裁剪；前三层固定给予优先级。
      */
     private Integer memoryDepth;
 

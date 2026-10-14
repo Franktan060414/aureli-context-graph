@@ -25,6 +25,7 @@ public interface TileMapper extends BaseMapper<TileDO> {
         if (tileIds == null || tileIds.isEmpty()) {
             return List.of();
         }
-        return selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId).in(TileDO::getTileId, tileIds));
+        return selectList(Wrappers.<TileDO>lambdaQuery().eq(TileDO::getMapId, mapId)
+                .in(TileDO::getTileId, tileIds).orderByAsc(TileDO::getId));
     }
 }

@@ -60,6 +60,8 @@ class TileKnowledgeRoutingTest {
         when(transaction.execute(any())).thenAnswer(call -> ((TransactionCallback<?>) call.getArgument(0))
                 .doInTransaction(new SimpleTransactionStatus()));
         controller = new AiCustomerServiceController();
+        ReflectionTestUtils.setField(controller, "generalSettings", com.aureli.ai.robot.service.MemoryTestSupport.settings());
+        ReflectionTestUtils.setField(controller, "memoryClassification", com.aureli.ai.robot.service.MemoryTestSupport.classifier());
         ReflectionTestUtils.setField(controller, "modelApiSettings", settings);
         var tavily = mock(com.aureli.ai.robot.service.search.TavilySettingsService.class);
         when(tavily.snapshot()).thenReturn(new com.aureli.ai.robot.service.search.TavilySettingsRepository.Settings(

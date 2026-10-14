@@ -52,6 +52,10 @@ public class TileDO {
     private byte[] fileData;
     private String userMessage;
     private String answerSummary;
+    /** Internal question-purpose classification, excluded from public JSON. */
+    @JsonIgnore
+    @Builder.Default
+    private String memoryCategory = "UNKNOWN";
     /** Tile 重要程度：1 普通，2 重要，3 非常重要。 */
     @Builder.Default
     private Integer weight = 1;

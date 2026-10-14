@@ -86,6 +86,7 @@ public class TileFusionService {
             TileDO tile = TileDO.builder().mapId(mapId).tileId(tileId).tileType("QA")
                     .title(question.substring(0, Math.min(255, question.length())))
                     .userMessage(question).answerSummary(answer.substring(0, Math.min(1000, answer.length())))
+                    .memoryCategory("DISCUSSION")
                     .labelId(inheritedLabel).weight(sources.stream().mapToInt(Source::weight).max().orElseThrow())
                     .createTime(now).updateTime(now).build();
             tiles.insert(tile);

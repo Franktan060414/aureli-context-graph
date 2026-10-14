@@ -21,7 +21,7 @@ public interface TileMessageMapper extends BaseMapper<TileMessageDO> {
 
         return selectList(Wrappers.<TileMessageDO>lambdaQuery()
                 .eq(TileMessageDO::getMapId, mapId).in(TileMessageDO::getTileId, tileIds)
-                .orderByAsc(TileMessageDO::getCreateTime));
+                .orderByAsc(TileMessageDO::getCreateTime).orderByAsc(TileMessageDO::getId));
     }
 
 }

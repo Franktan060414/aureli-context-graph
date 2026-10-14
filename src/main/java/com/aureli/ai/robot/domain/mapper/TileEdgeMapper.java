@@ -14,6 +14,16 @@ import java.util.List;
  **/
 public interface TileEdgeMapper extends BaseMapper<TileEdgeDO> {
 
+    /** One frontier query per batch; direction is checked again by the memory reader. */
+    default List<TileEdgeDO> selectRelatedEdgesBatch(String mapId, Collection<String> tileIds) {
+        if (tileIds == null || tileIds.isEmpty()) return List.of();
+        return selectList(Wrappers.<TileEdgeDO>lambdaQuery().eq(TileEdgeDO::getMapId, mapId)
+                .and(q -> q.in(TileEdgeDO::getTargetTileId, tileIds)
+                        .or(u -> u.eq(TileEdgeDO::getDirection, "UNDIRECTED")
+                                .in(TileEdgeDO::getSourceTileId, tileIds)))
+                .orderByAsc(TileEdgeDO::getId));
+    }
+
     default List<TileEdgeDO> selectRelatedEdges(String mapId, String tileId) {
         return selectList(Wrappers.<TileEdgeDO>lambdaQuery()
                 .eq(TileEdgeDO::getMapId, mapId)
