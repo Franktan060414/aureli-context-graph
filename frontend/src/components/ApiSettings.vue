@@ -16,6 +16,8 @@ import {
 import { createApiClient } from "../lib/api.js";
 import TavilySettings from "./TavilySettings.vue";
 const props = defineProps({ apiBase: String, busy: Boolean });
+const mobileLocal = Boolean(window.AURELI_MOBILE?.local);
+const modelKinds = mobileLocal ? ["chat"] : ["chat", "embedding"];
 const emit = defineEmits(["base-change", "notify"]);
 const serviceBase = ref(props.apiBase),
   loading = ref(false),
@@ -90,7 +92,7 @@ const groups = [
     subtitle: "用于文档向量化与 RAG 检索",
     icon: Database,
   },
-];
+].filter(group => modelKinds.includes(group.id));
 function useProvider(kind, provider) {
   Object.assign(config[kind], defaults(kind, provider));
   saved.value = false;
@@ -116,9 +118,9 @@ async function load() {
   try {
     const base = normalizeUrl(serviceBase.value, true);
     const result = await createApiClient(base).modelSettings();
-    for (const kind of ["chat", "embedding"])
+    for (const kind of modelKinds)
       Object.assign(config[kind], normalizeProfile(result.data[kind]), { apiKey: "" });
-    for (const kind of ["chat", "embedding"])
+    for (const kind of modelKinds)
       savedProfiles[kind] = normalizeProfile(result.data[kind]);
     dimensions.value = result.data.dimensions;
     saved.value = false;
@@ -137,7 +139,7 @@ async function save() {
   try {
     base = normalizeUrl(serviceBase.value, true);
     payload = { dimensions: dimensions.value };
-    for (const kind of ["chat", "embedding"]) {
+    for (const kind of modelKinds) {
       const value = config[kind];
       if (!value.model.trim())
         throw new Error(`请填写${kind === "chat" ? "对话" : "向量"}模型名称。`);
@@ -176,9 +178,9 @@ async function save() {
     const result = await createApiClient(base).saveModelSettings(payload);
     localStorage.setItem("aureli-api-base", base);
     emit("base-change", base);
-    for (const kind of ["chat", "embedding"])
+    for (const kind of modelKinds)
       Object.assign(config[kind], normalizeProfile(result.data[kind]), { apiKey: "" });
-    for (const kind of ["chat", "embedding"])
+    for (const kind of modelKinds)
       savedProfiles[kind] = normalizeProfile(result.data[kind]);
     showKeys.chat = false;
     showKeys.embedding = false;
@@ -242,7 +244,7 @@ async function testConnection() {
       novalidate
     >
       <fieldset :disabled="loading || saving || testing || busy">
-        <div class="api-service-field">
+        <div v-if="!mobileLocal" class="api-service-field">
           <label for="project-service-url"
             >项目服务地址 <span class="optional">选填</span></label
           ><input

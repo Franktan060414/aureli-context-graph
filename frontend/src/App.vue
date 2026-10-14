@@ -75,7 +75,7 @@ const nav = [
   { id: "graph", label: "图谱工作台", icon: Network },
   { id: "knowledge", label: "知识库管理", icon: BookOpen },
   { id: "settings", label: "服务设置", icon: Settings2 },
-];
+].filter(item => !window.AURELI_MOBILE?.local || item.id !== 'knowledge');
 const titles = {
   graph: "图谱工作台",
   knowledge: "知识库管理",
@@ -301,6 +301,9 @@ async function loadWorkspace() {
     state.tiles = result.data.tiles;
     state.edges = result.data.edges;
     state.labels = result.data.labels || [];
+    if (window.AURELI_MOBILE?.local && result.data.layout && !Object.keys(layouts[key] || {}).length) {
+      layouts[key] = result.data.layout;
+    }
     if (key === workspaceKey.value) {
       if (!state.tiles.some(t => t.id === selected.value)) selected.value = state.tiles[0]?.id || null;
       related.value = related.value.filter(id => state.tiles.some(t => t.id === id));
